@@ -1,11 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { getSession } from "@auth0/nextjs-auth0";
 
-export default async function Home() {
-  const session = await getSession();
-  const user = session?.user;
-
+export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -93,13 +89,6 @@ export default async function Home() {
           />
           Go to nextjs.org →
         </a>
-        {user && (
-          <div>
-            <Image src={user.picture} alt={user.name} />
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
-          </div>
-        )}
       </footer>
     </div>
   );
