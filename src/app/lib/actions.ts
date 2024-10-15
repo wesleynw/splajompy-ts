@@ -5,13 +5,19 @@ import bcrypt from "bcryptjs";
 import { registerSchema } from "./zod";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
+import { CredentialsSignin } from "next-auth";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
     await signIn("credentials", formData);
-  } catch (error) {
-    if (error) {
-      return "Something went wrong.";
+  } catch (err) {
+    if (err instanceof CredentialsSignin) {
+      switch (err.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials";
+        default:
+          return "Something went wrong.";
+      }
     }
   }
 }

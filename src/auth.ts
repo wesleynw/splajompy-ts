@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./app/lib/zod";
 import { getUserPWHashFromDb } from "@/utils/db";
 import bcrypt from "bcryptjs";
 import { User } from "./types/user";
+import zod from "zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -20,19 +21,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const user = await getUserPWHashFromDb(email);
 
-          if (user !== null) {
+          if (user != null) {
             const match = await bcrypt.compare(password, user.password);
 
-            console.log(match);
-
             if (!match) {
-              throw new Error("User not found.");
+              throw new Error("Incorrect password!");
             }
             return user;
           }
-        } catch {
-          // catch zod errors
-          return null;
+          throw new Error("User not found!");
+        } catch (err) {
+          if (err instanceof zod.ZodError) {
+            return null;
+          }
         }
         return null;
       },
