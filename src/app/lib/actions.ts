@@ -6,6 +6,7 @@ import { registerSchema } from "./zod";
 import { sql } from "@vercel/postgres";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
+import { redirect } from "next/navigation";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -20,6 +21,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
       }
     }
   }
+  redirect("/");
 }
 
 export async function register(_currentState: unknown, formData: FormData) {
@@ -50,4 +52,6 @@ export async function register(_currentState: unknown, formData: FormData) {
     console.error("Registration error:", error);
     return "An error occurred while registering. Please try again.";
   }
+
+  redirect("/login");
 }
