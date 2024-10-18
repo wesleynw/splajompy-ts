@@ -44,6 +44,12 @@ export async function register(_currentState: unknown, formData: FormData) {
       INSERT INTO users (email, password)
       VALUES (${parsedData.email}, ${hashedPassword});
     `;
+
+    await signIn("credentials", {
+      redirect: false,
+      email: parsedData.email,
+      password: parsedData.password,
+    });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return error.errors.map((e) => e.message).join(", ");
@@ -53,5 +59,5 @@ export async function register(_currentState: unknown, formData: FormData) {
     return "An error occurred while registering. Please try again.";
   }
 
-  redirect("/login");
+  redirect("/");
 }
