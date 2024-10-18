@@ -29,6 +29,13 @@ export async function register(_currentState: unknown, formData: FormData) {
   try {
     const parsedData = registerSchema.parse({ email, password });
 
+    const existingUser = await sql`
+      SELECT 1 FROM users WHERE email = ${email};
+    `;
+
+    if (existingUser.rows.length > 0) {
+      return "A user with this email already exists. Please use a different email.";
+    }
     const hashedPassword = await bcrypt.hash(parsedData.password, 10);
 
     await sql`
