@@ -19,3 +19,10 @@ export const signInSchema = object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
 });
+
+export const postTextSchema = object({
+  text: string()
+    .min(1, { message: "Post text cannot be empty." })
+    .max(255, { message: "Post text is too long." })
+    .trim(),
+});

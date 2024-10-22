@@ -12,6 +12,8 @@ export async function getUserPWHashFromDb(
             LIMIT 1;
         `;
 
+    console.log(result);
+
     return result.rows.length > 0 ? result.rows[0] : null;
   } catch (error) {
     console.error("Database query error:", error);
