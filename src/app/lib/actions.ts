@@ -1,12 +1,13 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import bcrypt from "bcryptjs";
-import { registerSchema } from "./zod";
+import { postTextSchema, registerSchema } from "./zod";
 import { sql } from "@vercel/postgres";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -25,11 +26,12 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 }
 
 export async function register(_currentState: unknown, formData: FormData) {
+  const username = formData.get("username")?.toString() || "";
   const email = formData.get("email")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
 
   try {
-    const parsedData = registerSchema.parse({ email, password });
+    const parsedData = registerSchema.parse({ username, email, password });
 
     const existingUser = await sql`
       SELECT 1 FROM users WHERE email = ${email};
@@ -60,4 +62,32 @@ export async function register(_currentState: unknown, formData: FormData) {
   }
 
   redirect("/");
+}
+
+export async function insertPost(formData: FormData) {
+  "use server";
+  const session = await auth();
+  if (!session) {
+    console.error("not logged in");
+    return;
+  }
+
+  const postText = formData.get("text")?.toString();
+
+  const parsed = postTextSchema.safeParse({ text: postText });
+  if (!parsed.success) {
+    console.error(parsed.error.issues);
+    return;
+  }
+
+  const sanitizedPostText = parsed.data.text;
+
+  if (postText) {
+    await sql`
+    INSERT INTO posts (user_id, text)
+    VALUES (${session?.user?.id}, ${sanitizedPostText})
+  `;
+    revalidatePath("/");
+    formData.set("text", "");
+  }
 }

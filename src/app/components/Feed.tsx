@@ -11,6 +11,7 @@ export default async function Page() {
           SELECT *
           FROM posts
           JOIN USERS ON posts.user_id = users.id
+          ORDER BY posts.POSTDATE DESC
     `;
   const posts = result.rows;
 

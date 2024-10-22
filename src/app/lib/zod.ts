@@ -1,6 +1,9 @@
 import { object, string } from "zod";
 
 export const registerSchema = object({
+  username: string({ required_error: "Username is required" })
+    .min(1, "Username is required")
+    .max(32, "Username must be less than 32 characters"),
   email: string({ required_error: "Email is required" })
     .min(1, "Email is required")
     .email("Invalid email"),
