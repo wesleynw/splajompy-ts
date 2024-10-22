@@ -43,8 +43,8 @@ export async function register(_currentState: unknown, formData: FormData) {
     const hashedPassword = await bcrypt.hash(parsedData.password, 10);
 
     await sql`
-      INSERT INTO users (email, password)
-      VALUES (${parsedData.email}, ${hashedPassword});
+      INSERT INTO users (email, password, username)
+      VALUES (${parsedData.email}, ${hashedPassword}, ${parsedData.username});
     `;
 
     await signIn("credentials", {
