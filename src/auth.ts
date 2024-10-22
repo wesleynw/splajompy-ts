@@ -9,16 +9,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
+        username: {},
         email: {},
         password: {},
       },
       authorize: async (credentials) => {
         try {
-          const { email, password } = await signInSchema.parseAsync(
+          const { email, password, username } = await signInSchema.parseAsync(
             credentials
           );
 
-          const user = await getUserPWHashFromDb(email);
+          const user = await getUserPWHashFromDb(email, username);
 
           if (user != null) {
             const match = await bcrypt.compare(password, user.password);

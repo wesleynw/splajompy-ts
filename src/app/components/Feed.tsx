@@ -19,7 +19,7 @@ export default async function Page() {
     <ul>
       {posts.map((post) => (
         <li key={post.id}>
-          <strong>{post.email} says: </strong>
+          <strong>{post.username} says: </strong>
           {post.text}
         </li>
       ))}
