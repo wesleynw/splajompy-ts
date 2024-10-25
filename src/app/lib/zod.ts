@@ -14,12 +14,9 @@ export const registerSchema = object({
 });
 
 export const signInSchema = object({
-  username: string({ required_error: "Username is required" })
-    .min(1, "Username is required")
-    .max(32, "Username must be less than 32 characters"),
-  email: string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+  identifier: string()
+    .min(1, "Username or email is required")
+    .max(32, "Username or email must be less than 32 characters"),
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")

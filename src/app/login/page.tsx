@@ -12,7 +12,7 @@ export default function Page() {
       <form action={dispatch}>
         <input
           type="text"
-          name="email"
+          name="identifier"
           placeholder="Email or Username"
           required
         />

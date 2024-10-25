@@ -2,14 +2,14 @@ import { UserWithPassword } from "@/types/user";
 import { sql } from "@vercel/postgres";
 
 export async function getUserPWHashFromDb(
-  email: string,
-  username: string
+  identifier: string
 ): Promise<UserWithPassword | null> {
+  console.log(identifier);
   try {
     const result = await sql<UserWithPassword>`
             SELECT *
             FROM users
-            WHERE email = ${email} OR username = ${username}
+            WHERE email = ${identifier} OR username = ${identifier}
             LIMIT 1;
         `;
 
