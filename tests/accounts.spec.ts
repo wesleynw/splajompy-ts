@@ -1,14 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { sql } from "@vercel/postgres";
+import { createClient } from "@vercel/postgres";
 
 test("create an account and login", async ({ page }) => {
-  console.log("Connecting to database with:", {
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DATABASE,
-    user: process.env.POSTGRES_USER,
-  });
   // delete test user from previous runs
-  await sql`DELETE FROM users WHERE username = 'developers+test1'`;
+  const client = createClient({ connectionString: process.env.POSTGRES_URL });
+  await client.connect();
+  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`;
 
   // create an account
   await page.goto("/register");
@@ -28,5 +25,5 @@ test("create an account and login", async ({ page }) => {
   await expect(page).toHaveURL("/");
 
   // delete test user from db
-  await sql`DELETE FROM users WHERE username = 'developers+test1'`;
+  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`;
 });
