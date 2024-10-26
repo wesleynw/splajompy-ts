@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
-import { sql } from "@vercel/postgres";
+import { createClient } from "@vercel/postgres";
 
 test("create a post", async ({ page }) => {
   // TODO: paramaterize account creation
   // delete test user from previous runs
-  await sql`DELETE FROM users WHERE username = 'developers+test1'`;
+  const client = createClient({ connectionString: process.env.POSTGRES_URL });
+  await client.connect();
+  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`;
 
   // create an account
   await page.goto("/register");
@@ -27,5 +29,5 @@ test("create a post", async ({ page }) => {
   );
 
   // cleanup
-  await sql`DELETE FROM users WHERE username = 'developers+test1'`; // also deletes the post
+  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`; // also deletes the post
 });
