@@ -8,7 +8,7 @@ export default async function Page() {
   }
 
   const result = await sql`
-          SELECT *
+          SELECT posts.id AS post_id, *
           FROM posts
           JOIN USERS ON posts.user_id = users.id
           ORDER BY posts.POSTDATE DESC
@@ -18,7 +18,7 @@ export default async function Page() {
   return (
     <ul>
       {posts.map((post) => (
-        <li key={post.id}>
+        <li key={post.post_id}>
           <strong>{post.username} says: </strong>
           {post.text}
         </li>
