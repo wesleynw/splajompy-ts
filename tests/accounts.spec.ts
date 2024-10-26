@@ -2,6 +2,11 @@ import { test, expect } from "@playwright/test";
 import { sql } from "@vercel/postgres";
 
 test("create an account and login", async ({ page }) => {
+  console.log("Connecting to database with:", {
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DATABASE,
+    user: process.env.POSTGRES_USER,
+  });
   // delete test user from previous runs
   await sql`DELETE FROM users WHERE username = 'developers+test1'`;
 
