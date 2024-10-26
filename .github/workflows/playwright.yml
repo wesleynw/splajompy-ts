@@ -20,7 +20,15 @@ jobs:
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
+          POSTRES_URL: ${{ secrets.POSTRES_URL }}
+          POSTGRES_URL_NON_POOLING: ${{ secrets.POSTGRES_URL_NON_POOLING }}
+          POSTGRES_URL_NO_SSL: ${{ secrets.POSTGRES_URL_NO_SSL }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
