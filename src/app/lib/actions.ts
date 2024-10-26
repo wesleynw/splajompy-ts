@@ -49,9 +49,8 @@ export async function register(_currentState: unknown, formData: FormData) {
 
     await signIn("credentials", {
       redirect: false,
-      email: parsedData.email,
+      identifier: parsedData.email,
       password: parsedData.password,
-      username: parsedData.username,
     });
   } catch (error) {
     if (error instanceof zod.ZodError) {
