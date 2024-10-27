@@ -144,3 +144,46 @@ test("can't create account with existing email or username", async ({
   // delete test user from db
   await client.sql`DELETE FROM users WHERE username = 'developers+test4'`;
 });
+
+test("usernames and emails aren't case sensitive, passwords are", async ({
+  page,
+}) => {
+  const client = createClient({
+    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+  });
+  await client.connect();
+
+  await client.sql`DELETE FROM users WHERE username = 'developers+test5'`;
+
+  // create an account
+  await page.goto("/register");
+  await page.fill('input[name="username"]', "developers+test5");
+  await page.fill('input[name="email"]', "developers+test5@splajompy.com");
+  await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
+  await page.click('button:has-text("Sign Out")');
+
+  // try logging in with different case email
+  await page.fill('input[name="identifier"]', "developeRs+tEsT5");
+  await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
+  await page.click('button:has-text("Sign Out")');
+
+  // try logging in with different case username
+  await page.fill('input[name="identifier"]', "deVELopers+tEST5@splajompy.com");
+  await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
+  await page.click('button:has-text("Sign Out")');
+
+  // try logging in with different case password
+  await page.fill('input[name="identifier"]', "developers+test5");
+  await page.fill('input[name="password"]', "b7nBsmzkiKnFumaMFifz$");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/login");
+
+  // delete test user from db
+  await client.sql`DELETE FROM users WHERE username = 'developers+test5'`;
+});
