@@ -1,9 +1,16 @@
 import { object, string } from "zod";
 
 export const registerSchema = object({
+  username: string({ required_error: "Username is required" })
+    .min(1, "Username is required")
+    .max(32, "Username must be less than 32 characters")
+    .toLowerCase()
+    .trim(),
   email: string({ required_error: "Email is required" })
     .min(1, "Email is required")
-    .email("Invalid email"),
+    .email("Invalid email")
+    .toLowerCase()
+    .trim(),
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
@@ -11,11 +18,20 @@ export const registerSchema = object({
 });
 
 export const signInSchema = object({
-  email: string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+  identifier: string()
+    .min(1, "Username or email is required")
+    .max(32, "Username or email must be less than 32 characters")
+    .toLowerCase()
+    .trim(),
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
+});
+
+export const postTextSchema = object({
+  text: string()
+    .min(1, { message: "Post text cannot be empty." })
+    .max(255, { message: "Post text is too long." })
+    .trim(),
 });
