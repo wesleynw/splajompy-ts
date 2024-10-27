@@ -4,7 +4,6 @@ import { sql } from "@vercel/postgres";
 export async function getUserPWHashFromDb(
   identifier: string
 ): Promise<UserWithPassword | null> {
-  console.log(identifier);
   try {
     const result = await sql<UserWithPassword>`
             SELECT *
