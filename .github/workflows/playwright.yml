@@ -1,6 +1,16 @@
 name: Playwright Tests
+
 on:
-  deployment_status:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   setup:
     name: Setup
@@ -47,10 +57,8 @@ jobs:
   #          # OR to use unpooled connection
   #          # DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url }}"
   test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    environment: Preview
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
