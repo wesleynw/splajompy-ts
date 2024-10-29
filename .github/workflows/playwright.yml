@@ -39,9 +39,7 @@ jobs:
         uses: neondatabase/create-branch-action@v5
         with:
           project_id: ${{ vars.NEON_PROJECT_ID }}
-          database: splajompy
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
-          username: splajompy_owner
           api_key: ${{ secrets.NEON_API_KEY }}
   test:
     needs: create_neon_branch
