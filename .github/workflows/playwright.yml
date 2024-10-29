@@ -47,6 +47,7 @@ jobs:
       - run: echo host ${{ steps.create_neon_branch.outputs.host }}
       - run: echo branch_id ${{ steps.create_neon_branch.outputs.branch_id }}
   test:
+    name: Run Playwright tests
     needs: create_neon_branch
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -59,6 +60,8 @@ jobs:
         run: npm install -g pnpm && pnpm install
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+      - name: Run Development Server
+        run: pnpm dev
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
