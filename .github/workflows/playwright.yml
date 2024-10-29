@@ -60,8 +60,8 @@ jobs:
         run: pnpm exec playwright test
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          POSTGRES_URL: ${{ steps.create_neon_branch.outputs.db_url_with_pooler }}
-          POSTGRES_URL_NON_POOLING: ${{ steps.create_neon_branch.outputs.db_url }}
+          POSTGRES_URL: "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}"
+          POSTGRES_URL_NON_POOLING: "${{ steps.create_neon_branch.outputs.db_url }}"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
