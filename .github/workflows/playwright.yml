@@ -24,8 +24,8 @@ jobs:
   create_neon_branch:
     name: Create Neon Branch
     outputs:
-      db_url: ${{ steps.create_neon_branch_encode.outputs.db_url }}
-      db_url_with_pooler: ${{ steps.create_neon_branch_encode.outputs.db_url_with_pooler }}
+      db_url: ${{ steps.create_neon_branch.outputs.db_url }}
+      db_url_with_pooler: ${{ steps.create_neon_branch.outputs.db_url_with_pooler }}
     needs: setup
     if: |
       github.event_name == 'pull_request' && (
@@ -43,14 +43,6 @@ jobs:
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           username: splajompy_owner
           api_key: ${{ secrets.NEON_API_KEY }}
-      - run: echo db_url ${{ steps.create-branch.outputs.db_url }}
-  log-test:
-    needs: create_neon_branch
-    name: Log Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log Test
-        run: echo "${{ steps.create_neon_branch.outputs.db_url }}"
   test:
     needs: create_neon_branch
     timeout-minutes: 60
@@ -68,8 +60,8 @@ jobs:
         run: pnpm exec playwright test
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          POSTGRES_URL: "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}"
-          POSTGRES_URL_NON_POOLING: "${{ steps.create_neon_branch.outputs.db_url }}"
+          POSTGRES_URL: "${{ needs.create_neon_branch.outputs.db_url_with_pooler }}"
+          POSTGRES_URL_NON_POOLING: "${{ needs.create_neon_branch.outputs.db_url }}"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
