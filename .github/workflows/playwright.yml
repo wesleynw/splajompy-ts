@@ -43,6 +43,13 @@ jobs:
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           username: splajompy_owner
           api_key: ${{ secrets.NEON_API_KEY }}
+  log-test:
+    needs: create_neon_branch
+    name: Log Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Test
+        run: echo "${{ steps.create_neon_branch.outputs.db_url }}"
   test:
     needs: create_neon_branch
     timeout-minutes: 60
