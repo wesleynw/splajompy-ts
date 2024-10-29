@@ -1,15 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { createClient } from "@vercel/postgres";
 
 test("create an account and login with email", async ({ page }) => {
-  const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
-  });
-  await client.connect();
-
-  // delete test user from previous runs
-  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`;
-
   // create an account
   await page.goto("/register");
   await page.fill('input[name="username"]', "developers+test1");
@@ -26,19 +17,9 @@ test("create an account and login with email", async ({ page }) => {
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL("/");
-
-  // delete test user from db
-  await client.sql`DELETE FROM users WHERE username = 'developers+test1'`;
 });
 
 test("create account and login with username", async ({ page }) => {
-  const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
-  });
-  await client.connect();
-
-  await client.sql`DELETE FROM users WHERE username = 'developers+test2'`;
-
   // create an account
   await page.goto("/register");
   await page.fill('input[name="username"]', "developers+test2");
@@ -55,17 +36,9 @@ test("create account and login with username", async ({ page }) => {
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL("/");
-
-  // delete test user from db
-  await client.sql`DELETE FROM users WHERE username = 'developers+test2'`;
 });
 
 test("can't login with incorrect password", async ({ page }) => {
-  const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
-  });
-  await client.connect();
-
   // create an account
   await page.goto("/register");
   await page.fill('input[name="username"]', "developers+test3");
@@ -84,20 +57,11 @@ test("can't login with incorrect password", async ({ page }) => {
   await expect(page).toHaveURL("/login");
 
   // TODO: further checking when we have zod implemented better
-
-  // delete test user from db
-  await client.sql`DELETE FROM users WHERE username = 'developers+test3'`;
 });
 
 test("can't create account with existing email or username", async ({
   page,
 }) => {
-  const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
-  });
-  await client.connect();
-  await client.sql`DELETE FROM users WHERE username = 'developers+test4'`;
-
   // create an account
   await page.goto("/register");
   await page.fill('input[name="username"]', "developers+test4");
@@ -140,21 +104,11 @@ test("can't create account with existing email or username", async ({
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL("/login");
-
-  // delete test user from db
-  await client.sql`DELETE FROM users WHERE username = 'developers+test4'`;
 });
 
 test("usernames and emails aren't case sensitive, passwords are", async ({
   page,
 }) => {
-  const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
-  });
-  await client.connect();
-
-  await client.sql`DELETE FROM users WHERE username = 'developers+test5'`;
-
   // create an account
   await page.goto("/register");
   await page.fill('input[name="username"]', "developers+test5");
@@ -183,7 +137,4 @@ test("usernames and emails aren't case sensitive, passwords are", async ({
   await page.fill('input[name="password"]', "b7nBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL("/login");
-
-  // delete test user from db
-  await client.sql`DELETE FROM users WHERE username = 'developers+test5'`;
 });
