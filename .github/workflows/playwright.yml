@@ -40,22 +40,8 @@ jobs:
         with:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          username: splajompy_owner
           api_key: ${{ secrets.NEON_API_KEY }}
-  # The step above creates a new Neon branch.
-  # You may want to do something with the new branch, such as run migrations, run tests
-  # on it, or send the connection details to a hosting platform environment.
-  # The branch DATABASE_URL is available to you via:
-  # "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}".
-  # It's important you don't log the DATABASE_URL as output as it contains a username and
-  # password for your database.
-  # For example, you can uncomment the lines below to run a database migration command:
-  #      - name: Run Migrations
-  #        run: npm run db:migrate
-  #        env:
-  #          # to use pooled connection
-  #          DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}"
-  #          # OR to use unpooled connection
-  #          # DATABASE_URL: "${{ steps.create_neon_branch.outputs.db_url }}"
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -71,16 +57,9 @@ jobs:
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
-          # PLAYWRIGHT_BASE_URL: ${{ github.event.deployment_status.environment_url }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          # POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-          # POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          # POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          # POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
           POSTGRES_URL: ${{ steps.create_neon_branch.outputs.db_url_with_pooler }}
           POSTGRES_URL_NON_POOLING: ${{ steps.create_neon_branch.outputs.db_url }}
-          # POSTGRES_URL_NO_SSL: ${{ secrets.POSTGRES_URL_NO_SSL }}
-          # POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
