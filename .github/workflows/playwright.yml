@@ -43,9 +43,9 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
           database: splajompy
           username: playwright
-      - run: echo db_url ${{ steps.create-branch.outputs.db_url }}
-      - run: echo host ${{ steps.create-branch.outputs.host }}
-      - run: echo branch_id ${{ steps.create-branch.outputs.branch_id }}
+      - run: echo db_url ${{ steps.create_neon_branch.outputs.db_url }}
+      - run: echo host ${{ steps.create_neon_branch.outputs.host }}
+      - run: echo branch_id ${{ steps.create_neon_branch.outputs.branch_id }}
   test:
     needs: create_neon_branch
     timeout-minutes: 60
