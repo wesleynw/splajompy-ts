@@ -41,7 +41,11 @@ jobs:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           api_key: ${{ secrets.NEON_API_KEY }}
+          database: splajompy
           username: playwright
+      - run: echo db_url ${{ steps.create-branch.outputs.db_url }}
+      - run: echo host ${{ steps.create-branch.outputs.host }}
+      - run: echo branch_id ${{ steps.create-branch.outputs.branch_id }}
   test:
     needs: create_neon_branch
     timeout-minutes: 60
