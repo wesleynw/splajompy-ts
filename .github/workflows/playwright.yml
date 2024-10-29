@@ -61,7 +61,7 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Development Server
-        run: pnpm dev
+        run: pnpm dev &
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
