@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Box, Typography } from "@mui/material";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -29,7 +30,33 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            {children}
+            <Box
+              component="header"
+              sx={{
+                position: "fixed",
+                top: 0,
+                width: "100%",
+                height: "60px",
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backdropFilter: "blur(8px)",
+                zIndex: 1100,
+                borderBottom: "0.5px solid rgba(160, 160, 160, 0.3)",
+              }}
+            >
+              <Typography variant="h5" fontWeight={700}>
+                Splajompy
+              </Typography>
+              {/* <h1 style={{ fontSize: "1.2rem", fontWeight: 700 }}>Splajompy</h1> */}
+            </Box>
+
+            <Box component="main" sx={{ paddingTop: "80px" }}>
+              {children}
+            </Box>
+
             <Analytics />
             <SpeedInsights />
           </ThemeProvider>

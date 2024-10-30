@@ -3,7 +3,7 @@ import { createClient } from "@vercel/postgres";
 
 test("create an account and login with email", async ({ page }) => {
   const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    connectionString: process.env.POSTGRES_URL_NON_POOLED,
   });
   await client.connect();
 
@@ -33,7 +33,7 @@ test("create an account and login with email", async ({ page }) => {
 
 test("create account and login with username", async ({ page }) => {
   const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    connectionString: process.env.POSTGRES_URL_NON_POOLED,
   });
   await client.connect();
 
@@ -62,9 +62,11 @@ test("create account and login with username", async ({ page }) => {
 
 test("can't login with incorrect password", async ({ page }) => {
   const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    connectionString: process.env.POSTGRES_URL_NON_POOLED,
   });
   await client.connect();
+
+  await client.sql`DELETE FROM users WHERE username = 'developers+test3'`;
 
   // create an account
   await page.goto("/register");
@@ -93,7 +95,7 @@ test("can't create account with existing email or username", async ({
   page,
 }) => {
   const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    connectionString: process.env.POSTGRES_URL_NON_POOLED,
   });
   await client.connect();
   await client.sql`DELETE FROM users WHERE username = 'developers+test4'`;
@@ -149,7 +151,7 @@ test("usernames and emails aren't case sensitive, passwords are", async ({
   page,
 }) => {
   const client = createClient({
-    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+    connectionString: process.env.POSTGRES_URL_NON_POOLED,
   });
   await client.connect();
 

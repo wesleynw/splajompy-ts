@@ -26,7 +26,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-          POSTGRES_URL_NON_POOLING: ${{ secrets.POSTGRES_URL_NON_POOLING }}
+          POSTGRES_URL_NON_POOLED: ${{ secrets.POSTGRES_URL_NON_POOLED }}
           POSTGRES_URL_NO_SSL: ${{ secrets.POSTGRES_URL_NO_SSL }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       - uses: actions/upload-artifact@v4
