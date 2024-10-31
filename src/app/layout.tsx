@@ -7,6 +7,7 @@ import theme from "../theme";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box, Typography } from "@mui/material";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -26,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
@@ -50,9 +51,8 @@ export default function RootLayout({
               <Typography variant="h5" fontWeight={700}>
                 Splajompy
               </Typography>
-              {/* <h1 style={{ fontSize: "1.2rem", fontWeight: 700 }}>Splajompy</h1> */}
             </Box>
-
+            <InitColorSchemeScript attribute="class" />
             <Box component="main" sx={{ paddingTop: "80px" }}>
               {children}
             </Box>
