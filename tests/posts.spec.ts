@@ -17,16 +17,20 @@ test("create a post", async ({ page }) => {
   await page.fill('input[name="email"]', "developers+a+test1@splajompy.com");
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
 
-  await page.fill('input[name="text"]', "My first post");
+  // await page.fill('input[name="text"]', "My first post");
+  await page.getByPlaceholder("What's on your mind?").fill("My first post");
 
   // see if the post is created:
   await page.click('button[type="submit"]');
-  await page.getByText("My first post", { exact: true });
+  await expect(page.locator("p:has-text('My first post')")).toContainText(
+    "My first post"
+  );
 
   // check if the post exists after reload too
   await page.reload();
-  await expect(page.locator("p:has-text('My second post')")).toContainText(
+  await expect(page.locator("p:has-text('My first post')")).toContainText(
     "My first post"
   );
 
@@ -48,11 +52,13 @@ test("create a post and make sure other users can see it", async ({ page }) => {
   await page.fill('input[name="email"]', "developers+a+test2@splajompy.com");
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
 
   // post
-  await page.fill('input[name="text"]', "My second post");
+  await page.getByPlaceholder("What's on your mind?").fill("My second post");
+  // await page.fill('input[name="text"]', "My second post");
   await page.click('button[type="submit"]');
-  await page.waitForSelector("li:has-text('My second post')");
+  await page.waitForSelector("p:has-text('My second post')");
   await page.click('button:has-text("Sign Out")');
 
   // create another account
