@@ -2,10 +2,11 @@
 
 import { useRef } from "react";
 import { insertPost } from "../lib/actions";
-import { Box, TextField, Button, Stack } from "@mui/material";
+import { Box, TextField, Button, Stack, useTheme } from "@mui/material";
 
 export default function Page() {
   const ref = useRef<HTMLFormElement>(null);
+  const theme = useTheme();
 
   return (
     <Stack
@@ -26,9 +27,12 @@ export default function Page() {
         alignItems: "flex-start",
         gap: 2,
         padding: 2,
-        backgroundColor: "#1e1e1e",
+        backgroundColor: theme.palette.mode === "dark" ? "#1c1c1c" : "#ffffff",
         borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+        boxShadow:
+          theme.palette.mode === "dark"
+            ? "0 2px 8px rgba(0, 0, 0, 0.3)"
+            : "0 2px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
       <TextField
@@ -36,20 +40,22 @@ export default function Page() {
         variant="outlined"
         placeholder="What's on your mind?"
         fullWidth
+        multiline
         sx={{
           "& .MuiOutlinedInput-root": {
-            borderRadius: "12px", // Rounded corners
-            backgroundColor: "#2a2a2a", // Darker background
-            color: "#ffffff",
+            borderRadius: "12px",
+            backgroundColor:
+              theme.palette.mode === "dark" ? "#2b2b2b" : "#f5f5f5",
+            color: theme.palette.mode === "dark" ? "#e0e0e0" : "#333333",
             "& fieldset": {
-              borderColor: "#3a86ff", // Custom border color
+              borderColor: "#4a90e2",
             },
             "&:hover fieldset": {
-              borderColor: "#3a86ff", // Custom border color on hover
+              borderColor: "#357abf",
             },
           },
           "& .MuiInputBase-input": {
-            color: "#ffffff", // Input text color
+            color: theme.palette.mode === "dark" ? "#e0e0e0" : "#333333",
           },
         }}
       />
@@ -63,12 +69,12 @@ export default function Page() {
           sx={{
             borderRadius: "20px",
             padding: "10px 20px",
-            backgroundColor: "#3a86ff",
+            backgroundColor: "#4a90e2",
             color: "#ffffff",
             fontWeight: "bold",
             textTransform: "none",
             "&:hover": {
-              backgroundColor: "#2563eb",
+              backgroundColor: "#357abf",
             },
             display: "flex",
             gap: 1,

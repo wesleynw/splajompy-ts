@@ -1,4 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
+"use client";
+
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -17,6 +19,7 @@ interface Props {
 
 export default function Post({ date, content, poster }: Props) {
   const userTimezone = dayjs.tz.guess();
+  const theme = useTheme();
 
   return (
     <Box
@@ -25,34 +28,55 @@ export default function Post({ date, content, poster }: Props) {
         padding: 2,
         margin: "16px auto",
         borderRadius: "8px",
-        background: "linear-gradient(135deg, #1b1b1b, #222222)", // Subtle, smooth gradient
-        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
+        background:
+          theme.palette.mode === "dark"
+            ? "linear-gradient(135deg, #1b1b1b, #222222)"
+            : "linear-gradient(135deg, #ffffff, #f0f0f0)",
+        boxShadow:
+          theme.palette.mode === "dark"
+            ? "0 2px 4px rgba(0, 0, 0, 0.5)"
+            : "0 2px 8px rgba(0, 0, 0, 0.2)",
         display: "flex",
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
         "&:hover": {
-          background: "linear-gradient(135deg, #222222, #2a2a2a)", // Slightly lighter on hover
+          background:
+            theme.palette.mode === "dark"
+              ? "linear-gradient(135deg, #222222, #2a2a2a)"
+              : "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
         },
       }}
     >
       <Stack direction="row" alignItems="center">
-        <Typography variant="body2" sx={{ color: "#a0a0a0" }}>
+        <Typography
+          variant="body2"
+          sx={{ color: theme.palette.mode === "dark" ? "#e0e0e0" : "#555555" }}
+        >
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <MoreHorizIcon sx={{ color: "#a0a0a0" }} />
+        <MoreHorizIcon
+          sx={{ color: theme.palette.mode === "dark" ? "#e0e0e0" : "#555555" }}
+        />
       </Stack>
 
       <Typography
         variant="body1"
-        sx={{ color: "#e0e0e0", fontWeight: "bold", marginBottom: 1 }}
+        sx={{
+          color: theme.palette.mode === "dark" ? "#ffffff" : "#333333",
+          fontWeight: "bold",
+          marginBottom: 1,
+        }}
       >
         {content}
       </Typography>
       <Typography
         variant="subtitle2"
-        sx={{ color: "#a0a0a0", alignSelf: "flex-end" }}
+        sx={{
+          color: theme.palette.mode === "dark" ? "#b0b0b0" : "#777777",
+          alignSelf: "flex-end",
+        }}
       >
         - {poster}
       </Typography>
