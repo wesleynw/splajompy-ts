@@ -45,6 +45,7 @@ test("create a post and make sure other users can see it", async ({ page }) => {
   });
   await client.connect();
   await client.sql`DELETE FROM users WHERE username = 'developers+a+test2'`;
+  await client.sql`DELETE FROM users WHERE username = 'developers+a+test3'`;
 
   // create an account
   await page.goto("/register");
@@ -67,6 +68,7 @@ test("create a post and make sure other users can see it", async ({ page }) => {
   await page.fill('input[name="email"]', "developers+a+test3@splajompy.com");
   await page.fill('input[name="password"]', "b7NBsmzkiKnFumaMFifz$");
   await page.click('button[type="submit"]');
+  await expect(page).toHaveURL("/");
 
   // check if the post is visible
   await expect(page.locator("p:has-text('My second post')")).toContainText(
