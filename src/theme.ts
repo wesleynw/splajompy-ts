@@ -8,6 +8,9 @@ const theme = createTheme({
   colorSchemes: {
     dark: true,
   },
+  cssVariables: {
+    colorSchemeSelector: "class",
+  },
 });
 
 export default theme;

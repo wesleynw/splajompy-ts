@@ -27,12 +27,13 @@ export default function Page() {
         alignItems: "flex-start",
         gap: 2,
         padding: 2,
-        backgroundColor: theme.palette.mode === "dark" ? "#1c1c1c" : "#ffffff",
+        backgroundColor: "#ffffff",
         borderRadius: "8px",
-        boxShadow:
-          theme.palette.mode === "dark"
-            ? "0 2px 8px rgba(0, 0, 0, 0.3)"
-            : "0 2px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        ...theme.applyStyles("dark", {
+          backgroundColor: "#1c1c1c",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
+        }),
       }}
     >
       <TextField
@@ -44,18 +45,22 @@ export default function Page() {
         sx={{
           "& .MuiOutlinedInput-root": {
             borderRadius: "12px",
-            backgroundColor:
-              theme.palette.mode === "dark" ? "#2b2b2b" : "#f5f5f5",
-            color: theme.palette.mode === "dark" ? "#e0e0e0" : "#333333",
+            backgroundColor: "#f5f5f5",
+            color: "#333333",
             "& fieldset": {
               borderColor: "#4a90e2",
             },
             "&:hover fieldset": {
               borderColor: "#357abf",
             },
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#2b2b2b",
+              color: "#e0e0e0",
+            }),
           },
           "& .MuiInputBase-input": {
-            color: theme.palette.mode === "dark" ? "#e0e0e0" : "#333333",
+            color: "#333333",
+            ...theme.applyStyles("dark", { color: "#e0e0e0" }),
           },
         }}
       />

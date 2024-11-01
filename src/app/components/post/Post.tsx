@@ -28,45 +28,50 @@ export default function Post({ date, content, poster }: Props) {
         padding: 2,
         margin: "16px auto",
         borderRadius: "8px",
-        background:
-          theme.palette.mode === "dark"
-            ? "linear-gradient(135deg, #1b1b1b, #222222)"
-            : "linear-gradient(135deg, #ffffff, #f0f0f0)",
-        boxShadow:
-          theme.palette.mode === "dark"
-            ? "0 2px 4px rgba(0, 0, 0, 0.5)"
-            : "0 2px 8px rgba(0, 0, 0, 0.2)",
         display: "flex",
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
+        background: "linear-gradient(135deg, #ffffff, #f0f0f0)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
         "&:hover": {
-          background:
-            theme.palette.mode === "dark"
-              ? "linear-gradient(135deg, #222222, #2a2a2a)"
-              : "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
+          background: "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
         },
+        ...theme.applyStyles("dark", {
+          background: "linear-gradient(135deg, #1b1b1b, #222222)",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
+          "&:hover": {
+            background: "linear-gradient(135deg, #222222, #2a2a2a)",
+          },
+        }),
       }}
     >
       <Stack direction="row" alignItems="center">
         <Typography
           variant="body2"
-          sx={{ color: theme.palette.mode === "dark" ? "#e0e0e0" : "#555555" }}
+          sx={{
+            color: "#555555",
+            ...theme.applyStyles("dark", { color: "#e0e0e0" }),
+          }}
         >
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <MoreHorizIcon
-          sx={{ color: theme.palette.mode === "dark" ? "#e0e0e0" : "#555555" }}
+          sx={{
+            color: "#555555",
+            ...theme.applyStyles("dark", { color: "#e0e0e0" }),
+          }}
         />
       </Stack>
 
       <Typography
         variant="body1"
         sx={{
-          color: theme.palette.mode === "dark" ? "#ffffff" : "#333333",
+          color: "#333333",
           fontWeight: "bold",
           marginBottom: 1,
+          ...theme.applyStyles("dark", { color: "#ffffff" }),
         }}
       >
         {content}
@@ -74,8 +79,9 @@ export default function Post({ date, content, poster }: Props) {
       <Typography
         variant="subtitle2"
         sx={{
-          color: theme.palette.mode === "dark" ? "#b0b0b0" : "#777777",
+          color: "#777777",
           alignSelf: "flex-end",
+          ...theme.applyStyles("dark", { color: "#b0b0b0" }),
         }}
       >
         - {poster}
