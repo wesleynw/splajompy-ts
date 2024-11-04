@@ -88,3 +88,27 @@ export async function insertPost(formData: FormData) {
     formData.set("text", "");
   }
 }
+
+export async function insertComment(text: string, post_id: string) {
+  "use server";
+  const session = await auth();
+  if (!session) {
+    return;
+  }
+
+  const parsed = postTextSchema.safeParse({ text: text });
+  if (!parsed.success) {
+    return;
+  }
+
+  const sanitizedCommentText = parsed.data.text;
+
+  console.log("post id: ", post_id);
+
+  if (text) {
+    await sql`
+      INSERT INTO comments (post_id, user_id, text)
+      VALUES (${post_id}, ${session?.user?.id}, ${sanitizedCommentText})
+  `;
+  }
+}
