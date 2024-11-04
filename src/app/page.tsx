@@ -5,6 +5,7 @@ import Link from "next/link";
 import NewPost from "./components/NewPost";
 import { redirect } from "next/navigation";
 import Feed from "./components/Feed";
+import { Box, Stack } from "@mui/material";
 
 export default async function Home() {
   const session = await auth();
@@ -14,28 +15,31 @@ export default async function Home() {
   }
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <h1>Home</h1>
-        <NewPost />
-        <Feed />
-      </main>
-      <footer className={styles.footer}>
-        {session ? (
-          <div>
-            <p>you are logged as</p>
-            <p>
-              <b>{session.user?.email}</b>
-            </p>
-            <SignOut />
-          </div>
-        ) : (
-          <div>
-            <p>you are not signed in</p>
-            <Link href="login">sign in</Link>
-          </div>
-        )}
-      </footer>
-    </div>
+    <Stack alignItems="center">
+      <div>
+        <main className={styles.main}>
+          <NewPost />
+          <Feed />
+        </main>
+        <footer className={styles.footer}>
+          <Box paddingBottom="20px">
+            {session ? (
+              <div>
+                <p>you are logged as</p>
+                <p>
+                  <b>{session.user?.email}</b>
+                </p>
+                <SignOut />
+              </div>
+            ) : (
+              <div>
+                <p>you are not signed in</p>
+                <Link href="login">sign in</Link>
+              </div>
+            )}
+          </Box>
+        </footer>
+      </div>
+    </Stack>
   );
 }

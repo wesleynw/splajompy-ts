@@ -3,6 +3,7 @@ on:
   deployment_status:
 jobs:
   test:
+    name: Run Playwright tests
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -21,14 +22,8 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ github.event.deployment_status.environment_url }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-          POSTGRES_URL_NON_POOLING: ${{ secrets.POSTGRES_URL_NON_POOLING }}
-          POSTGRES_URL_NO_SSL: ${{ secrets.POSTGRES_URL_NO_SSL }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_URL_NON_POOLED: ${{ secrets.POSTGRES_URL_NON_POOLING }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

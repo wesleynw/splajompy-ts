@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import { sql } from "@vercel/postgres";
+import Post from "./post/Post";
+import { Box } from "@mui/material";
 
 export default async function Page() {
   const session = await auth();
@@ -16,13 +18,15 @@ export default async function Page() {
   const posts = result.rows;
 
   return (
-    <ul>
+    <Box>
       {posts.map((post) => (
-        <li key={post.post_id}>
-          <strong>{post.username} says: </strong>
-          {post.text}
-        </li>
+        <Post
+          key={post.post_id}
+          date={new Date(post.postdate + "Z")} // + "Z" to conver to UTC
+          content={post.text}
+          poster={post.username}
+        />
       ))}
-    </ul>
+    </Box>
   );
 }
