@@ -1,9 +1,21 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./app/lib/zod";
 import { getUserPWHashFromDb } from "@/utils/db";
 import bcrypt from "bcryptjs";
 import zod from "zod";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      user_id: number;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    user_id: number;
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -41,24 +53,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id ?? "";
+        token.user_id = user.user_id;
       }
       return token;
     },
     session({ session, token }) {
-      session.user.id = token.id;
+      session.user.user_id = token.user_id;
       return session;
     },
   },
 });
 
-// The `JWT` interface can be found in the `next-auth/jwt` submodule
 import {} from "next-auth/jwt";
 
 declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
-    /** OpenID ID Token */
-    id: string; // Add the id property to the JWT interface
+    user_id: number;
   }
 }

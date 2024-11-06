@@ -1,7 +1,9 @@
 import { auth } from "@/auth";
-import { sql } from "@vercel/postgres";
 import Post from "./post/Post";
 import { Box } from "@mui/material";
+import { db } from "@/db";
+import { posts, users } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
 
 export default async function Page() {
   const session = await auth();
@@ -9,23 +11,21 @@ export default async function Page() {
     return <></>;
   }
 
-  const result = await sql`
-          SELECT *
-          FROM posts
-          JOIN USERS ON posts.user_id = users.user_id
-          ORDER BY posts.POSTDATE DESC
-    `;
-  const posts = result.rows;
+  const results = await db
+    .select()
+    .from(posts)
+    .innerJoin(users, eq(posts.user_id, users.user_id))
+    .orderBy(desc(posts.postdate));
 
   return (
     <Box>
-      {posts.map((post) => (
+      {results.map((post) => (
         <Post
-          key={post.post_id}
-          id={post.post_id}
-          date={new Date(post.postdate + "Z")} // + "Z" to conver to UTC
-          content={post.text}
-          poster={post.username}
+          key={post.posts.post_id}
+          id={post.posts.post_id}
+          date={new Date(post.posts.postdate + "Z")} // + "Z" to conver to UTC
+          content={post.posts.text}
+          poster={post.users?.username}
         />
       ))}
     </Box>

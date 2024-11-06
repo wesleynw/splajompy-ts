@@ -8,31 +8,22 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useState } from "react";
-import { PostWithUser } from "@/types/post";
-import CommentInput from "./comment/CommentInput";
+import { Suspense } from "react";
 import CommentList from "./comment/CommentList";
-import { insertComment } from "@/app/lib/actions";
+import { SelectPost, SelectUser } from "@/db/schema";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface Props {
-  post: PostWithUser;
+  post: SelectUser & SelectPost;
 }
 
 export default function Page({ post }: Props) {
   const router = useRouter();
   const theme = useTheme();
   const userTimezone = dayjs.tz.guess();
-
-  const [comments, setComments] = useState<string[]>([]);
-
-  const addComment = (text: string) => {
-    setComments((prevComments) => [...prevComments, text]);
-    insertComment(text, post.post_id);
-  };
 
   return (
     <Box
@@ -96,8 +87,9 @@ export default function Page({ post }: Props) {
         - {post.username}
       </Typography>
 
-      <CommentInput onAddComment={addComment} />
-      <CommentList comments={comments} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CommentList post_id={post.post_id} />
+      </Suspense>
     </Box>
   );
 }
