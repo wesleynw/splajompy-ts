@@ -6,7 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "npx drizzle-kit push --yes",
+    "postbuild": "if [ \"$CI\" = \"true\" ]; then npx drizzle-kit push --yes; fi",
     "start": "next start",
     "lint": "next lint"
   },
