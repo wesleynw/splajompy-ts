@@ -6,7 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "npx drizzle-kit push",
+    "postbuild": "npx drizzle-kit push --yes",
     "start": "next start",
     "lint": "next lint"
   },
