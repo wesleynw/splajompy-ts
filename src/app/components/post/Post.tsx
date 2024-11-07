@@ -19,7 +19,7 @@ interface Props {
   poster: string;
 }
 
-export default function Post({ id, date, content, poster }: Props) {
+export default function Post({ id, date, content, poster }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
 

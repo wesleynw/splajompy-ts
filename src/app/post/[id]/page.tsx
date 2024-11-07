@@ -14,9 +14,9 @@ dayjs.extend(timezone);
 
 export default async function Page({
   params,
-}: {
+}: Readonly<{
   params: Promise<{ id: number }>;
-}) {
+}>) {
   const session = await auth();
   if (!session) {
     return <></>;

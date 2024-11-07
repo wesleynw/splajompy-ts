@@ -8,7 +8,7 @@ interface CommentListProps {
   post_id: number;
 }
 
-export default function CommentList({ post_id }: CommentListProps) {
+export default function CommentList({ post_id }: Readonly<CommentListProps>) {
   const [comments, setComments] = useState<SelectComment[] | InsertComment[]>(
     []
   );

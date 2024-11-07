@@ -20,7 +20,7 @@ interface Props {
   post: SelectUser & SelectPost;
 }
 
-export default function Page({ post }: Props) {
+export default function Page({ post }: Readonly<Props>) {
   const router = useRouter();
   const theme = useTheme();
   const userTimezone = dayjs.tz.guess();

@@ -16,11 +16,10 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
     await signIn("credentials", formData);
   } catch (err) {
     if (err instanceof CredentialsSignin) {
-      switch (err.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials";
-        default:
-          return "Something went wrong.";
+      if (err.type === "CredentialsSignin") {
+        return "Invalid credentials";
+      } else {
+        return "Something went wrong.";
       }
     }
   }
@@ -28,9 +27,9 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 }
 
 export async function register(_currentState: unknown, formData: FormData) {
-  const username = formData.get("username")?.toString() || "";
-  const email = formData.get("email")?.toString() || "";
-  const password = formData.get("password")?.toString() || "";
+  const username = formData.get("username")?.toString() ?? "";
+  const email = formData.get("email")?.toString() ?? "";
+  const password = formData.get("password")?.toString() ?? "";
 
   try {
     const parsedData = registerSchema.parse({ username, email, password });
