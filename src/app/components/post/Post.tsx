@@ -56,24 +56,15 @@ export default function Post({
           }),
         }}
       >
-        <Stack direction="row" alignItems="center">
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#555555",
-              ...theme.applyStyles("dark", { color: "#e0e0e0" }),
-            }}
-          >
-            {dayjs.utc(date).tz(userTimezone).fromNow()}
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <MoreHorizIcon
-            sx={{
-              color: "#555555",
-              ...theme.applyStyles("dark", { color: "#e0e0e0" }),
-            }}
-          />
-        </Stack>
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: "#777777",
+            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+          }}
+        >
+          @{poster}
+        </Typography>
 
         <Typography
           variant="body1"
@@ -86,27 +77,32 @@ export default function Post({
         >
           {content}
         </Typography>
-        <Typography
-          variant="subtitle2"
-          sx={{
-            color: "#777777",
-            alignSelf: "flex-end",
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-          }}
-        >
-          - {poster}
-        </Typography>
 
-        <Typography
-          variant="subtitle2"
-          sx={{
-            color: "#777777",
-            fontSize: 14,
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-          }}
-        >
-          {comment_count} comment{comment_count === 1 ? "" : "s"}
-        </Typography>
+        <Stack direction="row" alignItems="center">
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: "#777777",
+              fontSize: 14,
+              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+            }}
+          >
+            {comment_count} comment{comment_count === 1 ? "" : "s"}
+          </Typography>
+
+          {/* Spacer for full width between comment count and date */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#555555",
+              ...theme.applyStyles("dark", { color: "#e0e0e0" }),
+            }}
+          >
+            {dayjs.utc(date).tz(userTimezone).fromNow()}
+          </Typography>
+        </Stack>
       </Box>
     </Link>
   );

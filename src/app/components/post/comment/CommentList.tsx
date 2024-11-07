@@ -3,6 +3,7 @@ import { SelectComment, SelectUser } from "@/db/schema";
 import { Box, Typography, Skeleton, useTheme } from "@mui/material";
 import { getComments, insertComment } from "@/app/lib/actions";
 import CommentInput from "./CommentInput";
+import Comment from "./Comment";
 
 interface CommentListProps {
   post_id: number;
@@ -51,42 +52,11 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
           </>
         ) : comments.length > 0 ? (
           comments.map((comment) => (
-            <Box
+            <Comment
               key={comment.comments.comment_id}
-              sx={{
-                padding: 2,
-                border: "1px solid",
-                borderRadius: "8px",
-                marginBottom: 2,
-                ...theme.applyStyles("dark", {
-                  borderColor: "borderColor",
-                  backgroundColor: "backgroundColor",
-                }),
-              }}
-            >
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  fontWeight: "bold",
-                  ...theme.applyStyles("dark", {
-                    color: "textPrimary",
-                  }),
-                }}
-              >
-                {comment.users.username}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  marginBottom: 1,
-                  ...theme.applyStyles("dark", {
-                    color: "textSecondary",
-                  }),
-                }}
-              >
-                {comment.comments.text}
-              </Typography>
-            </Box>
+              comments={comment.comments} // TODO we can do this better
+              users={comment.users}
+            />
           ))
         ) : (
           <Typography

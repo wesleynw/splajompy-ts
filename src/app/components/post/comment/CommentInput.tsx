@@ -6,7 +6,9 @@ interface CommentInputProps {
   onAddComment: (text: string) => void;
 }
 
-export default function CommentInput({ onAddComment }: CommentInputProps) {
+export default function CommentInput({
+  onAddComment,
+}: Readonly<CommentInputProps>) {
   const [comment, setComment] = useState("");
 
   const handleAddComment = () => {
