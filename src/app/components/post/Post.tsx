@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, Stack, Typography, useTheme } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
