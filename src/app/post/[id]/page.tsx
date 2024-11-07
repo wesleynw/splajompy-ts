@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -19,7 +20,7 @@ export default async function Page({
 }>) {
   const session = await auth();
   if (!session) {
-    return <></>;
+    redirect("/login");
   }
   const id = (await params).id;
 

@@ -112,11 +112,21 @@ export async function insertComment(text: string, post_id: number) {
   console.log("post id: ", post_id);
 
   if (text) {
-    await db.insert(comments).values({
-      post_id: Number(post_id),
-      user_id: session?.user?.user_id,
-      text: sanitizedCommentText,
-    });
+    const comment = await db
+      .insert(comments)
+      .values({
+        post_id: Number(post_id),
+        user_id: session?.user?.user_id,
+        text: sanitizedCommentText,
+      })
+      .returning();
+
+    return await db
+      .select()
+      .from(comments)
+      .innerJoin(users, eq(comments.user_id, users.user_id))
+      .where(eq(comments.comment_id, comment[0].comment_id))
+      .limit(1);
   }
 }
 
@@ -124,6 +134,7 @@ export async function getComments(post_id: number) {
   const results = await db
     .select()
     .from(comments)
+    .innerJoin(users, eq(comments.user_id, users.user_id))
     .where(eq(comments.post_id, post_id));
 
   return results;

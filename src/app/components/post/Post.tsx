@@ -17,9 +17,16 @@ interface Props {
   date: Date;
   content: string;
   poster: string;
+  comment_count: number;
 }
 
-export default function Post({ id, date, content, poster }: Readonly<Props>) {
+export default function Post({
+  id,
+  date,
+  content,
+  poster,
+  comment_count,
+}: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
 
@@ -88,6 +95,17 @@ export default function Post({ id, date, content, poster }: Readonly<Props>) {
           }}
         >
           - {poster}
+        </Typography>
+
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: "#777777",
+            fontSize: 14,
+            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+          }}
+        >
+          {comment_count} comment{comment_count === 1 ? "" : "s"}
         </Typography>
       </Box>
     </Link>

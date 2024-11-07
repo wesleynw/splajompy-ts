@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { InsertComment, SelectComment } from "@/db/schema";
-import { Box, Typography, Skeleton } from "@mui/material";
+import { SelectComment, SelectUser } from "@/db/schema";
+import { Box, Typography, Skeleton, useTheme } from "@mui/material";
 import { getComments, insertComment } from "@/app/lib/actions";
 import CommentInput from "./CommentInput";
 
@@ -9,9 +9,10 @@ interface CommentListProps {
 }
 
 export default function CommentList({ post_id }: Readonly<CommentListProps>) {
-  const [comments, setComments] = useState<SelectComment[] | InsertComment[]>(
-    []
-  );
+  const theme = useTheme();
+  const [comments, setComments] = useState<
+    { users: SelectUser; comments: SelectComment }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,14 +23,20 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
     });
   }, [post_id]);
 
-  const addComment = (text: string) => {
-    const newComment: InsertComment = {
-      user_id: 0,
-      post_id: post_id,
-      text: text,
+  const addComment = async (text: string) => {
+    const result = await insertComment(text, post_id);
+    const newComment = result?.[0];
+
+    if (!newComment) {
+      return;
+    }
+
+    const formattedComment = {
+      users: newComment.users,
+      comments: newComment.comments,
     };
-    setComments((prevComments) => [...prevComments, newComment]);
-    insertComment(text, post_id);
+
+    setComments((prevComments) => [...prevComments, formattedComment]);
   };
 
   return (
@@ -38,32 +45,54 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
       <Box sx={{ marginTop: 3 }}>
         {isLoading ? (
           <>
-            <Skeleton
-              variant="rectangular"
-              height={40}
-              sx={{ marginBottom: 2 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              height={40}
-              sx={{ marginBottom: 2 }}
-            />
-            <Skeleton variant="rectangular" height={40} />
+            <Skeleton variant="rounded" height={80} sx={{ marginBottom: 2 }} />
+            <Skeleton variant="rounded" height={60} sx={{ marginBottom: 2 }} />
+            <Skeleton variant="rounded" height={50} />
           </>
         ) : comments.length > 0 ? (
           comments.map((comment) => (
             <Box
-              key={comment.comment_id}
+              key={comment.comments.comment_id}
               sx={{
                 padding: 2,
-                outline: "1px solid #ffffff",
+                border: "1px solid",
+                borderRadius: "8px",
+                marginBottom: 2,
+                ...theme.applyStyles("dark", {
+                  borderColor: "borderColor",
+                  backgroundColor: "backgroundColor",
+                }),
               }}
             >
-              <Typography variant="body2">{comment.text}</Typography>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  fontWeight: "bold",
+                  ...theme.applyStyles("dark", {
+                    color: "textPrimary",
+                  }),
+                }}
+              >
+                {comment.users.username}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  marginBottom: 1,
+                  ...theme.applyStyles("dark", {
+                    color: "textSecondary",
+                  }),
+                }}
+              >
+                {comment.comments.text}
+              </Typography>
             </Box>
           ))
         ) : (
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            sx={{ ...theme.applyStyles("dark", { color: "textSecondary" }) }}
+          >
             No comments yet.
           </Typography>
         )}
