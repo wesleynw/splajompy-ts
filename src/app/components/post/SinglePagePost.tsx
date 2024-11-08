@@ -29,7 +29,7 @@ export default function Page({ post }: Readonly<Props>) {
     <Box
       sx={{
         maxWidth: 600,
-        margin: "32px auto",
+        margin: "6px auto",
         padding: 3,
         borderRadius: "12px",
         backgroundColor: "background.paper",
@@ -57,13 +57,13 @@ export default function Page({ post }: Readonly<Props>) {
       </Stack>
 
       <Typography
-        variant="body2"
+        variant="subtitle2"
         sx={{
           color: theme.palette.text.secondary,
-          marginBottom: 1,
+          alignSelf: "flex-end",
         }}
       >
-        {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
+        @{post.username}
       </Typography>
 
       <Typography
@@ -78,13 +78,13 @@ export default function Page({ post }: Readonly<Props>) {
       </Typography>
 
       <Typography
-        variant="subtitle2"
+        variant="body2"
         sx={{
           color: theme.palette.text.secondary,
-          alignSelf: "flex-end",
+          marginBottom: 1,
         }}
       >
-        - {post.username}
+        {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
       </Typography>
 
       <Suspense fallback={<div>Loading...</div>}>
