@@ -83,7 +83,6 @@ export async function insertPost(formData: FormData) {
 
   const sanitizedPostText = parsed.data.text;
 
-  console.log("user id: ", session?.user?.id);
   if (postText) {
     await db.insert(posts).values({
       user_id: Number(session?.user?.user_id),
@@ -108,8 +107,6 @@ export async function insertComment(text: string, post_id: number) {
   }
 
   const sanitizedCommentText = parsed.data.text;
-
-  console.log("post id: ", post_id);
 
   if (text) {
     const comment = await db
