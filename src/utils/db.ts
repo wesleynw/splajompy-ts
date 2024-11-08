@@ -1,18 +1,20 @@
-import { UserWithPassword } from "@/types/user";
-import { sql } from "@vercel/postgres";
+import { db } from "@/db";
+import { SelectUser, users } from "@/db/schema";
+import { eq, or } from "drizzle-orm";
 
 export async function getUserPWHashFromDb(
   identifier: string
-): Promise<UserWithPassword | null> {
+): Promise<SelectUser | null> {
   try {
-    const result = await sql<UserWithPassword>`
-            SELECT *
-            FROM users
-            WHERE email = ${identifier} OR username = ${identifier}
-            LIMIT 1;
-        `;
+    const result = await db
+      .select()
+      .from(users)
+      .where(or(eq(users.email, identifier), eq(users.username, identifier)))
+      .limit(1);
 
-    return result.rows.length > 0 ? result.rows[0] : null;
+    if (result.length === 0) return null;
+
+    return result[0];
   } catch {
     throw new Error("Failed to query the database");
   }

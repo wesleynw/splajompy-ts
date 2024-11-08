@@ -3,22 +3,23 @@
 import { auth, signIn } from "@/auth";
 import bcrypt from "bcryptjs";
 import { postTextSchema, registerSchema } from "./zod";
-import { sql } from "@vercel/postgres";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { db } from "@/db";
+import { comments, posts, users } from "@/db/schema";
+import { eq, or } from "drizzle-orm";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
     await signIn("credentials", formData);
   } catch (err) {
     if (err instanceof CredentialsSignin) {
-      switch (err.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials";
-        default:
-          return "Something went wrong.";
+      if (err.type === "CredentialsSignin") {
+        return "Invalid credentials";
+      } else {
+        return "Something went wrong.";
       }
     }
   }
@@ -26,26 +27,29 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 }
 
 export async function register(_currentState: unknown, formData: FormData) {
-  const username = formData.get("username")?.toString() || "";
-  const email = formData.get("email")?.toString() || "";
-  const password = formData.get("password")?.toString() || "";
+  const username = formData.get("username")?.toString() ?? "";
+  const email = formData.get("email")?.toString() ?? "";
+  const password = formData.get("password")?.toString() ?? "";
 
   try {
     const parsedData = registerSchema.parse({ username, email, password });
 
-    const existingUser = await sql`
-      SELECT 1 FROM users WHERE email = ${email} OR username = ${username} LIMIT 1;
-    `;
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(or(eq(users.email, email), eq(users.username, username)))
+      .limit(1);
 
-    if (existingUser.rows.length > 0) {
+    if (existingUser.length > 0) {
       return "A user with this email or username already exists. Please use a different email.";
     }
     const hashedPassword = await bcrypt.hash(parsedData.password, 10);
 
-    await sql`
-      INSERT INTO users (email, password, username)
-      VALUES (${parsedData.email}, ${hashedPassword}, ${parsedData.username});
-    `;
+    await db.insert(users).values({
+      email: parsedData.email,
+      password: hashedPassword,
+      username: parsedData.username,
+    });
 
     await signIn("credentials", {
       redirect: false,
@@ -80,11 +84,55 @@ export async function insertPost(formData: FormData) {
   const sanitizedPostText = parsed.data.text;
 
   if (postText) {
-    await sql`
-    INSERT INTO posts (user_id, text)
-    VALUES (${session?.user?.id}, ${sanitizedPostText})
-  `;
+    await db.insert(posts).values({
+      user_id: Number(session?.user?.user_id),
+      text: sanitizedPostText,
+    });
+
     revalidatePath("/");
     formData.set("text", "");
   }
+}
+
+export async function insertComment(text: string, post_id: number) {
+  "use server";
+  const session = await auth();
+  if (!session) {
+    return;
+  }
+
+  const parsed = postTextSchema.safeParse({ text: text });
+  if (!parsed.success) {
+    return;
+  }
+
+  const sanitizedCommentText = parsed.data.text;
+
+  if (text) {
+    const comment = await db
+      .insert(comments)
+      .values({
+        post_id: Number(post_id),
+        user_id: session?.user?.user_id,
+        text: sanitizedCommentText,
+      })
+      .returning();
+
+    return await db
+      .select()
+      .from(comments)
+      .innerJoin(users, eq(comments.user_id, users.user_id))
+      .where(eq(comments.comment_id, comment[0].comment_id))
+      .limit(1);
+  }
+}
+
+export async function getComments(post_id: number) {
+  const results = await db
+    .select()
+    .from(comments)
+    .innerJoin(users, eq(comments.user_id, users.user_id))
+    .where(eq(comments.post_id, post_id));
+
+  return results;
 }
