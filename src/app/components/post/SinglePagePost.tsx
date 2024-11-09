@@ -1,9 +1,6 @@
 "use client";
 
-import { Box, Stack, Typography, Button, useTheme } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useRouter } from "next/navigation";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -11,6 +8,7 @@ import timezone from "dayjs/plugin/timezone";
 import { Suspense } from "react";
 import CommentList from "./comment/CommentList";
 import { SelectPost, SelectUser } from "@/db/schema";
+import BackButton from "../navigation/back-button";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -21,7 +19,6 @@ interface Props {
 }
 
 export default function Page({ post }: Readonly<Props>) {
-  const router = useRouter();
   const theme = useTheme();
   const userTimezone = dayjs.tz.guess();
 
@@ -42,18 +39,7 @@ export default function Page({ post }: Readonly<Props>) {
       }}
     >
       <Stack direction="row" alignItems="center" sx={{ marginBottom: 2 }}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.back()}
-          sx={{
-            color: theme.palette.text.secondary,
-            textTransform: "none",
-          }}
-        >
-          Back
-        </Button>
-        <Box sx={{ flexGrow: 1 }} />
-        <MoreHorizIcon sx={{ color: theme.palette.text.secondary }} />
+        <BackButton />
       </Stack>
 
       <Typography
