@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { comments, posts, users } from "@/db/schema";
-import { eq, or } from "drizzle-orm";
+import { count, desc, eq, or } from "drizzle-orm";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -65,6 +65,24 @@ export async function register(_currentState: unknown, formData: FormData) {
   }
 
   redirect("/");
+}
+
+export async function getAllPosts() {
+  const results = await db
+    .select({
+      post_id: posts.post_id,
+      text: posts.text,
+      postdate: posts.postdate,
+      poster: users.username,
+      comment_count: count(comments.comment_id),
+    })
+    .from(posts)
+    .innerJoin(users, eq(posts.user_id, users.user_id))
+    .leftJoin(comments, eq(posts.post_id, comments.post_id))
+    .groupBy(posts.post_id, users.user_id)
+    .orderBy(desc(posts.postdate));
+
+  return results;
 }
 
 export async function insertPost(formData: FormData) {
