@@ -9,6 +9,8 @@ import { Suspense } from "react";
 import CommentList from "./comment/CommentList";
 import { SelectPost, SelectUser } from "@/db/schema";
 import BackButton from "../navigation/back-button";
+import LinkPreviewComponent from "./link-preview";
+import { OgObject } from "open-graph-scraper/types";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -16,6 +18,7 @@ dayjs.extend(timezone);
 
 interface Props {
   post: SelectUser & SelectPost;
+  ogResult: OgObject | null;
 }
 
 export default function Page({ post }: Readonly<Props>) {
@@ -63,11 +66,14 @@ export default function Page({ post }: Readonly<Props>) {
         {post.text}
       </Typography>
 
+      {post.link && <LinkPreviewComponent linkUrl={post.link} />}
+
       <Typography
         variant="body2"
         sx={{
           color: theme.palette.text.secondary,
           marginBottom: 1,
+          marginTop: 1,
         }}
       >
         {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
