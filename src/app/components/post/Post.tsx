@@ -6,7 +6,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import LinkPreview from "./link-preview";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { parseLinks } from "@/app/lib/parse-links";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -31,10 +32,11 @@ export default function Post({
 }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <Box
-      component="a"
+      onClick={() => router.push(`/post/${id}`)}
       sx={{
         maxWidth: 500,
         padding: 2,
@@ -50,6 +52,7 @@ export default function Post({
         "&:hover": {
           background: "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+          cursor: "pointer",
         },
         ...theme.applyStyles("dark", {
           background: "linear-gradient(135deg, #1b1b1b, #222222)",
@@ -60,29 +63,27 @@ export default function Post({
         }),
       }}
     >
-      <Link href={`/post/${id}`} passHref>
-        <Typography
-          variant="subtitle2"
-          sx={{
-            color: "#777777",
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-          }}
-        >
-          @{poster}
-        </Typography>
+      <Typography
+        variant="subtitle2"
+        sx={{
+          color: "#777777",
+          ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+        }}
+      >
+        @{poster}
+      </Typography>
 
-        <Typography
-          variant="body1"
-          sx={{
-            color: "#333333",
-            fontWeight: "bold",
-            marginBottom: 1,
-            ...theme.applyStyles("dark", { color: "#ffffff" }),
-          }}
-        >
-          {content}
-        </Typography>
-      </Link>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "#333333",
+          fontWeight: "bold",
+          marginBottom: 1,
+          ...theme.applyStyles("dark", { color: "#ffffff" }),
+        }}
+      >
+        {parseLinks(content)}
+      </Typography>
 
       {link && <LinkPreview linkUrl={link} />}
 

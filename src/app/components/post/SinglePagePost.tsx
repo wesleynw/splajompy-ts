@@ -11,6 +11,7 @@ import { SelectPost, SelectUser } from "@/db/schema";
 import BackButton from "../navigation/back-button";
 import LinkPreviewComponent from "./link-preview";
 import { OgObject } from "open-graph-scraper/types";
+import { parseLinks } from "@/app/lib/parse-links";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -63,7 +64,7 @@ export default function Page({ post }: Readonly<Props>) {
           marginBottom: 2,
         }}
       >
-        {post.text}
+        {parseLinks(post.text)}
       </Typography>
 
       {post.link && <LinkPreviewComponent linkUrl={post.link} />}

@@ -59,7 +59,8 @@ export default function LinkPreview({ linkUrl }: Readonly<LinkPreviewProps>) {
 
   return (
     <Box
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation();
         window.open(linkUrl, "_blank", "noopener,noreferrer");
       }}
       sx={{
