@@ -24,7 +24,7 @@ dayjs.extend(timezone);
 interface Props {
   id: number;
   date: Date;
-  content: string;
+  content: string | null;
   poster: string;
   comment_count: number;
   imageUrl: string | null;
@@ -84,17 +84,19 @@ export default function Post({
             @{poster}
           </Typography>
 
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#333333",
-              fontWeight: "bold",
-              marginBottom: 1,
-              ...theme.applyStyles("dark", { color: "#ffffff" }),
-            }}
-          >
-            {content}
-          </Typography>
+          {content && (
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#333333",
+                fontWeight: "bold",
+                marginBottom: 1,
+                ...theme.applyStyles("dark", { color: "#ffffff" }),
+              }}
+            >
+              {content}
+            </Typography>
+          )}
           {imageUrl && (
             <Image
               src={imagePath}
