@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { comments, posts, users } from "@/db/schema";
 import { count, desc, eq, or } from "drizzle-orm";
+import { insertImage } from "./s3";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -75,6 +76,7 @@ export async function getAllPosts() {
       postdate: posts.postdate,
       poster: users.username,
       comment_count: count(comments.comment_id),
+      imageBlobUrl: posts.imageBlobUrl,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
@@ -99,12 +101,18 @@ export async function insertPost(formData: FormData) {
     return;
   }
 
+  let imageBlobUrl: string | undefined;
+  if (formData.get("file")) {
+    const file = formData.get("file") as File;
+    imageBlobUrl = await insertImage(session.user.user_id, file);
+  }
   const sanitizedPostText = parsed.data.text;
 
   if (postText) {
     await db.insert(posts).values({
       user_id: Number(session?.user?.user_id),
       text: sanitizedPostText,
+      imageBlobUrl: imageBlobUrl,
     });
 
     revalidatePath("/");

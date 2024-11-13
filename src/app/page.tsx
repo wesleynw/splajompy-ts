@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import { auth } from "@/auth";
 import { SignOut } from "./components/signout-button";
 import Link from "next/link";
-import NewPost from "./components/NewPost";
+import NewPost from "./components/post/NewPost/NewPost";
 import { redirect } from "next/navigation";
 import Feed from "./components/Feed";
 import { Box, Stack } from "@mui/material";
@@ -18,8 +18,17 @@ export default async function Home() {
     <Stack alignItems="center">
       <div>
         <main className={styles.main}>
-          <NewPost />
-          <Feed />
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: { xs: "100%", md: "600px" },
+              margin: "auto",
+              padding: 2,
+            }}
+          >
+            <NewPost />
+            <Feed />
+          </Box>
         </main>
         <footer className={styles.footer}>
           <Box paddingBottom="20px">

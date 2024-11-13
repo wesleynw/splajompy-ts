@@ -33,6 +33,7 @@ export default async function Page({
       username: users.username,
       email: users.email,
       password: users.password,
+      imageBlobUrl: posts.imageBlobUrl,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))

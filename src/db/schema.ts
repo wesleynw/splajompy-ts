@@ -4,6 +4,7 @@ import {
   varchar,
   integer,
   timestamp,
+  text,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -26,6 +27,7 @@ export const posts = pgTable("posts", {
     }),
   text: varchar({ length: 255 }).notNull(),
   postdate: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  imageBlobUrl: text(),
 });
 
 export type SelectPost = typeof posts.$inferSelect;
