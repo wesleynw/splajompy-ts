@@ -14,7 +14,7 @@ export default function Page() {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // New loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export default function Page() {
     ref.current?.reset();
     setPreviewFile(null);
     setSelectedFile(null);
-    setIsLoading(false); // Reset loading state after submission
+    setIsLoading(false);
   };
 
   return (
