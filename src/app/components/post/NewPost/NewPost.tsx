@@ -18,7 +18,7 @@ export default function Page() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state to true on submit
+    setIsLoading(true);
 
     const formData = new FormData(ref.current!);
     if (selectedFile) {

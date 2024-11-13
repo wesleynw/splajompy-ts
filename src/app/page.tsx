@@ -21,7 +21,7 @@ export default async function Home() {
           <Box
             sx={{
               width: "100%",
-              maxWidth: { xs: "100%", md: "600px" },
+              maxWidth: { s: "100%", md: "600px" },
               margin: "auto",
               padding: 2,
             }}

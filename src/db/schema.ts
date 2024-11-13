@@ -25,7 +25,7 @@ export const posts = pgTable("posts", {
     .references(() => users.user_id, {
       onDelete: "cascade",
     }),
-  text: varchar({ length: 255 }).notNull(),
+  text: varchar({ length: 255 }),
   postdate: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   imageBlobUrl: text(),
 });

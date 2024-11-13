@@ -2,7 +2,7 @@
 
 import { auth, signIn } from "@/auth";
 import bcrypt from "bcryptjs";
-import { postTextSchema, registerSchema } from "./zod";
+import { registerSchema } from "./zod";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
@@ -88,17 +88,14 @@ export async function getAllPosts() {
 }
 
 export async function insertPost(formData: FormData) {
-  "use server";
   const session = await auth();
   if (!session) {
     return;
   }
 
-  const postText = formData.get("text")?.toString();
-
-  const parsed = postTextSchema.safeParse({ text: postText });
-  if (!parsed.success) {
-    return;
+  let postText: string | undefined;
+  if (formData.get("text")) {
+    postText = formData.get("text")?.toString();
   }
 
   let imageBlobUrl: string | undefined;
@@ -106,12 +103,10 @@ export async function insertPost(formData: FormData) {
     const file = formData.get("file") as File;
     imageBlobUrl = await insertImage(session.user.user_id, file);
   }
-  const sanitizedPostText = parsed.data.text;
-
-  if (postText) {
+  if (postText || imageBlobUrl) {
     await db.insert(posts).values({
       user_id: Number(session?.user?.user_id),
-      text: sanitizedPostText,
+      text: postText,
       imageBlobUrl: imageBlobUrl,
     });
 
@@ -127,20 +122,13 @@ export async function insertComment(text: string, post_id: number) {
     return;
   }
 
-  const parsed = postTextSchema.safeParse({ text: text });
-  if (!parsed.success) {
-    return;
-  }
-
-  const sanitizedCommentText = parsed.data.text;
-
   if (text) {
     const comment = await db
       .insert(comments)
       .values({
         post_id: Number(post_id),
         user_id: session?.user?.user_id,
-        text: sanitizedCommentText,
+        text: text,
       })
       .returning();
 

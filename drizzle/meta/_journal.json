@@ -29,6 +29,13 @@
       "when": 1731455141595,
       "tag": "0003_freezing_abomination",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1731536732250,
+      "tag": "0004_shallow_ricochet",
+      "breakpoints": true
     }
   ]
 }
