@@ -8,6 +8,7 @@ interface FileInputProps {
 }
 
 export default function FileInput({
+  file,
   setFile,
   setPreviewFile,
 }: Readonly<FileInputProps>) {
@@ -29,6 +30,7 @@ export default function FileInput({
         <AddPhotoAlternateIcon
           fontSize="medium"
           sx={{ color: "#ffffff", marginLeft: "20px" }}
+          visibility={file ? "hidden" : "visible"}
         />
       </label>
     </Box>

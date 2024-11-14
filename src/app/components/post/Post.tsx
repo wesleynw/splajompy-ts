@@ -1,14 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  Stack,
-  Typography,
-  useTheme,
-  Modal,
-  IconButton,
-} from "@mui/material";
+import { Box, Stack, Typography, useTheme, IconButton } from "@mui/material";
+import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -40,8 +34,8 @@ export default function Post({
 }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -97,24 +91,43 @@ export default function Post({
               {content}
             </Typography>
           )}
+
           {imageUrl && (
-            <Image
-              src={imagePath}
-              alt="post image"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{
+            <Box
+              sx={{
                 width: "100%",
-                height: "auto",
-                cursor: "pointer",
-                maxHeight: "500px",
+                maxHeight: 510,
+                overflow: "hidden",
+                display: "flex",
+                justifyContent: "center",
               }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleOpen();
-              }}
-            />
+            >
+              <Box
+                sx={{
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  maxHeight: 510,
+                }}
+              >
+                <Image
+                  src={imagePath}
+                  alt="post image"
+                  width={600}
+                  height={510}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxHeight: 510,
+                    cursor: "pointer",
+                  }}
+                  sizes="100vw"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleOpen();
+                  }}
+                />
+              </Box>
+            </Box>
           )}
 
           <Stack direction="row" alignItems="center">
