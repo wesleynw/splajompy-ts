@@ -48,7 +48,7 @@ export default function ImageModal({
             e.preventDefault();
             handleClose();
           }}
-          sx={{ color: "#aaa" }}
+          sx={{ backgroundColor: "black" }}
         >
           <Image
             src={src}
@@ -61,8 +61,8 @@ export default function ImageModal({
               left: "50%",
               transform: "translate(-50%, -50%)",
               objectFit: "contain",
-              width: "80%",
-              height: "80%",
+              width: "100%",
+              height: "100%",
             }}
           />
         </Backdrop>

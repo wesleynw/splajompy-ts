@@ -41,10 +41,13 @@ export default function Page() {
       ref={ref}
       onSubmit={handleSubmit}
       sx={{
-        width: "100%",
+        maxWidth: "600px",
+        margin: "0 auto",
         padding: 2,
+        paddingY: 4,
         backgroundColor: "#ffffff",
-        borderRadius: "8px",
+        borderBottom: "1px #979797 solid",
+        // marginBottom: 5,
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         ...theme.applyStyles("dark", {
           backgroundColor: "#1c1c1c",

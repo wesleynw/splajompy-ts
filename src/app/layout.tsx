@@ -34,7 +34,7 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <TopBar />
             <InitColorSchemeScript attribute="class" />
-            <Box component="main" sx={{ paddingTop: "80px" }}>
+            <Box component="main" sx={{ paddingTop: "60px" }}>
               {children}
             </Box>
 

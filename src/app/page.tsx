@@ -22,6 +22,7 @@ export default async function Home() {
             width: "100%",
             maxWidth: { xs: "100%", md: "600px" },
             margin: "auto",
+            boxSizing: "border-box",
           }}
         >
           <NewPost />

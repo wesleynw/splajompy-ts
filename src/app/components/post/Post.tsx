@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import Link from "next/link";
-import ResponsiveImage from "./images/ScaledImage";
+import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 
 dayjs.extend(relativeTime);
@@ -47,9 +47,8 @@ export default function Post({
         <Box
           sx={{
             maxWidth: 600,
-            padding: 2,
-            margin: "16px auto",
-            borderRadius: "8px",
+            padding: 3,
+            borderBottom: "1px #979797 solid",
             display: "flex",
             flexDirection: "column",
             gap: 1,
@@ -84,7 +83,7 @@ export default function Post({
               sx={{
                 color: "#333333",
                 fontWeight: "bold",
-                marginBottom: 1,
+                marginBottom: 3,
                 ...theme.applyStyles("dark", { color: "#ffffff" }),
               }}
             >
@@ -93,18 +92,12 @@ export default function Post({
           )}
           {imagePath && imageHeight && imageWidth && (
             <>
-              <Box
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpen(true);
-                }}
-              >
-                <ResponsiveImage
-                  imagePath={imagePath}
-                  width={imageWidth}
-                  height={imageHeight}
-                />
-              </Box>
+              <ResponsiveImage
+                imagePath={imagePath}
+                width={imageWidth}
+                height={imageHeight}
+                setOpen={setOpen}
+              />
               <ImageModal
                 imagePath={imagePath}
                 imageWidth={imageWidth}

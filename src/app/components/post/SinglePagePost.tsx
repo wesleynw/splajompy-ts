@@ -8,7 +8,7 @@ import timezone from "dayjs/plugin/timezone";
 import { Suspense, useState } from "react";
 import CommentList from "./comment/CommentList";
 import BackButton from "../navigation/back-button";
-import ResponsiveImage from "./images/ScaledImage";
+import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 
 dayjs.extend(relativeTime);
@@ -45,9 +45,9 @@ export default function Page({
     <Box
       sx={{
         maxWidth: 600,
-        margin: "6px auto",
+        // margin: "6px auto",
         padding: 3,
-        borderRadius: "12px",
+        // borderRadius: "12px",
         backgroundColor: "background.paper",
         background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
@@ -84,18 +84,12 @@ export default function Page({
 
       {imagePath && imageWidth && imageHeight && (
         <>
-          <Box
-            onClick={(e) => {
-              e.preventDefault();
-              setOpen(true);
-            }}
-          >
-            <ResponsiveImage
-              imagePath={imagePath}
-              width={imageWidth}
-              height={imageHeight}
-            />
-          </Box>
+          <ResponsiveImage
+            imagePath={imagePath}
+            width={imageWidth}
+            height={imageHeight}
+            setOpen={setOpen}
+          />
 
           <ImageModal
             imagePath={imagePath}
