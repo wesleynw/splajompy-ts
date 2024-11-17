@@ -23,7 +23,10 @@ export default function ImageModal({
     <Modal open={open} onClose={handleClose}>
       <>
         <IconButton
-          onClick={handleClose}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClose();
+          }}
           sx={{
             position: "fixed",
             top: 16,
@@ -39,7 +42,14 @@ export default function ImageModal({
           <CloseIcon />
         </IconButton>
 
-        <Backdrop open={open} onClick={handleClose} sx={{ color: "#aaa" }}>
+        <Backdrop
+          open={open}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClose();
+          }}
+          sx={{ color: "#aaa" }}
+        >
           <Image
             src={src}
             alt="Image"
