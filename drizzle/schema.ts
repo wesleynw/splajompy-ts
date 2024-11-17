@@ -1,31 +1,68 @@
-import { pgTable, unique, serial, varchar, foreignKey, integer, timestamp } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, serial, integer, varchar, timestamp, unique, text } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
 
+export const comments = pgTable("comments", {
+	commentId: serial("comment_id").primaryKey().notNull(),
+	postId: integer("post_id").notNull(),
+	userId: integer("user_id").notNull(),
+	text: varchar({ length: 255 }).notNull(),
+	commentDate: timestamp("comment_date", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => {
+	return {
+		commentsPostIdPostsPostIdFk: foreignKey({
+			columns: [table.postId],
+			foreignColumns: [posts.postId],
+			name: "comments_post_id_posts_post_id_fk"
+		}).onDelete("cascade"),
+		commentsUserIdUsersUserIdFk: foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.userId],
+			name: "comments_user_id_users_user_id_fk"
+		}).onDelete("cascade"),
+	}
+});
+
 export const users = pgTable("users", {
-	id: serial().primaryKey().notNull(),
+	userId: serial("user_id").primaryKey().notNull(),
 	email: varchar({ length: 255 }).notNull(),
 	password: varchar({ length: 255 }).notNull(),
 	username: varchar({ length: 100 }).notNull(),
 }, (table) => {
 	return {
-		usersEmailKey: unique("users_email_key").on(table.email),
-		usersUsernameKey: unique("users_username_key").on(table.username),
+		usersUserIdUnique: unique("users_user_id_unique").on(table.userId),
+		usersEmailUnique: unique("users_email_unique").on(table.email),
 	}
 });
 
 export const posts = pgTable("posts", {
-	id: serial().primaryKey().notNull(),
+	postId: serial("post_id").primaryKey().notNull(),
 	userId: integer("user_id").notNull(),
-	text: varchar({ length: 255 }).notNull(),
+	text: varchar({ length: 255 }),
 	postdate: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 }, (table) => {
 	return {
-		postsUserIdFkey: foreignKey({
+		postsUserIdUsersUserIdFk: foreignKey({
 			columns: [table.userId],
-			foreignColumns: [users.id],
-			name: "posts_user_id_fkey"
+			foreignColumns: [users.userId],
+			name: "posts_user_id_users_user_id_fk"
+		}).onDelete("cascade"),
+	}
+});
+
+export const images = pgTable("images", {
+	imageId: serial("image_id").primaryKey().notNull(),
+	height: integer().notNull(),
+	width: integer().notNull(),
+	imageBlobUrl: text(),
+	postId: integer("post_id").notNull(),
+}, (table) => {
+	return {
+		imagesPostIdPostsPostIdFk: foreignKey({
+			columns: [table.postId],
+			foreignColumns: [posts.postId],
+			name: "images_post_id_posts_post_id_fk"
 		}).onDelete("cascade"),
 	}
 });

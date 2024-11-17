@@ -21,7 +21,9 @@ export default async function Page() {
           content={post.text}
           poster={post.poster}
           comment_count={post.comment_count}
-          imageUrl={post.imageBlobUrl}
+          imagePath={post.imageBlobUrl}
+          imageWidth={post.imageWidth}
+          imageHeight={post.imageHeight}
         />
       ))}
     </Box>

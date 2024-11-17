@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Stack, Typography, useTheme, IconButton } from "@mui/material";
-import Modal from "@mui/material/Modal";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import Link from "next/link";
-import Image from "next/image";
-import CloseIcon from "@mui/icons-material/Close";
+import ResponsiveImage from "./images/ScaledImage";
+import ImageModal from "./images/ImageModal";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -21,7 +20,9 @@ interface Props {
   content: string | null;
   poster: string;
   comment_count: number;
-  imageUrl: string | null;
+  imagePath: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
 }
 
 export default function Post({
@@ -30,16 +31,15 @@ export default function Post({
   content,
   poster,
   comment_count,
-  imageUrl,
+  imagePath,
+  imageWidth,
+  imageHeight,
 }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const imagePath = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imageUrl}`;
 
   return (
     <>
@@ -91,43 +91,28 @@ export default function Post({
               {content}
             </Typography>
           )}
-
-          {imageUrl && (
-            <Box
-              sx={{
-                width: "100%",
-                maxHeight: 510,
-                overflow: "hidden",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
+          {imagePath && imageHeight && imageWidth && (
+            <>
               <Box
-                sx={{
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  maxHeight: 510,
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(true);
                 }}
               >
-                <Image
-                  src={imagePath}
-                  alt="post image"
-                  width={600}
-                  height={510}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    maxHeight: 510,
-                    cursor: "pointer",
-                  }}
-                  sizes="100vw"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleOpen();
-                  }}
+                <ResponsiveImage
+                  imagePath={imagePath}
+                  width={imageWidth}
+                  height={imageHeight}
                 />
               </Box>
-            </Box>
+              <ImageModal
+                imagePath={imagePath}
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
+                open={open}
+                handleClose={handleClose}
+              />
+            </>
           )}
 
           <Stack direction="row" alignItems="center">
@@ -156,48 +141,6 @@ export default function Post({
           </Stack>
         </Box>
       </Link>
-
-      {imageUrl && (
-        <Modal open={open} onClose={handleClose}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100vh",
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
-              position: "relative",
-              outline: "none",
-            }}
-          >
-            <IconButton
-              onClick={handleClose}
-              sx={{
-                position: "absolute",
-                top: 16,
-                right: 16,
-                color: "white",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-
-            <Image
-              src={imagePath}
-              alt="Fullscreen post image"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{
-                width: "auto",
-                height: "90%",
-                maxWidth: "90%",
-                objectFit: "contain",
-              }}
-            />
-          </Box>
-        </Modal>
-      )}
     </>
   );
 }

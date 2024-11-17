@@ -8,9 +8,10 @@ import zod from "zod";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { comments, posts, users } from "@/db/schema";
+import { comments, images, posts, users } from "@/db/schema";
 import { count, desc, eq, or } from "drizzle-orm";
 import { insertImage } from "./s3";
+import sizeOf from "image-size";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -76,12 +77,21 @@ export async function getAllPosts() {
       postdate: posts.postdate,
       poster: users.username,
       comment_count: count(comments.comment_id),
-      imageBlobUrl: posts.imageBlobUrl,
+      imageBlobUrl: images.imageBlobUrl,
+      imageWidth: images.width,
+      imageHeight: images.height,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
     .leftJoin(comments, eq(posts.post_id, comments.post_id))
-    .groupBy(posts.post_id, users.user_id)
+    .leftJoin(images, eq(posts.post_id, images.post_id))
+    .groupBy(
+      posts.post_id,
+      users.user_id,
+      images.imageBlobUrl,
+      images.width,
+      images.height
+    )
     .orderBy(desc(posts.postdate));
 
   return results;
@@ -90,7 +100,7 @@ export async function getAllPosts() {
 export async function insertPost(formData: FormData) {
   const session = await auth();
   if (!session) {
-    return;
+    return "You must be logged in to post.";
   }
 
   let postText: string | undefined;
@@ -98,21 +108,37 @@ export async function insertPost(formData: FormData) {
     postText = formData.get("text")?.toString();
   }
 
-  let imageBlobUrl: string | undefined;
-  if (formData.get("file")) {
-    const file = formData.get("file") as File;
-    imageBlobUrl = await insertImage(session.user.user_id, file);
-  }
-  if (postText || imageBlobUrl) {
-    await db.insert(posts).values({
+  const post = await db
+    .insert(posts)
+    .values({
       user_id: Number(session?.user?.user_id),
       text: postText,
-      imageBlobUrl: imageBlobUrl,
-    });
+    })
+    .returning();
 
-    revalidatePath("/");
-    formData.set("text", "");
+  let imageBlobUrl: string | undefined;
+  let file: File;
+  let width, height;
+  if (formData.get("file")) {
+    file = formData.get("file") as File;
+    imageBlobUrl = await insertImage(session.user.user_id, file);
+
+    const dimensions = sizeOf(new Uint8Array(await file.arrayBuffer()));
+    width = dimensions.width;
+    height = dimensions.height;
+
+    if (file && imageBlobUrl && post.length > 0 && width && height) {
+      await db.insert(images).values({
+        post_id: Number(post[0].post_id),
+        height: height,
+        width: width,
+        imageBlobUrl: imageBlobUrl,
+      });
+    }
   }
+
+  revalidatePath("/");
+  formData.set("text", "");
 }
 
 export async function insertComment(text: string, post_id: number) {
