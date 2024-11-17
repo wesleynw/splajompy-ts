@@ -26,12 +26,13 @@ export async function insertImage(user_id: number, file: File) {
       ACL: "public-read",
     });
 
-    await client.send(uploadCommand);
+    let message = await client.send(uploadCommand);
+    console.log(message.$metadata.httpStatusCode);
 
     const fileUrl = `${uniqueFilename}`;
 
     return fileUrl;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

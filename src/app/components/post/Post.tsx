@@ -46,9 +46,10 @@ export default function Post({
       <Link href={`/post/${id}`}>
         <Box
           sx={{
+            borderRadius: "8px",
+            margin: "10px",
             maxWidth: 600,
             padding: 3,
-            borderBottom: "1px #979797 solid",
             display: "flex",
             flexDirection: "column",
             gap: 1,

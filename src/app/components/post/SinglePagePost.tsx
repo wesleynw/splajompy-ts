@@ -45,9 +45,9 @@ export default function Page({
     <Box
       sx={{
         maxWidth: 600,
-        // margin: "6px auto",
+        margin: "6px auto",
         padding: 3,
-        // borderRadius: "12px",
+        borderRadius: "8px",
         backgroundColor: "background.paper",
         background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
