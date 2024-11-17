@@ -47,7 +47,7 @@ export default function Post({
         <Box
           sx={{
             borderRadius: "8px",
-            margin: "10px",
+            margin: "10px auto",
             maxWidth: 600,
             padding: 3,
             display: "flex",

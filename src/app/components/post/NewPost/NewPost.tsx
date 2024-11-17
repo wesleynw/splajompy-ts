@@ -12,12 +12,20 @@ export default function Page() {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
 
+  const [textValue, setTextValue] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (error) {
+      // Prevent submission if there's an error
+      return;
+    }
+
     setIsLoading(true);
 
     const formData = new FormData(ref.current!);
@@ -26,7 +34,8 @@ export default function Page() {
     }
 
     await insertPost(formData);
-    ref.current?.reset();
+    // ref.current?.reset();
+    setTextValue("");
     setPreviewFile(null);
     setSelectedFile(null);
     setIsLoading(false);
@@ -42,9 +51,8 @@ export default function Page() {
       onSubmit={handleSubmit}
       sx={{
         borderRadius: "8px",
-        margin: "10px",
+        margin: "10px auto",
         maxWidth: "600px",
-        // margin: "0 auto",
         padding: 2,
         paddingY: 4,
         backgroundColor: "#ffffff",
@@ -62,15 +70,16 @@ export default function Page() {
         spacing={2}
         sx={{ width: "100%" }}
       >
-        <TextInput />
+        <TextInput
+          value={textValue}
+          onChange={(e) => setTextValue(e.target.value)}
+        />
       </Stack>
-
       <ImagePreview
         previewFile={previewFile}
         setPreviewFile={setPreviewFile}
         setFile={setSelectedFile}
       />
-
       <Box
         sx={{
           width: "100%",
@@ -85,9 +94,14 @@ export default function Page() {
           file={selectedFile}
           setFile={setSelectedFile}
           setPreviewFile={setPreviewFile}
+          setError={setError}
         />
-        <SubmitPostButton isLoading={isLoading} />
+        <SubmitPostButton
+          isLoading={isLoading}
+          disabled={!!error || (!textValue.trim() && !selectedFile)}
+        />
       </Box>
+      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
     </Stack>
   );
 }

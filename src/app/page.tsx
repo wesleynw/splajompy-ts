@@ -5,7 +5,9 @@ import Link from "next/link";
 import NewPost from "./components/post/NewPost/NewPost";
 import { redirect } from "next/navigation";
 import Feed from "./components/Feed";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
+import { Suspense } from "react";
+import LoadingIcon from "./components/LoadingIcon";
 
 export default async function Home() {
   const session = await auth();
@@ -26,7 +28,10 @@ export default async function Home() {
           }}
         >
           <NewPost />
-          <Feed />
+          <Suspense fallback={<LoadingIcon />}>
+            <Feed />
+          </Suspense>
+          {/* <Feed /> */}
         </Box>
       </main>
       <footer className={styles.footer} style={{ width: "100%" }}>

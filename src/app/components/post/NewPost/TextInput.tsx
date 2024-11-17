@@ -1,9 +1,19 @@
+"use client";
+
 import theme from "@/theme";
 import { TextField } from "@mui/material";
+import { useState } from "react";
 
-export function TextInput() {
+interface TextInputProps {
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function TextInput({ value, onChange }: TextInputProps) {
   return (
     <TextField
+      value={value}
+      onChange={onChange}
       name="text"
       variant="outlined"
       placeholder="What's on your mind?"

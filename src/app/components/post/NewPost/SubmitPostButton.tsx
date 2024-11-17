@@ -2,7 +2,8 @@ import { Box, Button, CircularProgress, Typography } from "@mui/material";
 
 export default function SubmitPostButton({
   isLoading,
-}: Readonly<{ isLoading: boolean }>) {
+  disabled,
+}: Readonly<{ isLoading: boolean; disabled: boolean }>) {
   return (
     <Button
       type="submit"
@@ -19,7 +20,7 @@ export default function SubmitPostButton({
         },
         position: "relative",
       }}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
     >
       {isLoading && (
         <Box
