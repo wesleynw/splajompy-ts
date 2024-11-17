@@ -26,7 +26,7 @@ export async function insertImage(user_id: number, file: File) {
       ACL: "public-read",
     });
 
-    let message = await client.send(uploadCommand);
+    const message = await client.send(uploadCommand);
     console.log(message.$metadata.httpStatusCode);
 
     const fileUrl = `${uniqueFilename}`;
