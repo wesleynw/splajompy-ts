@@ -6,12 +6,10 @@ import { registerSchema } from "./zod";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { comments, images, posts, users } from "@/db/schema";
 import { count, desc, eq, or } from "drizzle-orm";
-import { insertImage } from "./s3";
-import sizeOf from "image-size";
+import { revalidatePath } from "next/cache";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -97,11 +95,24 @@ export async function getAllPosts() {
   return results;
 }
 
+export async function insertImage(
+  post_id: number,
+  imageBlobUrl: string,
+  width: number,
+  height: number
+) {
+  await db.insert(images).values({
+    post_id: post_id,
+    height: height,
+    width: width,
+    imageBlobUrl: imageBlobUrl,
+  });
+
+  revalidatePath("/");
+}
+
 export async function insertPost(formData: FormData) {
   const session = await auth();
-  if (!session) {
-    return "You must be logged in to post.";
-  }
 
   let postText: string | undefined;
   if (formData.get("text")) {
@@ -116,29 +127,10 @@ export async function insertPost(formData: FormData) {
     })
     .returning();
 
-  let imageBlobUrl: string | undefined;
-  let file: File;
-  let width, height;
-  if (formData.get("file")) {
-    file = formData.get("file") as File;
-    imageBlobUrl = await insertImage(session.user.user_id, file);
-
-    const dimensions = sizeOf(new Uint8Array(await file.arrayBuffer()));
-    width = dimensions.width;
-    height = dimensions.height;
-
-    if (file && imageBlobUrl && post.length > 0 && width && height) {
-      await db.insert(images).values({
-        post_id: Number(post[0].post_id),
-        height: height,
-        width: width,
-        imageBlobUrl: imageBlobUrl,
-      });
-    }
-  }
-
   revalidatePath("/");
+
   formData.set("text", "");
+  return post[0].post_id;
 }
 
 export async function insertComment(text: string, post_id: number) {

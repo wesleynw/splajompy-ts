@@ -1,11 +1,11 @@
 "use server";
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { v4 as uuidv4 } from "uuid";
 
-export async function insertImage(user_id: number, file: File) {
+export async function getPresignedUrl(user_id: number) {
   try {
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
     const client = new S3Client({
       region: process.env.SPACE_REGION!,
       endpoint: `https://${process.env.SPACE_REGION}.digitaloceanspaces.com`,
@@ -16,22 +16,17 @@ export async function insertImage(user_id: number, file: File) {
     });
 
     const uniqueFilename = `${process.env
-      .ENVIRONMENT!}/posts/${user_id}/${uuidv4()}-${file.name}`;
+      .ENVIRONMENT!}/posts/${user_id}/${uuidv4()}`;
 
-    const uploadCommand = new PutObjectCommand({
+    const { url, fields } = await createPresignedPost(client, {
       Bucket: process.env.SPACE_NAME!,
       Key: `${uniqueFilename}`,
-      Body: fileBuffer,
-      ContentType: file.type,
-      ACL: "public-read",
+      Fields: {
+        acl: "public-read",
+      },
     });
 
-    const message = await client.send(uploadCommand);
-    console.log(message.$metadata.httpStatusCode);
-
-    const fileUrl = `${uniqueFilename}`;
-
-    return fileUrl;
+    return { url, fields, uniqueFilename };
   } catch (error) {
     console.error(error);
   }

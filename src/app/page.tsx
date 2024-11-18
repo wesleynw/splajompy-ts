@@ -8,6 +8,7 @@ import Feed from "./components/Feed";
 import { Box } from "@mui/material";
 import { Suspense } from "react";
 import LoadingIcon from "./components/LoadingIcon";
+import { SessionProvider } from "next-auth/react";
 
 export default async function Home() {
   const session = await auth();
@@ -27,11 +28,12 @@ export default async function Home() {
             boxSizing: "border-box",
           }}
         >
-          <NewPost />
+          <SessionProvider session={session}>
+            <NewPost />
+          </SessionProvider>
           <Suspense fallback={<LoadingIcon />}>
             <Feed />
           </Suspense>
-          {/* <Feed /> */}
         </Box>
       </main>
       <footer className={styles.footer} style={{ width: "100%" }}>

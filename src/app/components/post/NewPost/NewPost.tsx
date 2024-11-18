@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { insertPost } from "../../../lib/actions";
 import { Box, Stack, useTheme } from "@mui/material";
 import SubmitPostButton from "./SubmitPostButton";
 import { TextInput } from "./TextInput";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
+import { getPresignedUrl } from "@/app/lib/s3";
+import { insertImage, insertPost } from "../../../lib/actions";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
   const ref = useRef<HTMLFormElement>(null);
@@ -18,23 +20,69 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { data: session } = useSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!session) {
+      setError("You must be logged in to post.");
+      return;
+    }
+
     if (error) {
-      // Prevent submission if there's an error
       return;
     }
 
     setIsLoading(true);
 
     const formData = new FormData(ref.current!);
+
+    const post_id = await insertPost(formData);
+
     if (selectedFile) {
-      formData.append("file", selectedFile);
+      try {
+        const img = new Image();
+        img.src = URL.createObjectURL(selectedFile);
+
+        await new Promise<void>((resolve) => {
+          img.onload = () => {
+            resolve();
+          };
+          img.onerror = () => {
+            console.error("Failed to load image");
+          };
+        });
+
+        const presignedUrlData = await getPresignedUrl(session.user.user_id);
+        if (!presignedUrlData) {
+          console.error("Failed to get presigned URL");
+          return;
+        }
+        const { url, fields, uniqueFilename } = presignedUrlData;
+
+        const formData = new FormData();
+        Object.entries(fields).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+        formData.append("file", selectedFile);
+
+        const uploadResponse = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          console.error("Failed to upload image");
+          return;
+        }
+
+        await insertImage(post_id, uniqueFilename, img.width, img.height);
+      } catch (err) {
+        console.error("Error processing file upload", err);
+      }
     }
 
-    await insertPost(formData);
-    // ref.current?.reset();
     setTextValue("");
     setPreviewFile(null);
     setSelectedFile(null);
