@@ -111,7 +111,7 @@ export async function insertImage(
   revalidatePath("/");
 }
 
-export async function insertPost(formData: FormData) {
+export async function insertPost(formData: FormData, includesImage: boolean) {
   const session = await auth();
 
   let postText: string | undefined;
@@ -127,7 +127,9 @@ export async function insertPost(formData: FormData) {
     })
     .returning();
 
-  revalidatePath("/");
+  if (!includesImage) {
+    revalidatePath("/");
+  }
 
   formData.set("text", "");
   return post[0].post_id;

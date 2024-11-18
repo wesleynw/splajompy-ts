@@ -38,7 +38,7 @@ export default function Page() {
 
     const formData = new FormData(ref.current!);
 
-    const post_id = await insertPost(formData);
+    const post_id = await insertPost(formData, selectedFile !== null);
 
     if (selectedFile) {
       try {
