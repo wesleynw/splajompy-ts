@@ -1,6 +1,7 @@
-import { Modal, Backdrop, IconButton } from "@mui/material";
+import { Modal, Backdrop, IconButton, CircularProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
+import { useState } from "react";
 
 interface ImageModalProps {
   imagePath: string;
@@ -17,6 +18,7 @@ export default function ImageModal({
   open,
   handleClose,
 }: ImageModalProps) {
+  const [loaded, setLoaded] = useState(false);
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
 
   return (
@@ -50,11 +52,13 @@ export default function ImageModal({
           }}
           sx={{ backgroundColor: "black" }}
         >
+          {!loaded && <CircularProgress />}
           <Image
             src={src}
             alt="Image"
             width={imageWidth}
             height={imageHeight}
+            onLoad={() => setLoaded(true)}
             style={{
               position: "absolute",
               top: "50%",
