@@ -4,6 +4,7 @@ import {
   varchar,
   integer,
   timestamp,
+  text,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -24,8 +25,10 @@ export const posts = pgTable("posts", {
     .references(() => users.user_id, {
       onDelete: "cascade",
     }),
-  text: varchar({ length: 255 }).notNull(),
-  postdate: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  text: varchar({ length: 255 }),
+  postdate: timestamp({ mode: "string" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type SelectPost = typeof posts.$inferSelect;
@@ -49,3 +52,15 @@ export const comments = pgTable("comments", {
 
 export type SelectComment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
+
+export const images = pgTable("images", {
+  image_id: serial().primaryKey().notNull(),
+  post_id: integer("post_id")
+    .notNull()
+    .references(() => posts.post_id, { onDelete: "cascade" }),
+  height: integer().notNull(),
+  width: integer().notNull(),
+  imageBlobUrl: text().notNull(),
+});
+
+export type SelectImage = typeof images.$inferSelect;

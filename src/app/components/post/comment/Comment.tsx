@@ -25,9 +25,6 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         border: "1px solid",
         borderRadius: "12px",
         marginBottom: 2,
-        boxShadow: theme.applyStyles("dark", {
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        }),
         ...theme.applyStyles("dark", {
           borderColor: "#444",
           backgroundColor: "#222",
@@ -58,8 +55,7 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         variant="body2"
         sx={{
           lineHeight: 1.6,
-          color: theme.applyStyles("dark", { color: "#ccc" }),
-          ...theme.applyStyles("light", { color: "#555" }),
+          ...theme.applyStyles("dark", { color: "#ccc" }),
         }}
       >
         {comments.text}
@@ -67,7 +63,6 @@ export default function Comment({ comments, users }: Readonly<Props>) {
       <Typography
         variant="caption"
         sx={{
-          color: theme.applyStyles("dark", { color: "#aaa" }),
           ...theme.applyStyles("light", { color: "#888" }),
           marginTop: 1,
           display: "block",

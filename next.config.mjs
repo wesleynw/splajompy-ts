@@ -1,4 +1,22 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "splajompy-bucket.nyc3.cdn.digitaloceanspaces.com",
+      },
+      {
+        protocol: "https",
+        hostname: "splajompy-bucket.nyc3.digitaloceanspaces.com",
+      },
+    ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "20mb",
+    },
+  },
+};
 
 export default nextConfig;

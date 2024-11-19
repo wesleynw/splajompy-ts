@@ -2,14 +2,14 @@
 
 import { auth, signIn } from "@/auth";
 import bcrypt from "bcryptjs";
-import { postTextSchema, registerSchema } from "./zod";
+import { registerSchema } from "./zod";
 import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { comments, posts, users } from "@/db/schema";
+import { comments, images, posts, users } from "@/db/schema";
 import { count, desc, eq, or } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
   try {
@@ -75,41 +75,64 @@ export async function getAllPosts() {
       postdate: posts.postdate,
       poster: users.username,
       comment_count: count(comments.comment_id),
+      imageBlobUrl: images.imageBlobUrl,
+      imageWidth: images.width,
+      imageHeight: images.height,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
     .leftJoin(comments, eq(posts.post_id, comments.post_id))
-    .groupBy(posts.post_id, users.user_id)
+    .leftJoin(images, eq(posts.post_id, images.post_id))
+    .groupBy(
+      posts.post_id,
+      users.user_id,
+      images.imageBlobUrl,
+      images.width,
+      images.height
+    )
     .orderBy(desc(posts.postdate));
 
   return results;
 }
 
-export async function insertPost(formData: FormData) {
-  "use server";
+export async function insertImage(
+  post_id: number,
+  imageBlobUrl: string,
+  width: number,
+  height: number
+) {
+  await db.insert(images).values({
+    post_id: post_id,
+    height: height,
+    width: width,
+    imageBlobUrl: imageBlobUrl,
+  });
+
+  revalidatePath("/");
+}
+
+export async function insertPost(formData: FormData, includesImage: boolean) {
   const session = await auth();
-  if (!session) {
-    return;
+
+  let postText: string | undefined;
+  if (formData.get("text")) {
+    postText = formData.get("text")?.toString();
   }
 
-  const postText = formData.get("text")?.toString();
-
-  const parsed = postTextSchema.safeParse({ text: postText });
-  if (!parsed.success) {
-    return;
-  }
-
-  const sanitizedPostText = parsed.data.text;
-
-  if (postText) {
-    await db.insert(posts).values({
+  const post = await db
+    .insert(posts)
+    .values({
       user_id: Number(session?.user?.user_id),
-      text: sanitizedPostText,
-    });
+      text: postText,
+    })
+    .returning();
 
+  if (!includesImage) {
     revalidatePath("/");
-    formData.set("text", "");
   }
+
+  formData.set("text", "");
+  return post[0].post_id;
 }
 
 export async function insertComment(text: string, post_id: number) {
@@ -119,20 +142,13 @@ export async function insertComment(text: string, post_id: number) {
     return;
   }
 
-  const parsed = postTextSchema.safeParse({ text: text });
-  if (!parsed.success) {
-    return;
-  }
-
-  const sanitizedCommentText = parsed.data.text;
-
   if (text) {
     const comment = await db
       .insert(comments)
       .values({
         post_id: Number(post_id),
         user_id: session?.user?.user_id,
-        text: sanitizedCommentText,
+        text: text,
       })
       .returning();
 
