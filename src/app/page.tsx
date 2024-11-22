@@ -2,13 +2,9 @@ import styles from "./page.module.css";
 import { auth } from "@/auth";
 import { SignOut } from "./components/signout-button";
 import Link from "next/link";
-import NewPost from "./components/post/NewPost/NewPost";
 import { redirect } from "next/navigation";
 import Feed from "./components/Feed";
 import { Box } from "@mui/material";
-import { Suspense } from "react";
-import LoadingIcon from "./components/LoadingIcon";
-import { SessionProvider } from "next-auth/react";
 
 export default async function Home() {
   const session = await auth();
@@ -28,12 +24,7 @@ export default async function Home() {
             boxSizing: "border-box",
           }}
         >
-          <SessionProvider session={session}>
-            <NewPost />
-          </SessionProvider>
-          <Suspense fallback={<LoadingIcon />}>
-            <Feed />
-          </Suspense>
+          <Feed session={session} />
         </Box>
       </main>
       <footer className={styles.footer} style={{ width: "100%" }}>

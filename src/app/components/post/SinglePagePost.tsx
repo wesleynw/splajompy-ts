@@ -7,9 +7,12 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { Suspense, useState } from "react";
 import CommentList from "./comment/CommentList";
-import BackButton from "../navigation/back-button";
+import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
+import PostDropdown from "./PostDropdown";
+import { deletePost } from "@/app/lib/posts";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -35,6 +38,7 @@ export default function Page({
   imageWidth,
   imageHeight,
 }: Readonly<Props>) {
+  const router = useRouter();
   const theme = useTheme();
   const userTimezone = dayjs.tz.guess();
 
@@ -57,8 +61,21 @@ export default function Page({
         }),
       }}
     >
-      <Stack direction="row" alignItems="center" sx={{ marginBottom: 2 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+        sx={{ marginBottom: 2 }}
+      >
         <BackButton />
+        <PostDropdown
+          post_id={post_id}
+          onDelete={() => {
+            deletePost(post_id);
+            router.push("/");
+          }}
+        />
       </Stack>
 
       <Typography

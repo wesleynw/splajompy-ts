@@ -7,10 +7,16 @@ import { TextInput } from "./TextInput";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
-import { insertImage, insertPost } from "../../../lib/actions";
+import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { useSession } from "next-auth/react";
+import { Post } from "../../Feed";
 
-export default function Page() {
+type NewPostProps = {
+  posts: Post[];
+  setPosts: (posts: Post[]) => void;
+};
+
+export default function Page({ posts, setPosts }: NewPostProps) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
 
@@ -38,23 +44,29 @@ export default function Page() {
 
     const formData = new FormData(ref.current!);
 
-    const post_id = await insertPost(formData, selectedFile !== null);
+    const post = await insertPost(formData, selectedFile !== null);
+    let imagePath: string | null = null;
 
+    const img = new Image();
     if (selectedFile) {
       try {
-        const img = new Image();
         img.src = URL.createObjectURL(selectedFile);
 
         await new Promise<void>((resolve) => {
           img.onload = () => {
             resolve();
+            URL.revokeObjectURL(img.src);
           };
           img.onerror = () => {
             console.error("Failed to load image");
           };
         });
 
-        const presignedUrlData = await getPresignedUrl(session.user.user_id);
+        const presignedUrlData = await getPresignedUrl(
+          session.user.user_id,
+          selectedFile.type,
+          selectedFile.name
+        );
         if (!presignedUrlData) {
           console.error("Failed to get presigned URL");
           return;
@@ -77,11 +89,25 @@ export default function Page() {
           return;
         }
 
-        await insertImage(post_id, uniqueFilename, img.width, img.height);
+        imagePath = uniqueFilename;
+
+        await insertImage(post.post_id, uniqueFilename, img.width, img.height);
       } catch (err) {
         console.error("Error processing file upload", err);
       }
     }
+
+    const mappedPost = {
+      ...post,
+      poster:
+        session.user.username || (await getUsername(session.user.user_id)),
+      comment_count: 0,
+      imageBlobUrl: imagePath || null,
+      imageWidth: selectedFile ? img.width : null,
+      imageHeight: selectedFile ? img.height : null,
+    };
+
+    setPosts([mappedPost, ...posts]);
 
     setTextValue("");
     setPreviewFile(null);

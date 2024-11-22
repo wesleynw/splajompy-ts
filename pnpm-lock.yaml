@@ -48,8 +48,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       drizzle-orm:
-        specifier: ^0.36.2
-        version: 0.36.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(pg@8.13.1)(react@18.3.1)
+        specifier: ^0.36.4
+        version: 0.36.4(@types/pg@8.11.10)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(pg@8.13.1)(react@18.3.1)
       image-size:
         specifier: ^1.1.1
         version: 1.1.1
@@ -1678,15 +1678,15 @@ packages:
     resolution: {integrity: sha512-JimOV+ystXTWMgZkLHYHf2w3oS28hxiH1FR0dkmJLc7GHzdGJoJAQtQS5DRppnabsRZwE2U1F6CuezVBgmsBBQ==}
     hasBin: true
 
-  drizzle-orm@0.36.2:
-    resolution: {integrity: sha512-uVwIdQMo+zwI09hCSNVR29tYn4Vw6F7gga/CsZgDJmTSGDdUdLo+Ur45Qc3gDK7oFTxD/eRANNnPgvPmRY+jSA==}
+  drizzle-orm@0.36.4:
+    resolution: {integrity: sha512-1OZY3PXD7BR00Gl61UUOFihslDldfH4NFRH2MbP54Yxi0G/PKn4HfO65JYZ7c16DeP3SpM3Aw+VXVG9j6CRSXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
       '@electric-sql/pglite': '>=0.2.0'
       '@libsql/client': '>=0.10.0'
       '@libsql/client-wasm': '>=0.10.0'
-      '@neondatabase/serverless': '>=0.1'
+      '@neondatabase/serverless': '>=0.10.0'
       '@op-engineering/op-sqlite': '>=2'
       '@opentelemetry/api': ^1.4.1
       '@planetscale/database': '>=1'
@@ -4873,9 +4873,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.36.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(pg@8.13.1)(react@18.3.1):
+  drizzle-orm@0.36.4(@types/pg@8.11.10)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(pg@8.13.1)(react@18.3.1):
     optionalDependencies:
-      '@neondatabase/serverless': 0.9.5
       '@types/pg': 8.11.10
       '@types/react': 18.3.11
       '@vercel/postgres': 0.10.0

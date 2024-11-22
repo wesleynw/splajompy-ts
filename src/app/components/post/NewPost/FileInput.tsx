@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 interface FileInputProps {
@@ -33,6 +33,8 @@ export default function FileInput({
     }
   };
 
+  const theme = useTheme();
+
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
       <input
@@ -44,7 +46,11 @@ export default function FileInput({
       <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
         <AddPhotoAlternateIcon
           fontSize="medium"
-          sx={{ color: "#ffffff", marginLeft: "20px" }}
+          sx={{
+            marginLeft: "20px",
+            color: "#777777",
+            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+          }}
           visibility={file ? "hidden" : "visible"}
         />
       </label>
