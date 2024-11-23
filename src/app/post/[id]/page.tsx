@@ -8,6 +8,8 @@ import { db } from "@/db";
 import { images, posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { Box, Typography } from "@mui/material";
+import BackButton from "@/app/components/navigation/BackButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -42,6 +44,22 @@ export default async function Page({
     .leftJoin(images, eq(posts.post_id, images.post_id))
     .where(eq(posts.post_id, id))
     .limit(1);
+
+  if (result.length === 0) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        height="20vh"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <BackButton />
+        <Typography variant="h5">This post cannot be found.</Typography>
+      </Box>
+    );
+  }
 
   return <SinglePostPage {...result[0]} />;
 }

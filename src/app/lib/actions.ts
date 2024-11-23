@@ -8,7 +8,7 @@ import zod from "zod";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { comments, images, posts, users } from "@/db/schema";
-import { count, desc, eq, or } from "drizzle-orm";
+import { eq, or, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
@@ -23,6 +23,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
       }
     }
   }
+  revalidatePath("/");
   redirect("/");
 }
 
@@ -67,34 +68,6 @@ export async function register(_currentState: unknown, formData: FormData) {
   redirect("/");
 }
 
-export async function getAllPosts() {
-  const results = await db
-    .select({
-      post_id: posts.post_id,
-      text: posts.text,
-      postdate: posts.postdate,
-      poster: users.username,
-      comment_count: count(comments.comment_id),
-      imageBlobUrl: images.imageBlobUrl,
-      imageWidth: images.width,
-      imageHeight: images.height,
-    })
-    .from(posts)
-    .innerJoin(users, eq(posts.user_id, users.user_id))
-    .leftJoin(comments, eq(posts.post_id, comments.post_id))
-    .leftJoin(images, eq(posts.post_id, images.post_id))
-    .groupBy(
-      posts.post_id,
-      users.user_id,
-      images.imageBlobUrl,
-      images.width,
-      images.height
-    )
-    .orderBy(desc(posts.postdate));
-
-  return results;
-}
-
 export async function insertImage(
   post_id: number,
   imageBlobUrl: string,
@@ -132,7 +105,7 @@ export async function insertPost(formData: FormData, includesImage: boolean) {
   }
 
   formData.set("text", "");
-  return post[0].post_id;
+  return post[0];
 }
 
 export async function insertComment(text: string, post_id: number) {
@@ -152,12 +125,16 @@ export async function insertComment(text: string, post_id: number) {
       })
       .returning();
 
-    return await db
+    const result = await db
       .select()
       .from(comments)
       .innerJoin(users, eq(comments.user_id, users.user_id))
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
+
+    revalidatePath("/");
+
+    return result;
   }
 }
 
@@ -166,7 +143,18 @@ export async function getComments(post_id: number) {
     .select()
     .from(comments)
     .innerJoin(users, eq(comments.user_id, users.user_id))
-    .where(eq(comments.post_id, post_id));
+    .where(eq(comments.post_id, post_id))
+    .orderBy(asc(comments.comment_date));
 
   return results;
+}
+
+export async function getUsername(user_id: number) {
+  const results = await db
+    .select()
+    .from(users)
+    .where(eq(users.user_id, user_id))
+    .limit(1);
+
+  return results[0].username;
 }

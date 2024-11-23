@@ -8,7 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import TopBar from "./components/navigation/top-bar";
+import TopBarWrapper from "./components/navigation/TopBarWrapper";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -32,7 +32,7 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <TopBar />
+            <TopBarWrapper />
             <InitColorSchemeScript attribute="class" />
             <Box component="main" sx={{ paddingTop: "60px" }}>
               {children}

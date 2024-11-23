@@ -9,11 +9,13 @@ declare module "next-auth" {
   interface Session {
     user: {
       user_id: number;
+      username: string;
     } & DefaultSession["user"];
   }
 
   interface User {
     user_id: number;
+    username: string;
   }
 }
 
@@ -54,11 +56,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.user_id = user.user_id;
+        token.username = user.username;
       }
       return token;
     },
     session({ session, token }) {
       session.user.user_id = token.user_id;
+      session.user.username = token.username;
       return session;
     },
   },
@@ -69,5 +73,6 @@ import {} from "next-auth/jwt";
 declare module "next-auth/jwt" {
   interface JWT {
     user_id: number;
+    username: string;
   }
 }
