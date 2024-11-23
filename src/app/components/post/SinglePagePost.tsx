@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 import CommentList from "./comment/CommentList";
 import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
@@ -96,7 +96,12 @@ export default function Page({
           marginBottom: 2,
         }}
       >
-        {text}
+        {text?.split("\n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
       </Typography>
 
       {imagePath && imageWidth && imageHeight && (
