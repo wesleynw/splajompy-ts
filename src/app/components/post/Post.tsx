@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -104,7 +104,12 @@ export default function Post({
               ...theme.applyStyles("dark", { color: "#ffffff" }),
             }}
           >
-            {content}
+            {content.split("\n").map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
           </Typography>
         )}
 
