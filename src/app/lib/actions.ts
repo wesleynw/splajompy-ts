@@ -23,6 +23,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
       }
     }
   }
+  revalidatePath("/");
   redirect("/");
 }
 
