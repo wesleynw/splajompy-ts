@@ -1,28 +1,10 @@
-"use client";
+import RegisterPage from "../components/register/RegisterPage";
 
-import { register } from "@/app/lib/actions";
-import { useFormState, useFormStatus } from "react-dom";
+export const metadata = {
+  title: "Register",
+  description: "Register for an account.",
+};
 
-export default function Page() {
-  const [errorMessage, dispatch] = useFormState(register, undefined);
-
-  return (
-    <form action={dispatch}>
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <div>{errorMessage && <p>{errorMessage}</p>}</div>
-      <LoginButton />
-    </form>
-  );
-}
-
-function LoginButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button aria-disabled={pending} type="submit">
-      Register
-    </button>
-  );
+export default async function Page() {
+  return <RegisterPage />;
 }
