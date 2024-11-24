@@ -15,6 +15,7 @@ import { deletePost } from "@/app/lib/posts";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import FollowButton from "../follows/FollowButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -74,7 +75,7 @@ export default function Page({
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
-        {session?.user.user_id === user_id && (
+        {session?.user.user_id === user_id ? (
           <PostDropdown
             post_id={post_id}
             onDelete={() => {
@@ -82,6 +83,8 @@ export default function Page({
               router.push("/");
             }}
           />
+        ) : (
+          <FollowButton user_id={user_id} show_unfollow={false} />
         )}
       </Stack>
 

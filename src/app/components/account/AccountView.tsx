@@ -68,7 +68,7 @@ export default function AccountView({
           >
             @{user.username}
           </Typography>
-          <FollowButton user_id={user.user_id} />
+          <FollowButton user_id={user.user_id} show_unfollow={true} />
         </Stack>
       </Box>
 

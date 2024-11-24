@@ -3,11 +3,18 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
-import { Button, Skeleton, useTheme } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
+
+type Props = {
+  user_id: number;
+  show_unfollow: boolean;
+};
 
 export default function FollowButton({
   user_id,
-}: Readonly<{ user_id: number }>) {
+  show_unfollow,
+}: Readonly<Props>) {
+  const [hasFollowed, setHasFollowed] = useState(false);
   const { data: session } = useSession();
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,7 +33,11 @@ export default function FollowButton({
     checkFollowingStatus();
   }, [session, user_id]);
 
-  if (!session || (isLoaded && isFollowing === null)) {
+  if (
+    !session ||
+    (isLoaded && isFollowing === null) ||
+    (!show_unfollow && isFollowing && !hasFollowed)
+  ) {
     return null;
   }
 
@@ -40,6 +51,7 @@ export default function FollowButton({
       } else {
         await followUser(user_id);
         setIsFollowing(true);
+        setHasFollowed(true);
       }
     } catch (error) {
       console.error("Failed to update follow status:", error);
@@ -49,7 +61,7 @@ export default function FollowButton({
   };
 
   if (!isLoaded) {
-    return <Skeleton variant="rectangular" width={80} height={36} />;
+    return null;
   }
 
   return (
