@@ -16,7 +16,7 @@ type NewPostProps = {
   setPosts: (posts: Post[]) => void;
 };
 
-export default function Page({ posts, setPosts }: NewPostProps) {
+export default function Page({ posts, setPosts }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
 
@@ -102,7 +102,7 @@ export default function Page({ posts, setPosts }: NewPostProps) {
       poster:
         session.user.username || (await getUsername(session.user.user_id)),
       comment_count: 0,
-      imageBlobUrl: imagePath || null,
+      imageBlobUrl: imagePath ?? null,
       imageWidth: selectedFile ? img.width : null,
       imageHeight: selectedFile ? img.height : null,
     };
