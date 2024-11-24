@@ -27,7 +27,7 @@ interface Props {
   imagePath: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 export default function Post({
@@ -95,7 +95,7 @@ export default function Post({
             </Typography>
           </Link>
           <Box sx={{ flexGrow: 1 }} />
-          {session?.user?.user_id == user_id && (
+          {session?.user?.user_id == user_id && onDelete && (
             <PostDropdown post_id={id} onDelete={onDelete} />
           )}
         </Stack>

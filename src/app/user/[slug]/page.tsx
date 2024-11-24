@@ -28,17 +28,11 @@ export default async function Page({
     return <h1>User not found</h1>;
   }
 
-  let posts = await getPostsByUserId(user.user_id);
+  const posts = await getPostsByUserId(user.user_id);
 
   return (
     <SessionProvider session={session}>
-      <AccountView
-        user={user}
-        posts={posts}
-        onDelete={(post_id) => {
-          posts = posts.filter((post) => post.post_id !== post_id);
-        }}
-      />
+      <AccountView user={user} posts={posts} />
     </SessionProvider>
   );
 }

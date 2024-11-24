@@ -16,13 +16,11 @@ interface AccountViewProps {
     username: string;
   };
   posts: PostData[];
-  onDelete: (postId: number) => void;
 }
 
 export default function AccountView({
   user,
   posts,
-  onDelete,
 }: Readonly<AccountViewProps>) {
   const { data: session } = useSession();
   const theme = useTheme();
@@ -88,7 +86,6 @@ export default function AccountView({
               imagePath={post.imageBlobUrl}
               imageWidth={post.imageWidth}
               imageHeight={post.imageHeight}
-              onDelete={() => onDelete(post.post_id)}
             />
           ))
         ) : (
