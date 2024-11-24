@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import BackButton from "@/app/components/navigation/BackButton";
 import { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -90,5 +91,9 @@ export default async function Page({
     );
   }
 
-  return <SinglePostPage {...result[0]} />;
+  return (
+    <SessionProvider session={session}>
+      <SinglePostPage {...result[0]} />
+    </SessionProvider>
+  );
 }

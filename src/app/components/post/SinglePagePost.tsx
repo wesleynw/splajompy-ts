@@ -13,6 +13,7 @@ import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
 import { deletePost } from "@/app/lib/posts";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -31,6 +32,7 @@ interface Props {
 
 export default function Page({
   post_id,
+  user_id,
   username,
   text,
   postdate,
@@ -41,6 +43,8 @@ export default function Page({
   const router = useRouter();
   const theme = useTheme();
   const userTimezone = dayjs.tz.guess();
+
+  const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -69,13 +73,15 @@ export default function Page({
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
-        <PostDropdown
-          post_id={post_id}
-          onDelete={() => {
-            deletePost(post_id);
-            router.push("/");
-          }}
-        />
+        {session?.user.user_id === user_id && (
+          <PostDropdown
+            post_id={post_id}
+            onDelete={() => {
+              deletePost(post_id);
+              router.push("/");
+            }}
+          />
+        )}
       </Stack>
 
       <Typography
