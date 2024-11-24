@@ -1,0 +1,112 @@
+"use client";
+
+import React from "react";
+import { Box, Typography, Stack, useTheme } from "@mui/material";
+import Post from "../post/Post";
+import BackButton from "../navigation/BackButton";
+import { useSession } from "next-auth/react";
+import { PostData } from "@/app/lib/posts";
+import FollowButton from "../follows/FollowButton";
+
+interface AccountViewProps {
+  user: {
+    user_id: number;
+    email: string;
+    password: string;
+    username: string;
+  };
+  posts: PostData[];
+  onDelete: (postId: number) => void;
+}
+
+export default function AccountView({
+  user,
+  posts,
+  onDelete,
+}: Readonly<AccountViewProps>) {
+  const { data: session } = useSession();
+  const theme = useTheme();
+
+  const isOwnProfile = session?.user?.user_id === user.user_id;
+
+  return (
+    <Box
+      sx={{
+        padding: 2,
+        maxWidth: 600,
+        margin: "0 auto",
+      }}
+    >
+      <Box
+        sx={{
+          borderRadius: "12px",
+          padding: 2,
+          background: "linear-gradient(135deg, #ffffff, #f9f9f9)",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          marginBottom: 3,
+          ...theme.applyStyles("dark", {
+            background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
+          }),
+        }}
+      >
+        <BackButton />
+        <Stack
+          direction="row"
+          alignItems="left"
+          justifyContent="space-between"
+          marginTop={1}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              color: "#333333",
+              wordBreak: "break-all",
+              textAlign: "center",
+              marginLeft: 1,
+              ...theme.applyStyles("dark", { color: "#ffffff" }),
+            }}
+          >
+            @{user.username}
+          </Typography>
+          <FollowButton user_id={user.user_id} />
+        </Stack>
+      </Box>
+
+      <Box>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <Post
+              key={post.post_id}
+              id={post.post_id}
+              date={new Date(post.postdate + "Z")}
+              content={post.text}
+              user_id={post.user_id}
+              poster={post.poster}
+              comment_count={post.comment_count}
+              imagePath={post.imageBlobUrl}
+              imageWidth={post.imageWidth}
+              imageHeight={post.imageHeight}
+              onDelete={() => onDelete(post.post_id)}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "center",
+              marginTop: 4,
+              color: "#777777",
+              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+            }}
+          >
+            {isOwnProfile
+              ? "You haven't posted anything yet."
+              : "This user hasn't posted anything yet."}
+          </Typography>
+        )}
+      </Box>
+    </Box>
+  );
+}

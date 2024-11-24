@@ -14,6 +14,7 @@ import PostDropdown from "./PostDropdown";
 import { deletePost } from "@/app/lib/posts";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -84,15 +85,20 @@ export default function Page({
         )}
       </Stack>
 
-      <Typography
-        variant="subtitle2"
-        sx={{
-          color: theme.palette.text.secondary,
-          alignSelf: "flex-end",
-        }}
-      >
-        @{username}
-      </Typography>
+      <Link href={`/user/${username}`}>
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: theme.palette.text.secondary,
+            alignSelf: "flex-end",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          @{username}
+        </Typography>
+      </Link>
 
       <Typography
         variant="h6"

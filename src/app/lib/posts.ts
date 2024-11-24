@@ -2,9 +2,21 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { comments, images, posts, users } from "@/db/schema";
-import { and, count, desc, eq } from "drizzle-orm";
+import { comments, follows, images, posts, users } from "@/db/schema";
+import { and, or, count, desc, eq, exists } from "drizzle-orm";
 import { deleteObject } from "./s3";
+
+export type PostData = {
+  post_id: number;
+  text: string | null;
+  postdate: string;
+  user_id: number;
+  poster: string;
+  comment_count: number;
+  imageBlobUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+};
 
 export async function getAllPosts() {
   const results = await db
@@ -23,6 +35,81 @@ export async function getAllPosts() {
     .innerJoin(users, eq(posts.user_id, users.user_id))
     .leftJoin(comments, eq(posts.post_id, comments.post_id))
     .leftJoin(images, eq(posts.post_id, images.post_id))
+    .groupBy(
+      posts.post_id,
+      users.user_id,
+      images.imageBlobUrl,
+      images.width,
+      images.height
+    )
+    .orderBy(desc(posts.postdate));
+
+  return results;
+}
+
+export async function getAllPostsForFollowing(user_id: number) {
+  const results = await db
+    .select({
+      post_id: posts.post_id,
+      text: posts.text,
+      postdate: posts.postdate,
+      user_id: users.user_id,
+      poster: users.username,
+      comment_count: count(comments.comment_id),
+      imageBlobUrl: images.imageBlobUrl,
+      imageWidth: images.width,
+      imageHeight: images.height,
+    })
+    .from(posts)
+    .innerJoin(users, eq(posts.user_id, users.user_id))
+    .leftJoin(comments, eq(posts.post_id, comments.post_id))
+    .leftJoin(images, eq(posts.post_id, images.post_id))
+    .where(
+      exists(
+        db
+          .select()
+          .from(follows)
+          .where(
+            or(
+              eq(posts.user_id, user_id),
+              and(
+                eq(follows.follower_id, user_id),
+                eq(follows.following_id, posts.user_id)
+              )
+            )
+          )
+      )
+    )
+    .groupBy(
+      posts.post_id,
+      users.user_id,
+      images.imageBlobUrl,
+      images.width,
+      images.height
+    )
+    .orderBy(desc(posts.postdate));
+
+  return results;
+}
+
+export async function getPostsByUserId(user_id: number) {
+  const results = await db
+    .select({
+      post_id: posts.post_id,
+      text: posts.text,
+      postdate: posts.postdate,
+      user_id: users.user_id,
+      poster: users.username,
+      comment_count: count(comments.comment_id),
+      imageBlobUrl: images.imageBlobUrl,
+      imageWidth: images.width,
+      imageHeight: images.height,
+    })
+    .from(posts)
+    .innerJoin(users, eq(posts.user_id, users.user_id))
+    .leftJoin(comments, eq(posts.post_id, comments.post_id))
+    .leftJoin(images, eq(posts.post_id, images.post_id))
+    .where(eq(users.user_id, user_id))
     .groupBy(
       posts.post_id,
       users.user_id,

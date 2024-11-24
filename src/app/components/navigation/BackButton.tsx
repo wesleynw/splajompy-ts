@@ -11,7 +11,13 @@ export default function BackButton() {
   return (
     <Button
       startIcon={<ArrowBackIcon />}
-      onClick={() => router.push("/")}
+      onClick={() => {
+        if (window.history?.length && window.history.length > 1) {
+          router.back();
+        } else {
+          router.push("/");
+        }
+      }}
       sx={{
         color: "#777777",
         ...theme.applyStyles("dark", { color: "#b0b0b0" }),

@@ -80,15 +80,21 @@ export default function Post({
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: "#777777",
-              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-            }}
-          >
-            @{poster}
-          </Typography>
+          <Link href={`/user/${poster}`}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: "#777777",
+                ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              @{poster}
+            </Typography>
+          </Link>
+          <Box sx={{ flexGrow: 1 }} />
           {session?.user?.user_id == user_id && (
             <PostDropdown post_id={id} onDelete={onDelete} />
           )}
