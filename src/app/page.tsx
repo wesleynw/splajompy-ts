@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
 import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
-import Feed from "./components/Feed";
+import Feed from "./components/feed/Feed";
 import { Box } from "@mui/material";
 
 export default async function Home() {
