@@ -1,19 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import Post from "./post/Post";
-import { getAllPosts, getAllPostsForFollowing } from "../lib/posts";
+import { Box, CircularProgress } from "@mui/material";
+import Post from "../post/Post";
+import { getAllPosts, getAllPostsForFollowing } from "../../lib/posts";
 import { SessionProvider } from "next-auth/react";
-import NewPost from "./post/NewPost/NewPost";
+import NewPost from "../post/NewPost/NewPost";
 import { Session } from "next-auth";
-import { useRouter } from "next/navigation";
+import EmptyFeed from "./EmptyFeed";
 
 export type Post = {
   post_id: number;
@@ -31,9 +25,6 @@ export default function Feed({
   session,
   fetchAllPosts,
 }: Readonly<{ session: Session; fetchAllPosts: boolean }>) {
-  const theme = useTheme();
-  const router = useRouter();
-
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
@@ -74,56 +65,19 @@ export default function Feed({
     return <div>Error loading posts.</div>;
   }
 
+  // if all the posts are by the current user, show them the same message about going to the all posts page
+  if (
+    posts.length > 0 &&
+    posts.every((post) => post.user_id === session.user.user_id)
+  ) {
+    return <EmptyFeed loading={loading} />;
+  }
+
   return (
     <Box>
       <SessionProvider session={session}>
         <NewPost posts={posts} setPosts={setPosts} />
-        {posts.length == 0 && (
-          <Box
-            maxWidth="600px"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            sx={{ margin: "0 auto", padding: 4 }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                textAlign: "center",
-                marginTop: 4,
-                color: "#777777",
-                paddingBottom: 2,
-              }}
-            >
-              Nobody you follow has posted anything yet.
-            </Typography>
-            <Button
-              onClick={() => router.push("/all")}
-              variant="contained"
-              size="medium"
-              disabled={loading}
-              sx={{
-                textTransform: "none",
-                borderRadius: "20px",
-                paddingX: 2,
-                paddingY: 0.5,
-                fontWeight: "bold",
-                fontSize: "0.875rem",
-                minWidth: "auto",
-                backgroundColor: "#1DA1F2",
-                color: "#ffffff",
-                ...theme.applyStyles("dark", {
-                  backgroundColor: "#1DA1F2",
-                }),
-                "&:hover": {
-                  backgroundColor: "#0d8de6",
-                },
-              }}
-            >
-              See all posts
-            </Button>
-          </Box>
-        )}
+        {posts.length == 0 && <EmptyFeed loading={loading} />}
         {posts.map((post) => (
           <Post
             key={post.post_id}
