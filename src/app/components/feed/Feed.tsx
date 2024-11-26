@@ -24,7 +24,12 @@ export type Post = {
 export default function Feed({
   session,
   fetchAllPosts,
-}: Readonly<{ session: Session; fetchAllPosts: boolean }>) {
+  showNewPost,
+}: Readonly<{
+  session: Session;
+  fetchAllPosts: boolean;
+  showNewPost: boolean;
+}>) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
@@ -76,7 +81,7 @@ export default function Feed({
   return (
     <Box>
       <SessionProvider session={session}>
-        <NewPost posts={posts} setPosts={setPosts} />
+        {showNewPost && <NewPost posts={posts} setPosts={setPosts} />}
         {posts.length == 0 && <EmptyFeed loading={loading} />}
         {posts.map((post) => (
           <Post

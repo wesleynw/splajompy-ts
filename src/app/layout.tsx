@@ -9,6 +9,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBarWrapper from "./components/navigation/TopBarWrapper";
+import Navigation from "./components/navigation/Navigation";
+import { AuthProvider } from "./components/AuthProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -19,7 +21,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "Splajompy",
-  description: "A work in progress",
+  description: "One of the websites of all time.",
 };
 
 export default function RootLayout({
@@ -37,7 +39,9 @@ export default function RootLayout({
             <Box component="main" sx={{ paddingTop: "60px" }}>
               {children}
             </Box>
-
+            <AuthProvider>
+              <Navigation />
+            </AuthProvider>
             <Analytics />
             <SpeedInsights />
           </ThemeProvider>
