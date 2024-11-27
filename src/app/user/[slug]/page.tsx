@@ -1,8 +1,10 @@
 import AccountView from "@/app/components/account/AccountView";
+import Navigation from "@/app/components/navigation/Navigation";
 import { getPostsByUserId } from "@/app/lib/posts";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -21,6 +23,10 @@ export default async function Page({
 
   const session = await auth();
 
+  if (!session) {
+    redirect("/login");
+  }
+
   const user = await getUserByUsername(username);
 
   if (!user) {
@@ -33,6 +39,7 @@ export default async function Page({
   return (
     <SessionProvider session={session}>
       <AccountView user={user} posts={posts} />
+      <Navigation session={session} />
     </SessionProvider>
   );
 }

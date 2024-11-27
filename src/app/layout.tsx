@@ -8,8 +8,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import Navigation from "./components/navigation/Navigation";
-import { AuthProvider } from "./components/AuthProvider";
 import TopBar from "./components/navigation/TopBar";
 
 const roboto = Roboto({
@@ -39,9 +37,7 @@ export default function RootLayout({
             <Box component="main" sx={{ paddingTop: "60px" }}>
               {children}
             </Box>
-            <AuthProvider>
-              <Navigation />
-            </AuthProvider>
+
             <Analytics />
             <SpeedInsights />
           </ThemeProvider>

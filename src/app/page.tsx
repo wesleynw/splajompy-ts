@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import Feed from "./components/feed/Feed";
 import { Box } from "@mui/material";
+import Navigation from "./components/navigation/Navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -31,6 +32,7 @@ export default async function Home() {
         >
           <Feed session={session} fetchAllPosts={false} showNewPost={true} />
         </Box>
+        <Navigation session={session} />
       </main>
     </div>
   );
