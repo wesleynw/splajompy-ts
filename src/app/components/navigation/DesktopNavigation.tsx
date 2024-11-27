@@ -66,15 +66,17 @@ export default function DesktopNavigation({
                   component={Link}
                   href={item.href}
                   sx={{
-                    border: `2px solid ${isActive ? "#1976d2" : "transparent"}`,
-                    borderRadius: "8px",
+                    border: "2px solid transparent",
+                    margin: "2px",
+                    outline: "none",
+                    borderRadius: "30px",
                     backgroundColor: isActive ? "#e3f2fd" : "transparent",
                     transition: "background-color 0.3s, border-color 0.3s",
                     "&:hover": {
                       backgroundColor: "#f5f5f5",
                     },
                     ...theme.applyStyles("dark", {
-                      borderColor: isActive ? "#90caf9" : "transparent",
+                      // borderColor: "transparent",
                       backgroundColor: isActive ? "#333333" : "transparent",
                       "&:hover": {
                         backgroundColor: "#444444",
