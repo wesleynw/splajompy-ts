@@ -67,22 +67,20 @@ export default function Feed({
   }
 
   if (error) {
+    // TODO: better error page
     return <div>Error loading posts.</div>;
   }
 
-  // if all the posts are by the current user, show them the same message about going to the all posts page
-  if (
-    posts.length > 0 &&
-    posts.every((post) => post.user_id === session.user.user_id)
-  ) {
-    return <EmptyFeed loading={loading} />;
-  }
+  const isOnlyCurrentUsersPosts = posts.every(
+    (post) => post.user_id === session.user.user_id
+  );
 
   return (
     <Box sx={{ marginBottom: "60px" }}>
       <SessionProvider session={session}>
         {showNewPost && <NewPost posts={posts} setPosts={setPosts} />}
         {posts.length == 0 && <EmptyFeed loading={loading} />}
+        {isOnlyCurrentUsersPosts && <EmptyFeed loading={loading} />}
         {posts.map((post) => (
           <Post
             key={post.post_id}

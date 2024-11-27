@@ -12,6 +12,7 @@ import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
 import theme from "@/theme";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -42,6 +43,7 @@ export default function Post({
   imageHeight,
   onDelete,
 }: Readonly<Props>) {
+  const router = useRouter();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
@@ -80,20 +82,22 @@ export default function Post({
           alignItems="center"
           justifyContent="space-between"
         >
-          <Link href={`/user/${poster}`}>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                color: "#777777",
-                ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
-            >
-              @{poster}
-            </Typography>
-          </Link>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: "#777777",
+              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(`/user/${poster}`);
+            }}
+          >
+            @{poster}
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {session?.user?.user_id == user_id && onDelete && (
             <PostDropdown post_id={id} onDelete={onDelete} />

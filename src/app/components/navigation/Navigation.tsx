@@ -8,7 +8,7 @@ import DesktopNavigation from "./DesktopNavigation";
 export default function Navigation() {
   const { data: session } = useSession();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   if (!session?.user) {
     return null;

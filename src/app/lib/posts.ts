@@ -65,19 +65,19 @@ export async function getAllPostsForFollowing(user_id: number) {
     .leftJoin(comments, eq(posts.post_id, comments.post_id))
     .leftJoin(images, eq(posts.post_id, images.post_id))
     .where(
-      exists(
-        db
-          .select()
-          .from(follows)
-          .where(
-            or(
-              eq(posts.user_id, user_id),
+      or(
+        eq(posts.user_id, user_id),
+        exists(
+          db
+            .select()
+            .from(follows)
+            .where(
               and(
                 eq(follows.follower_id, user_id),
                 eq(follows.following_id, posts.user_id)
               )
             )
-          )
+        )
       )
     )
     .groupBy(

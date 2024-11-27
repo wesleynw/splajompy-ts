@@ -5,7 +5,6 @@ import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 interface BottomNavProps {
   username: string;
@@ -14,12 +13,6 @@ interface BottomNavProps {
 export default function BottomNav({ username }: Readonly<BottomNavProps>) {
   const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    router.prefetch("/");
-    router.prefetch("/all");
-    router.prefetch(`/user/${username}`);
-  }, [router, username]);
 
   const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
     if (targetPath === pathname) {

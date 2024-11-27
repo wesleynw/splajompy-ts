@@ -28,20 +28,15 @@ export default function AccountView({
   const isOwnProfile = session?.user?.user_id === user.user_id;
 
   return (
-    <Box
-      sx={{
-        padding: 2,
-        maxWidth: 600,
-        margin: "0 auto",
-      }}
-    >
+    <Box>
       <Box
         sx={{
-          borderRadius: "12px",
+          maxWidth: 600,
+          borderRadius: "8px",
           padding: 2,
           background: "linear-gradient(135deg, #ffffff, #f9f9f9)",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-          marginBottom: 3,
+          margin: "10px auto",
           ...theme.applyStyles("dark", {
             background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",

@@ -24,8 +24,7 @@ export default function EmptyFeed({ loading }: Readonly<Props>) {
           paddingBottom: 2,
         }}
       >
-        Click on a post and follow other people to have their posts show up
-        here.
+        Follow other users to see their posts here.
       </Typography>
       <Button
         onClick={() => router.push("/all")}
