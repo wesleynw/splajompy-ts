@@ -79,7 +79,7 @@ export default function Feed({
   }
 
   return (
-    <Box>
+    <Box sx={{ marginBottom: "60px" }}>
       <SessionProvider session={session}>
         {showNewPost && <NewPost posts={posts} setPosts={setPosts} />}
         {posts.length == 0 && <EmptyFeed loading={loading} />}

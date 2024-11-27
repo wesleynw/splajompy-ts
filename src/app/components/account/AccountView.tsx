@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Stack, useTheme } from "@mui/material";
+import { Box, Typography, Stack, useTheme, Button } from "@mui/material";
 import Post from "../post/Post";
 import BackButton from "../navigation/BackButton";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { PostData } from "@/app/lib/posts";
 import FollowButton from "../follows/FollowButton";
 
@@ -48,7 +48,38 @@ export default function AccountView({
           }),
         }}
       >
-        <BackButton />
+        <Box display="flex" justifyContent="space-between">
+          <BackButton />
+          {isOwnProfile && (
+            <Button
+              variant="contained"
+              size="medium"
+              onClick={() => {
+                signOut();
+              }}
+              sx={{
+                textTransform: "none",
+                borderRadius: "20px",
+                paddingX: 2,
+                paddingY: 0.5,
+                fontWeight: "bold",
+                fontSize: "0.875rem",
+                minWidth: "auto",
+                backgroundColor: "#1DA1F2",
+                color: "#ffffff",
+                ...theme.applyStyles("dark", {
+                  backgroundColor: "#1DA1F2",
+                }),
+                "&:hover": {
+                  backgroundColor: "#0d8de6",
+                },
+              }}
+            >
+              Sign Out
+            </Button>
+          )}
+          <FollowButton user_id={user.user_id} show_unfollow={true} />
+        </Box>
         <Stack
           direction="row"
           alignItems="left"
@@ -68,11 +99,10 @@ export default function AccountView({
           >
             @{user.username}
           </Typography>
-          <FollowButton user_id={user.user_id} show_unfollow={true} />
         </Stack>
       </Box>
 
-      <Box>
+      <Box sx={{ marginBottom: "100px" }}>
         {posts.length > 0 ? (
           posts.map((post) => (
             <Post

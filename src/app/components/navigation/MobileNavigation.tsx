@@ -3,37 +3,38 @@
 import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
-import { useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function BottomNav({
-  username,
-}: Readonly<{ username: string }>) {
-  const [value, setValue] = useState(0);
+interface BottomNavProps {
+  username: string;
+}
+
+export default function BottomNav({ username }: Readonly<BottomNavProps>) {
+  const pathname = usePathname();
+
   return (
     <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
-      <BottomNavigation
-        value={value}
-        onChange={(_event, newValue) => {
-          setValue(newValue);
-        }}
-      >
+      <BottomNavigation value={pathname}>
         <BottomNavigationAction
+          value="/"
           icon={<HomeIcon />}
-          LinkComponent={Link}
+          component={Link}
           href="/"
           disableRipple
         />
         <BottomNavigationAction
+          value="/all"
           icon={<PublicIcon />}
-          LinkComponent={Link}
+          component={Link}
           href="/all"
           disableRipple
         />
         <BottomNavigationAction
+          value={`/user/${username}`}
           icon={<PersonIcon />}
-          LinkComponent={Link}
+          component={Link}
           href={`/user/${username}`}
           disableRipple
         />
