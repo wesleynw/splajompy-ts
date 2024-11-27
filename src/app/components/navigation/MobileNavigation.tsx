@@ -4,8 +4,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface BottomNavProps {
   username: string;
@@ -13,6 +13,22 @@ interface BottomNavProps {
 
 export default function BottomNav({ username }: Readonly<BottomNavProps>) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch("/");
+    router.prefetch("/all");
+    router.prefetch(`/user/${username}`);
+  }, [router, username]);
+
+  const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
+    if (targetPath === pathname) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push(targetPath);
+    }
+  };
 
   return (
     <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
@@ -20,22 +36,19 @@ export default function BottomNav({ username }: Readonly<BottomNavProps>) {
         <BottomNavigationAction
           value="/"
           icon={<HomeIcon />}
-          component={Link}
-          href="/"
+          onClick={(event) => handleNavigation(event, "/")}
           disableRipple
         />
         <BottomNavigationAction
           value="/all"
           icon={<PublicIcon />}
-          component={Link}
-          href="/all"
+          onClick={(event) => handleNavigation(event, "/all")}
           disableRipple
         />
         <BottomNavigationAction
           value={`/user/${username}`}
           icon={<PersonIcon />}
-          component={Link}
-          href={`/user/${username}`}
+          onClick={(event) => handleNavigation(event, `/user/${username}`)}
           disableRipple
         />
       </BottomNavigation>
