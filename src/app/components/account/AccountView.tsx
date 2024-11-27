@@ -28,12 +28,12 @@ export default function AccountView({
   const isOwnProfile = session?.user?.user_id === user.user_id;
 
   return (
-    <Box>
+    <Box sx={{ px: { xs: 2, md: 4 } }}>
       <Box
         sx={{
           maxWidth: 600,
           borderRadius: "8px",
-          padding: 2,
+          padding: 3,
           background: "linear-gradient(135deg, #ffffff, #f9f9f9)",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
           margin: "10px auto",
