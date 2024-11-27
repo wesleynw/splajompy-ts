@@ -9,7 +9,7 @@ import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { useSession } from "next-auth/react";
-import { Post } from "../../feed/Feed";
+import { Post } from "../../../data/FeedProvider";
 
 type NewPostProps = {
   posts: Post[];

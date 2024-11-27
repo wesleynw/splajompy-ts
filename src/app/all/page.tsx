@@ -26,8 +26,8 @@ export default async function Home() {
         >
           <Feed session={session} fetchAllPosts={true} showNewPost={false} />
         </Box>
-        <Navigation session={session} />
       </main>
+      <Navigation session={session} />
     </div>
   );
 }

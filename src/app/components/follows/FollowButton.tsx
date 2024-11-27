@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
 import { Button, useTheme } from "@mui/material";
+import { useFeed } from "@/app/data/FeedProvider";
 
 type Props = {
   user_id: number;
@@ -21,6 +22,8 @@ export default function FollowButton({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const theme = useTheme();
+
+  const { refreshPosts } = useFeed();
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
@@ -57,6 +60,7 @@ export default function FollowButton({
       console.error("Failed to update follow status:", error);
     } finally {
       setLoading(false);
+      refreshPosts(session.user.user_id);
     }
   };
 

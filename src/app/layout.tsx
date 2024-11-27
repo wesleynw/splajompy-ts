@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBar from "./components/navigation/TopBar";
+import { FeedProvider } from "./data/FeedProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -35,7 +36,7 @@ export default function RootLayout({
             <TopBar />
             <InitColorSchemeScript attribute="class" />
             <Box component="main" sx={{ paddingTop: "60px" }}>
-              {children}
+              <FeedProvider>{children}</FeedProvider>
             </Box>
 
             <Analytics />

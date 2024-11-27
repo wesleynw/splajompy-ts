@@ -55,8 +55,8 @@ export default function DesktopNavigation({
       }}
     >
       <Toolbar />
-      <Box sx={{ overflow: "auto" }}>
-        <List>
+      <Box sx={{ overflow: "auto", padding: "16px 8px" }}>
+        <List sx={{ padding: 0 }}>
           {navItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -67,7 +67,9 @@ export default function DesktopNavigation({
                   href={item.href}
                   sx={{
                     border: "2px solid transparent",
-                    margin: "2px",
+                    margin: "4px 0",
+                    padding: "12px 16px",
+                    minHeight: "48px",
                     outline: "none",
                     borderRadius: "30px",
                     backgroundColor: isActive ? "#e3f2fd" : "transparent",
@@ -76,7 +78,6 @@ export default function DesktopNavigation({
                       backgroundColor: "#f5f5f5",
                     },
                     ...theme.applyStyles("dark", {
-                      // borderColor: "transparent",
                       backgroundColor: isActive ? "#333333" : "transparent",
                       "&:hover": {
                         backgroundColor: "#444444",
