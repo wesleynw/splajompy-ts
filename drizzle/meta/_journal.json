@@ -5,71 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730785203368,
-      "tag": "0000_tense_pretty_boy",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730785234918,
-      "tag": "0001_lowly_impossible_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1730788059765,
-      "tag": "0002_lying_captain_flint",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1731455141595,
-      "tag": "0003_freezing_abomination",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1731536732250,
-      "tag": "0004_shallow_ricochet",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1731628214779,
-      "tag": "0005_aspiring_scream",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1731703941127,
-      "tag": "0006_colorful_james_howlett",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1731859288781,
-      "tag": "0007_bouncy_vance_astro",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1732415798741,
-      "tag": "0008_lush_fabian_cortez",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1732417970517,
-      "tag": "0009_known_maddog",
+      "when": 1732744442116,
+      "tag": "0000_short_rictor",
       "breakpoints": true
     }
   ]
