@@ -5,6 +5,7 @@ import {
   integer,
   timestamp,
   text,
+  unique,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -25,7 +26,7 @@ export const posts = pgTable("posts", {
     .references(() => users.user_id, {
       onDelete: "cascade",
     }),
-  text: varchar({ length: 255 }),
+  text: text(),
   postdate: timestamp({ mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -64,3 +65,19 @@ export const images = pgTable("images", {
 });
 
 export type SelectImage = typeof images.$inferSelect;
+
+export const follows = pgTable(
+  "follows",
+  {
+    follower_id: integer("follower_id")
+      .notNull()
+      .references(() => users.user_id, { onDelete: "cascade" }),
+    following_id: integer("following_id")
+      .notNull()
+      .references(() => users.user_id, {
+        onDelete: "cascade",
+      }),
+    created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [unique().on(table.follower_id, table.following_id)]
+);

@@ -1,20 +1,14 @@
-import styles from "./page.module.css";
-import { auth, signOut } from "@/auth";
+import styles from "../page.module.css";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Feed from "./components/feed/Feed";
+import Feed from "../components/feed/Feed";
 import { Box } from "@mui/material";
-import Navigation from "./components/navigation/Navigation";
+import Navigation from "../components/navigation/Navigation";
 
 export default async function Home() {
   const session = await auth();
 
   if (!session) {
-    redirect("/login");
-  }
-
-  // if the user has an old JWT token, without their username, sign them out
-  if (!session.user.username) {
-    signOut();
     redirect("/login");
   }
 
@@ -30,7 +24,7 @@ export default async function Home() {
             paddingBottom: 20,
           }}
         >
-          <Feed session={session} fetchAllPosts={false} showNewPost={true} />
+          <Feed session={session} fetchAllPosts={true} showNewPost={false} />
         </Box>
       </main>
       <Navigation session={session} />

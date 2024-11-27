@@ -2,10 +2,9 @@
 
 import theme from "@/theme";
 import { Box, Typography } from "@mui/material";
+import Link from "next/link";
 
-export default function TopBar({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function TopBar() {
   return (
     <Box
       component="header"
@@ -34,12 +33,12 @@ export default function TopBar({
           height: "100%",
         }}
       >
-        <Typography variant="h5" fontWeight={700} sx={{ paddingX: 2 }}>
-          Splajompy
-        </Typography>
+        <Link href="/">
+          <Typography variant="h5" fontWeight={700} sx={{ paddingX: 2 }}>
+            Splajompy
+          </Typography>
+        </Link>
       </Box>
-      {/* TODO: shifts the logo slightly to the left when logged in */}
-      <Box sx={{ position: "absolute", top: 10, right: 10 }}>{children}</Box>
     </Box>
   );
 }

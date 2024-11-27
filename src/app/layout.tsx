@@ -8,7 +8,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import TopBarWrapper from "./components/navigation/TopBarWrapper";
+import TopBar from "./components/navigation/TopBar";
+import { FeedProvider } from "./data/FeedProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -19,7 +20,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "Splajompy",
-  description: "A work in progress",
+  description: "One of the websites of all time.",
 };
 
 export default function RootLayout({
@@ -32,10 +33,10 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <TopBarWrapper />
+            <TopBar />
             <InitColorSchemeScript attribute="class" />
             <Box component="main" sx={{ paddingTop: "60px" }}>
-              {children}
+              <FeedProvider>{children}</FeedProvider>
             </Box>
 
             <Analytics />
