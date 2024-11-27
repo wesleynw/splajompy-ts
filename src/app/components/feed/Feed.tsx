@@ -79,7 +79,6 @@ export default function Feed({
     <Box sx={{ marginBottom: "60px" }}>
       <SessionProvider session={session}>
         {showNewPost && <NewPost posts={posts} setPosts={setPosts} />}
-        {posts.length == 0 && <EmptyFeed loading={loading} />}
         {isOnlyCurrentUsersPosts && <EmptyFeed loading={loading} />}
         {posts.map((post) => (
           <Post
