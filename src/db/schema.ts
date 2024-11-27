@@ -26,7 +26,7 @@ export const posts = pgTable("posts", {
     .references(() => users.user_id, {
       onDelete: "cascade",
     }),
-  text: varchar({ length: 255 }),
+  text: text(),
   postdate: timestamp({ mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
