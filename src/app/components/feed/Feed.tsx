@@ -5,10 +5,11 @@ import { Box, CircularProgress } from "@mui/material";
 import Post from "../post/Post";
 import { getAllPosts, getAllPostsForFollowing } from "../../lib/posts";
 import { useFeed } from "../../data/FeedProvider";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signOut } from "next-auth/react";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 export default function Feed({
   session,
@@ -19,6 +20,12 @@ export default function Feed({
   fetchAllPosts: boolean;
   showNewPost: boolean;
 }>) {
+  const router = useRouter();
+  // if the user has an old JWT token without their username, sign them out
+  if (!session.user.username) {
+    signOut();
+    router.push("/login");
+  }
   const { posts, setPosts, allPosts, setAllPosts } = useFeed();
   const [loading, setLoading] = useState(
     fetchAllPosts ? allPosts.length === 0 : posts.length === 0

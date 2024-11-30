@@ -57,6 +57,7 @@ export default function Page({
         maxWidth: 600,
         margin: "6px auto",
         padding: 3,
+        paddingBottom: 10,
         borderRadius: "8px",
         backgroundColor: "background.paper",
         background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
