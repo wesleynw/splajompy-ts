@@ -24,7 +24,14 @@ export default function BottomNav({ username }: Readonly<BottomNavProps>) {
   };
 
   return (
-    <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+      }}
+    >
       <BottomNavigation value={pathname}>
         <BottomNavigationAction
           value="/"

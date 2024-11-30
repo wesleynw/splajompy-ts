@@ -5,8 +5,9 @@ import { Box, Typography, Stack, useTheme, Button } from "@mui/material";
 import Post from "../post/Post";
 import BackButton from "../navigation/BackButton";
 import { signOut, useSession } from "next-auth/react";
-import { PostData } from "@/app/lib/posts";
+import { deletePost, PostData } from "@/app/lib/posts";
 import FollowButton from "../follows/FollowButton";
+import { useRouter } from "next/navigation";
 
 interface AccountViewProps {
   user: {
@@ -22,6 +23,7 @@ export default function AccountView({
   user,
   posts,
 }: Readonly<AccountViewProps>) {
+  const router = useRouter();
   const { data: session } = useSession();
   const theme = useTheme();
 
@@ -111,6 +113,10 @@ export default function AccountView({
               imagePath={post.imageBlobUrl}
               imageWidth={post.imageWidth}
               imageHeight={post.imageHeight}
+              onDelete={() => {
+                deletePost(post.post_id);
+                router.refresh(); // TODO: something more efficient than this, use client component with local state?
+              }}
             />
           ))
         ) : (

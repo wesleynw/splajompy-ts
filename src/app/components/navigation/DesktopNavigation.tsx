@@ -30,7 +30,7 @@ export default function DesktopNavigation({
       icon: <HomeIcon fontSize="large" />,
     },
     {
-      label: "Explore",
+      label: "All",
       href: "/all",
       icon: <PublicIcon fontSize="large" />,
     },
