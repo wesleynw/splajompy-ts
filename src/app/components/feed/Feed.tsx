@@ -21,11 +21,6 @@ export default function Feed({
   showNewPost: boolean;
 }>) {
   const router = useRouter();
-  // if the user has an old JWT token without their username, sign them out
-  if (!session.user.username) {
-    signOut();
-    router.push("/login");
-  }
   const { posts, setPosts, allPosts, setAllPosts } = useFeed();
   const [loading, setLoading] = useState(
     fetchAllPosts ? allPosts.length === 0 : posts.length === 0
@@ -36,6 +31,11 @@ export default function Feed({
   const setCurrentPosts = fetchAllPosts ? setAllPosts : setPosts;
 
   useEffect(() => {
+    // if the user has an old JWT token without their username, sign them out
+    if (!session.user.username) {
+      signOut();
+      router.push("/login");
+    }
     if (currentPosts.length > 0) return;
 
     const fetchPosts = async () => {
@@ -58,6 +58,8 @@ export default function Feed({
     session.user.user_id,
     setCurrentPosts,
     currentPosts.length,
+    router,
+    session.user.username,
   ]);
 
   const isOnlyCurrentUsersPosts = useMemo(
