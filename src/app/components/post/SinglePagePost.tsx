@@ -52,7 +52,7 @@ export default function PostPageContent() {
         maxWidth: 600,
         margin: "6px auto",
         padding: 3,
-        paddingBottom: 10,
+        marginBottom: 10,
         borderRadius: "8px",
         backgroundColor: "background.paper",
         background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
@@ -128,26 +128,28 @@ export default function PostPageContent() {
         </>
       )}
 
-      <Typography
-        variant="body2"
-        sx={{
-          color: theme.palette.text.secondary,
-          marginBottom: 1,
-        }}
-      >
-        {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
-      </Typography>
-
-      {session?.user.user_id && (
-        <LikeButton
-          post_id={post.post_id}
-          user_id={session?.user.user_id}
-          liked={post.liked}
-          setLiked={() => {
-            updatePost({ liked: !post.liked });
+      <Box display="flex" justifyContent="space-between">
+        <Typography
+          variant="body2"
+          sx={{
+            color: theme.palette.text.secondary,
+            marginBottom: 1,
           }}
-        />
-      )}
+        >
+          {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
+        </Typography>
+
+        {session?.user.user_id && (
+          <LikeButton
+            post_id={post.post_id}
+            user_id={session?.user.user_id}
+            liked={post.liked}
+            setLiked={() => {
+              updatePost({ liked: !post.liked });
+            }}
+          />
+        )}
+      </Box>
 
       <Suspense fallback={<div>Loading...</div>}>
         <CommentList

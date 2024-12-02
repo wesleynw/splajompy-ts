@@ -16,7 +16,7 @@ import { PostData } from "@/app/lib/posts";
 import FollowButton from "../follows/FollowButton";
 import { useFeed } from "@/app/data/FeedProvider";
 
-interface AccountViewProps {
+interface Props {
   user: {
     user_id: number;
     email: string;
@@ -25,7 +25,7 @@ interface AccountViewProps {
   };
 }
 
-export default function AccountView({ user }: Readonly<AccountViewProps>) {
+export default function UserView({ user }: Readonly<Props>) {
   const { posts, fetchFeed, deletePostFromFeed, updatePost, loading, error } =
     useFeed();
   const { data: session } = useSession();

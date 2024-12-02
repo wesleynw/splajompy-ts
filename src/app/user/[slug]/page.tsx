@@ -1,9 +1,10 @@
-import AccountView from "@/app/components/user/UserView";
+import UserView from "@/app/components/user/UserView";
 import Navigation from "@/app/components/navigation/Navigation";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { Box, Typography } from "@mui/material";
 
 export async function generateMetadata({
   params,
@@ -29,13 +30,41 @@ export default async function Page({
   const user = await getUserByUsername(username);
 
   if (!user) {
-    // TODO: better 404 page
-    return <h1>User not found</h1>;
+    return (
+      <Box
+        maxWidth="600px"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        sx={{ margin: "0 auto", padding: 4 }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: "center",
+            color: "#777777",
+            paddingBottom: 2,
+          }}
+        >
+          This user doesn&apos;t exist.
+        </Typography>
+      </Box>
+    );
   }
 
   return (
     <SessionProvider session={session}>
-      <AccountView user={user} />
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: { xs: "100%", md: "600px" },
+          margin: "auto",
+          boxSizing: "border-box",
+          paddingBottom: 20,
+        }}
+      >
+        <UserView user={user} />
+      </Box>
       <Navigation session={session} />
     </SessionProvider>
   );
