@@ -101,8 +101,8 @@ export default function PostPageContent() {
           marginBottom: 2,
         }}
       >
-        {post.text?.split("\n").map((line: string, index: number) => (
-          <React.Fragment key={index}>
+        {post.text?.split("\n").map((line: string) => (
+          <React.Fragment key={line.substring(0, 10)}>
             {line}
             <br />
           </React.Fragment>

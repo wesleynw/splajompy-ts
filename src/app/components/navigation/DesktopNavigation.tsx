@@ -11,17 +11,17 @@ import {
   Toolbar,
   Box,
 } from "@mui/material";
-import Link from "next/link";
 import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import theme from "@/theme";
 
 export default function DesktopNavigation({
   username,
 }: Readonly<{ username: string }>) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     {
@@ -40,6 +40,15 @@ export default function DesktopNavigation({
       icon: <PersonIcon fontSize="large" />,
     },
   ];
+
+  const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
+    if (targetPath === pathname) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push(targetPath, { scroll: false });
+    }
+  };
 
   return (
     <Drawer
@@ -63,8 +72,7 @@ export default function DesktopNavigation({
             return (
               <ListItem key={item.label} disablePadding>
                 <ListItemButton
-                  component={Link}
-                  href={item.href}
+                  onClick={(event) => handleNavigation(event, item.href)}
                   sx={{
                     border: "2px solid transparent",
                     margin: "4px 0",

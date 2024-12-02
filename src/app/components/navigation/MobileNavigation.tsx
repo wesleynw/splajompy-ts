@@ -19,7 +19,7 @@ export default function BottomNav({ username }: Readonly<BottomNavProps>) {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      router.push(targetPath);
+      router.push(targetPath, { scroll: false });
     }
   };
 
