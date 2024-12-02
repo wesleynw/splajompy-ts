@@ -145,27 +145,29 @@ export default function AccountView({ user }: Readonly<AccountViewProps>) {
 
       <Box sx={{ marginBottom: "100px" }}>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <Post
-              key={post.post_id}
-              id={post.post_id}
-              date={new Date(post.postdate + "Z")}
-              content={post.text}
-              user_id={post.user_id}
-              poster={post.poster}
-              comment_count={post.comment_count}
-              imagePath={post.imageBlobUrl}
-              imageWidth={post.imageWidth}
-              imageHeight={post.imageHeight}
-              likedByCurrentUser={post.liked}
-              updateParentContext={(updatedAttributes: Partial<PostData>) => {
-                updatePost(post.post_id, updatedAttributes);
-              }}
-              onDelete={() => {
-                deletePostFromFeed(post.post_id);
-              }}
-            />
-          ))
+          posts
+            .filter((post) => post.user_id == session?.user.user_id)
+            .map((post) => (
+              <Post
+                key={post.post_id}
+                id={post.post_id}
+                date={new Date(post.postdate + "Z")}
+                content={post.text}
+                user_id={post.user_id}
+                poster={post.poster}
+                comment_count={post.comment_count}
+                imagePath={post.imageBlobUrl}
+                imageWidth={post.imageWidth}
+                imageHeight={post.imageHeight}
+                likedByCurrentUser={post.liked}
+                updateParentContext={(updatedAttributes: Partial<PostData>) => {
+                  updatePost(post.post_id, updatedAttributes);
+                }}
+                onDelete={() => {
+                  deletePostFromFeed(post.post_id);
+                }}
+              />
+            ))
         ) : (
           <Typography
             variant="h6"

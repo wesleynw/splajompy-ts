@@ -1,4 +1,4 @@
-import AccountView from "@/app/components/account/AccountView";
+import AccountView from "@/app/components/user/UserView";
 import Navigation from "@/app/components/navigation/Navigation";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
