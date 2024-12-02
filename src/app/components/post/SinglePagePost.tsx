@@ -1,12 +1,11 @@
 "use client";
 
+import React, { Suspense, useState } from "react";
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import React, { Suspense, useState } from "react";
-import CommentList from "./comment/CommentList";
 import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
@@ -16,40 +15,36 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
+import LikeButton from "./LikeButton";
+import CommentList from "./comment/CommentList";
+import { usePost } from "@/app/data/PostProvider";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface Props {
-  post_id: number;
-  user_id: number;
-  username: string;
-  text: string | null;
-  postdate: string;
-  imagePath: string | null;
-  imageWidth: number | null;
-  imageHeight: number | null;
-}
-
-export default function Page({
-  post_id,
-  user_id,
-  username,
-  text,
-  postdate,
-  imagePath,
-  imageWidth,
-  imageHeight,
-}: Readonly<Props>) {
-  const router = useRouter();
+export default function PostPageContent() {
   const theme = useTheme();
-  const userTimezone = dayjs.tz.guess();
-
+  const router = useRouter();
+  const { post, updatePost } = usePost();
   const { data: session } = useSession();
+  const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+
+  if (!post) {
+    return <Typography variant="h6">Post not found.</Typography>;
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deletePost(post.post_id);
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
 
   return (
     <Box
@@ -76,20 +71,14 @@ export default function Page({
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
-        {session?.user.user_id === user_id ? (
-          <PostDropdown
-            post_id={post_id}
-            onDelete={() => {
-              deletePost(post_id);
-              router.push("/");
-            }}
-          />
+        {session?.user.user_id === post.user_id ? (
+          <PostDropdown post_id={post.post_id} onDelete={handleDelete} />
         ) : (
-          <FollowButton user_id={user_id} show_unfollow={false} />
+          <FollowButton user_id={post.user_id} show_unfollow={false} />
         )}
       </Stack>
 
-      <Link href={`/user/${username}`}>
+      <Link href={`/user/${post.poster}`}>
         <Typography
           variant="subtitle2"
           sx={{
@@ -100,7 +89,7 @@ export default function Page({
             },
           }}
         >
-          @{username}
+          @{post.poster}
         </Typography>
       </Link>
 
@@ -112,7 +101,7 @@ export default function Page({
           marginBottom: 2,
         }}
       >
-        {text?.split("\n").map((line, index) => (
+        {post.text?.split("\n").map((line: string, index: number) => (
           <React.Fragment key={index}>
             {line}
             <br />
@@ -120,19 +109,19 @@ export default function Page({
         ))}
       </Typography>
 
-      {imagePath && imageWidth && imageHeight && (
+      {post.imageBlobUrl && post.imageWidth && post.imageHeight && (
         <>
           <ResponsiveImage
-            imagePath={imagePath}
-            width={imageWidth}
-            height={imageHeight}
+            imagePath={post.imageBlobUrl}
+            width={post.imageWidth}
+            height={post.imageHeight}
             setOpen={setOpen}
           />
 
           <ImageModal
-            imagePath={imagePath}
-            imageWidth={imageWidth}
-            imageHeight={imageHeight}
+            imagePath={post.imageBlobUrl}
+            imageWidth={post.imageWidth}
+            imageHeight={post.imageHeight}
             open={open}
             handleClose={handleClose}
           />
@@ -146,11 +135,28 @@ export default function Page({
           marginBottom: 1,
         }}
       >
-        {dayjs.utc(postdate).tz(userTimezone).fromNow()}
+        {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
       </Typography>
 
+      {session?.user.user_id && (
+        <LikeButton
+          post_id={post.post_id}
+          user_id={session?.user.user_id}
+          liked={post.liked}
+          setLiked={() => {
+            updatePost({ liked: !post.liked });
+          }}
+        />
+      )}
+
       <Suspense fallback={<div>Loading...</div>}>
-        <CommentList post_id={post_id} />
+        <CommentList
+          post_id={post.post_id}
+          commentCount={post.comment_count}
+          setCommentCount={() => {
+            updatePost({ comment_count: post.comment_count + 1 });
+          }}
+        />
       </Suspense>
     </Box>
   );

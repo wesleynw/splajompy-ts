@@ -132,8 +132,6 @@ export async function insertComment(text: string, post_id: number) {
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
 
-    revalidatePath("/");
-
     return result;
   }
 }

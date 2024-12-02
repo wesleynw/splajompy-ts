@@ -23,7 +23,7 @@ export default function FollowButton({
 
   const theme = useTheme();
 
-  const { refreshPosts } = useFeed();
+  const { fetchFeed } = useFeed();
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
@@ -60,7 +60,7 @@ export default function FollowButton({
       console.error("Failed to update follow status:", error);
     } finally {
       setLoading(false);
-      refreshPosts(session.user.user_id);
+      fetchFeed(true);
     }
   };
 

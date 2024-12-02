@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
 import { Box, CircularProgress } from "@mui/material";
-import Post from "../post/Post";
-import { getAllPosts, getAllPostsForFollowing } from "../../lib/posts";
-import { useFeed } from "../../data/FeedProvider";
-import { SessionProvider, signOut } from "next-auth/react";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
+import { PostType, useFeed } from "../../data/FeedProvider";
+import { SessionProvider, signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Post from "../post/Post";
 
 export default function Feed({
   session,
@@ -21,51 +20,34 @@ export default function Feed({
   showNewPost: boolean;
 }>) {
   const router = useRouter();
-  const { posts, setPosts, allPosts, setAllPosts } = useFeed();
-  const [loading, setLoading] = useState(
-    fetchAllPosts ? allPosts.length === 0 : posts.length === 0
-  );
-  const [error, setError] = useState<unknown>(null);
-
+  const {
+    posts,
+    allPosts,
+    loading,
+    error,
+    fetchFeed,
+    insertPostToFeed,
+    deletePostFromFeed,
+    updatePost,
+  } = useFeed();
   const currentPosts = fetchAllPosts ? allPosts : posts;
-  const setCurrentPosts = fetchAllPosts ? setAllPosts : setPosts;
 
   useEffect(() => {
-    // if the user has an old JWT token without their username, sign them out
     if (!session.user.username) {
       signOut();
       router.push("/login");
     }
-    if (currentPosts.length > 0) return;
 
-    const fetchPosts = async () => {
-      try {
-        const results = fetchAllPosts
-          ? await getAllPosts()
-          : await getAllPostsForFollowing(session.user.user_id);
-        setCurrentPosts(results);
-      } catch (err) {
-        console.error("Failed to fetch posts:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
+    if (currentPosts.length === 0) {
+      fetchFeed(fetchAllPosts);
+    }
   }, [
+    fetchFeed,
     fetchAllPosts,
-    session.user.user_id,
-    setCurrentPosts,
+    session.user.username,
     currentPosts.length,
     router,
-    session.user.username,
   ]);
-
-  const isOnlyCurrentUsersPosts = useMemo(
-    () => currentPosts.every((post) => post.user_id === session.user.user_id),
-    [currentPosts, session.user.user_id]
-  );
 
   if (loading) {
     return (
@@ -95,12 +77,14 @@ export default function Feed({
     );
   }
 
+  const isOnlyCurrentUsersPosts = currentPosts.every(
+    (post) => post.user_id === session.user.user_id
+  );
+
   return (
     <Box sx={{ marginBottom: "60px", px: { xs: 2, md: 4 } }}>
       <SessionProvider session={session}>
-        {showNewPost && (
-          <NewPost posts={currentPosts} setPosts={setCurrentPosts} />
-        )}
+        {showNewPost && <NewPost insertPostToFeed={insertPostToFeed} />}
         {isOnlyCurrentUsersPosts && <EmptyFeed loading={loading} />}
         {currentPosts.map((post) => (
           <Post
@@ -110,13 +94,11 @@ export default function Feed({
             content={post.text}
             imagePath={post.imageBlobUrl}
             {...post}
-            onDelete={() => {
-              if (session.user.user_id === post.user_id) {
-                setCurrentPosts(
-                  currentPosts.filter((p) => p.post_id !== post.post_id)
-                );
-              }
+            likedByCurrentUser={post.liked}
+            updateParentContext={(updatedAttributes: Partial<PostType>) => {
+              updatePost(post.post_id, updatedAttributes);
             }}
+            onDelete={() => deletePostFromFeed(post.post_id)}
           />
         ))}
       </SessionProvider>

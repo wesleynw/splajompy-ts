@@ -13,6 +13,9 @@ import PostDropdown from "./PostDropdown";
 import theme from "@/theme";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import LikeButton from "./LikeButton";
+import { PostType } from "@/app/data/FeedProvider";
+import CommentCount from "./comment/CommentCount";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -28,7 +31,9 @@ interface Props {
   imagePath: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
+  likedByCurrentUser: boolean;
   onDelete?: () => void;
+  updateParentContext?: (updatedAttributes: Partial<PostType>) => void;
 }
 
 export default function Post({
@@ -41,7 +46,9 @@ export default function Post({
   imagePath,
   imageWidth,
   imageHeight,
+  likedByCurrentUser,
   onDelete,
+  updateParentContext,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -142,16 +149,7 @@ export default function Post({
         )}
 
         <Stack direction="row" alignItems="center">
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: "#777777",
-              fontSize: 14,
-              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-            }}
-          >
-            {comment_count} comment{comment_count === 1 ? "" : "s"}
-          </Typography>
+          <CommentCount count={comment_count} />
 
           <Box sx={{ flexGrow: 1 }} />
 
@@ -164,6 +162,18 @@ export default function Post({
           >
             {dayjs.utc(date).tz(userTimezone).fromNow()}
           </Typography>
+          {session?.user?.user_id && (
+            <LikeButton
+              post_id={id}
+              user_id={session?.user?.user_id}
+              liked={likedByCurrentUser}
+              setLiked={(liked) => {
+                if (updateParentContext) {
+                  updateParentContext({ liked: liked });
+                }
+              }}
+            />
+          )}
         </Stack>
       </Box>
     </Link>

@@ -22,8 +22,6 @@ export async function isFollowingUser(user_id: number) {
       )
     );
 
-  console.log(`is ${session.user.user_id} following ${user_id}?`, results);
-
   return results.length > 0;
 }
 

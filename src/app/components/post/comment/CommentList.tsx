@@ -7,9 +7,15 @@ import Comment from "./Comment";
 
 interface CommentListProps {
   post_id: number;
+  commentCount: number;
+  setCommentCount: (count: number) => void;
 }
 
-export default function CommentList({ post_id }: Readonly<CommentListProps>) {
+export default function CommentList({
+  post_id,
+  commentCount,
+  setCommentCount,
+}: Readonly<CommentListProps>) {
   const theme = useTheme();
   const [comments, setComments] = useState<
     { users: SelectUser; comments: SelectComment }[]
@@ -31,6 +37,8 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
     if (!newComment) {
       return;
     }
+
+    setCommentCount(commentCount + 1);
 
     const formattedComment = {
       users: newComment.users,

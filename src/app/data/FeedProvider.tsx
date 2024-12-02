@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode, useMemo } from "react";
 import { getAllPosts, getAllPostsForFollowing } from "../lib/posts";
 
-export type Post = {
+export type PostType = {
   post_id: number;
   text: string | null;
   postdate: string;
@@ -13,51 +13,83 @@ export type Post = {
   imageBlobUrl: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
+  liked: boolean;
 };
 
 type FeedContextType = {
-  posts: Post[];
-  allPosts: Post[];
-  setPosts: (posts: Post[]) => void;
-  setAllPosts: (allPosts: Post[]) => void;
-  refreshPosts: (userId: number) => Promise<void>;
-  refreshAllPosts: () => Promise<void>;
+  posts: PostType[];
+  allPosts: PostType[];
+  loading: boolean;
+  error: unknown | null;
+  fetchFeed: (fetchAllPosts: boolean) => Promise<void>;
+  updatePost: (postId: number, updatedData: Partial<PostType>) => void;
+  insertPostToFeed: (post: PostType) => void;
+  deletePostFromFeed: (postId: number) => void;
 };
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
 
 export const FeedProvider = ({ children }: { children: ReactNode }) => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [allPosts, setAllPosts] = useState<PostType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<unknown | null>(null);
 
-  const refreshPosts = async (userId: number) => {
+  const fetchFeed = async (fetchAllPosts: boolean) => {
+    setLoading(true);
+    setError(null);
     try {
-      const results = await getAllPostsForFollowing(userId);
-      setPosts(results);
-    } catch (error) {
-      console.error("Failed to refresh following posts:", error);
+      const results = fetchAllPosts
+        ? await getAllPosts()
+        : await getAllPostsForFollowing();
+      if (fetchAllPosts) {
+        setAllPosts(results);
+      } else {
+        setPosts(results);
+      }
+    } catch (err) {
+      console.error("Failed to fetch posts:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const refreshAllPosts = async () => {
-    try {
-      const results = await getAllPosts();
-      setAllPosts(results);
-    } catch (error) {
-      console.error("Failed to refresh all posts:", error);
-    }
+  const updatePost = (postId: number, updatedData: Partial<PostType>) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.post_id === postId ? { ...post, ...updatedData } : post
+      )
+    );
+    setAllPosts((prev) =>
+      prev.map((post) =>
+        post.post_id === postId ? { ...post, ...updatedData } : post
+      )
+    );
+  };
+
+  const insertPostToFeed = (post: PostType) => {
+    setPosts((prev) => [post, ...prev]);
+    setAllPosts((prev) => [post, ...prev]);
+  };
+
+  const deletePostFromFeed = (postId: number) => {
+    setPosts((prev) => prev.filter((post) => post.post_id !== postId));
+    setAllPosts((prev) => prev.filter((post) => post.post_id !== postId));
   };
 
   const value = useMemo(
     () => ({
       posts,
       allPosts,
-      setPosts,
-      setAllPosts,
-      refreshPosts,
-      refreshAllPosts,
+      loading,
+      error,
+      fetchFeed,
+      updatePost,
+      insertPostToFeed,
+      deletePostFromFeed,
     }),
-    [posts, allPosts]
+    [posts, allPosts, loading, error]
   );
 
   return <FeedContext.Provider value={value}>{children}</FeedContext.Provider>;
