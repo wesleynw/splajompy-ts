@@ -6,6 +6,7 @@ import {
   timestamp,
   text,
   unique,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -95,3 +96,20 @@ export const likes = pgTable(
   },
   (table) => [unique().on(table.post_id, table.user_id)]
 );
+
+export const notifications = pgTable(
+  "notifications",
+  {
+    notification_id: serial().primaryKey().notNull(),
+    user_id: integer("user_id")
+      .notNull()
+      .references(() => users.user_id, { onDelete: "cascade" }),
+    message: text().notNull(),
+    link: text(),
+    viewed: boolean().default(false),
+    created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [unique().on(table.user_id, table.message)]
+);
+
+export type SelectNotification = typeof notifications.$inferSelect;

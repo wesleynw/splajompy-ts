@@ -7,7 +7,7 @@ import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { comments, images, posts, users } from "@/db/schema";
+import { comments, images, notifications, posts, users } from "@/db/schema";
 import { eq, or, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -131,6 +131,13 @@ export async function insertComment(text: string, post_id: number) {
       .innerJoin(users, eq(comments.user_id, users.user_id))
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
+
+    // notification
+    await db.insert(notifications).values({
+      user_id: session.user.user_id,
+      message: `${session.user.username} commented on your post`,
+      link: `/post/${post_id}`,
+    });
 
     return result;
   }

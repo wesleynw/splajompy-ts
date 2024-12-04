@@ -15,6 +15,20 @@
       "when": 1733090138774,
       "tag": "0001_shocking_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733180450269,
+      "tag": "0002_square_randall",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1733180585463,
+      "tag": "0003_superb_vanisher",
+      "breakpoints": true
     }
   ]
 }

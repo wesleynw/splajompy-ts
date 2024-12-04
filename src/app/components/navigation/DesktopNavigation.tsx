@@ -14,12 +14,15 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { usePathname, useRouter } from "next/navigation";
 import theme from "@/theme";
+import NotificationBadge from "../notifications/NotificationBadge";
 
 export default function DesktopNavigation({
+  user_id,
   username,
-}: Readonly<{ username: string }>) {
+}: Readonly<{ user_id: number; username: string }>) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -35,6 +38,15 @@ export default function DesktopNavigation({
       icon: <PublicIcon fontSize="large" />,
     },
     {
+      label: "Notifications",
+      href: "/notifications",
+      icon: (
+        <NotificationBadge user_id={user_id}>
+          <NotificationsIcon fontSize="large" />
+        </NotificationBadge>
+      ),
+    },
+    {
       label: "Profile",
       href: `/user/${username}`,
       icon: <PersonIcon fontSize="large" />,
@@ -46,7 +58,7 @@ export default function DesktopNavigation({
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      router.push(targetPath, { scroll: false });
+      router.push(targetPath);
     }
   };
 
@@ -56,7 +68,6 @@ export default function DesktopNavigation({
       anchor="left"
       sx={{
         "& .MuiDrawer-paper": {
-          width: 240,
           backgroundColor: "transparent",
           paddingLeft: "50px",
           borderRight: "none",

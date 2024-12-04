@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { posts, comments, users, images, follows, notifications } from "./schema";
+import { posts, comments, users, likes, images, follows } from "./schema";
 
 export const commentsRelations = relations(comments, ({one}) => ({
 	post: one(posts, {
@@ -18,19 +18,31 @@ export const postsRelations = relations(posts, ({one, many}) => ({
 		fields: [posts.userId],
 		references: [users.userId]
 	}),
+	likes: many(likes),
 	images: many(images),
 }));
 
 export const usersRelations = relations(users, ({many}) => ({
 	comments: many(comments),
 	posts: many(posts),
+	likes: many(likes),
 	follows_followerId: many(follows, {
 		relationName: "follows_followerId_users_userId"
 	}),
 	follows_followingId: many(follows, {
 		relationName: "follows_followingId_users_userId"
 	}),
-	notifications: many(notifications),
+}));
+
+export const likesRelations = relations(likes, ({one}) => ({
+	post: one(posts, {
+		fields: [likes.postId],
+		references: [posts.postId]
+	}),
+	user: one(users, {
+		fields: [likes.userId],
+		references: [users.userId]
+	}),
 }));
 
 export const imagesRelations = relations(images, ({one}) => ({
@@ -50,12 +62,5 @@ export const followsRelations = relations(follows, ({one}) => ({
 		fields: [follows.followingId],
 		references: [users.userId],
 		relationName: "follows_followingId_users_userId"
-	}),
-}));
-
-export const notificationsRelations = relations(notifications, ({one}) => ({
-	user: one(users, {
-		fields: [notifications.userId],
-		references: [users.userId]
 	}),
 }));

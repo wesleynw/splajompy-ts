@@ -8,14 +8,18 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 type Props = {
   post_id: number;
+  poster_id: number;
   user_id: number;
+  username: string;
   liked: boolean;
   setLiked: (liked: boolean) => void;
 };
 
 export default function LikeButton({
   post_id,
+  poster_id,
   user_id,
+  username,
   liked,
   setLiked,
 }: Readonly<Props>) {
@@ -28,7 +32,7 @@ export default function LikeButton({
         await unlikePost(post_id, user_id);
       } else {
         setLiked(true);
-        await likePost(post_id, user_id);
+        await likePost(post_id, poster_id, user_id, username);
       }
     } catch (error) {
       console.error("Error toggling like:", error);

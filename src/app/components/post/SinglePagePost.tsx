@@ -142,7 +142,9 @@ export default function PostPageContent() {
         {session?.user.user_id && (
           <LikeButton
             post_id={post.post_id}
+            poster_id={post.user_id}
             user_id={session?.user.user_id}
+            username={session?.user.username}
             liked={post.liked}
             setLiked={() => {
               updatePost({ liked: !post.liked });

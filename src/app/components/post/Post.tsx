@@ -165,7 +165,9 @@ export default function Post({
           {session?.user?.user_id && (
             <LikeButton
               post_id={id}
+              poster_id={user_id}
               user_id={session?.user?.user_id}
+              username={session?.user?.username}
               liked={likedByCurrentUser}
               setLiked={(liked) => {
                 if (updateParentContext) {

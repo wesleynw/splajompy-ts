@@ -1,13 +1,24 @@
 "use server";
 
 import { db } from "@/db";
-import { likes } from "@/db/schema";
+import { likes, notifications } from "@/db/schema";
 import { and, count, eq } from "drizzle-orm";
 
-export async function likePost(post_id: number, user_id: number) {
+export async function likePost(
+  post_id: number,
+  poster_id: number,
+  user_id: number,
+  username: string
+) {
   await db.insert(likes).values({
     post_id,
     user_id,
+  });
+
+  await db.insert(notifications).values({
+    user_id: poster_id,
+    message: `${username} liked your post`,
+    link: `/post/${post_id}`,
   });
 }
 
