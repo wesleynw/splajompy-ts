@@ -155,6 +155,7 @@ export default function PostPageContent() {
 
       <Suspense fallback={<div>Loading...</div>}>
         <CommentList
+          poster={post.user_id}
           post_id={post.post_id}
           commentCount={post.comment_count}
           setCommentCount={() => {

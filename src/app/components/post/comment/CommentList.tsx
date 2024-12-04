@@ -6,12 +6,14 @@ import CommentInput from "./CommentInput";
 import Comment from "./Comment";
 
 interface CommentListProps {
+  poster: number;
   post_id: number;
   commentCount: number;
   setCommentCount: (count: number) => void;
 }
 
 export default function CommentList({
+  poster,
   post_id,
   commentCount,
   setCommentCount,
@@ -31,7 +33,7 @@ export default function CommentList({
   }, [post_id]);
 
   const addComment = async (text: string) => {
-    const result = await insertComment(text, post_id);
+    const result = await insertComment(text, post_id, poster);
     const newComment = result?.[0];
 
     if (!newComment) {

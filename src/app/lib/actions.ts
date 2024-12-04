@@ -108,7 +108,11 @@ export async function insertPost(formData: FormData, includesImage: boolean) {
   return post[0];
 }
 
-export async function insertComment(text: string, post_id: number) {
+export async function insertComment(
+  text: string,
+  post_id: number,
+  poster: number
+) {
   "use server";
   const session = await auth();
   if (!session) {
@@ -132,9 +136,8 @@ export async function insertComment(text: string, post_id: number) {
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
 
-    // notification
     await db.insert(notifications).values({
-      user_id: session.user.user_id,
+      user_id: poster,
       message: `${session.user.username} commented on your post`,
       link: `/post/${post_id}`,
     });
