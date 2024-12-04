@@ -38,16 +38,8 @@ export default function Feed({
       router.push("/login");
     }
 
-    if (currentPosts.length === 0) {
-      fetchFeed(fetchAllPosts);
-    }
-  }, [
-    fetchFeed,
-    fetchAllPosts,
-    session.user.username,
-    currentPosts.length,
-    router,
-  ]);
+    fetchFeed(fetchAllPosts);
+  }, []);
 
   if (loading) {
     return (

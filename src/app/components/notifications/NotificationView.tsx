@@ -26,6 +26,30 @@ export default function NotificationView({
     setNotificationAsViewedForUser(session.user.user_id);
   }, 2000);
 
+  if (notifications.length === 0) {
+    return (
+      <Box
+        sx={{
+          maxWidth: 600,
+          margin: "20px auto",
+          padding: 3,
+          borderRadius: "8px",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: "center",
+            color: "#777777",
+            ...theme.applyStyles("dark", { color: "#bbb" }),
+          }}
+        >
+          No notifications yet.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
