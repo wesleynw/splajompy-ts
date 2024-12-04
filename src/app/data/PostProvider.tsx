@@ -34,7 +34,7 @@ export const PostProvider = ({
       setPost(foundPost);
     } else if (!hasFetched) {
       setHasFetched(true);
-      fetchFeed(false).catch((err) =>
+      fetchFeed(true).catch((err) =>
         console.error("Failed to fetch feed:", err)
       );
     }

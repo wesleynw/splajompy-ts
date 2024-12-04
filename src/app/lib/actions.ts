@@ -113,7 +113,6 @@ export async function insertComment(
   post_id: number,
   poster: number
 ) {
-  "use server";
   const session = await auth();
   if (!session) {
     return;
