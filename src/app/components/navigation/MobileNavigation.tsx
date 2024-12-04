@@ -52,6 +52,8 @@ export default function BottomNav({
               <NotificationsIcon />
             </NotificationBadge>
           }
+          onClick={(event) => handleNavigation(event, "/notifications")}
+          disableRipple
         />
         <BottomNavigationAction
           value="/all"
