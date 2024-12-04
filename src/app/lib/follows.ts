@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { follows } from "@/db/schema";
+import { follows, notifications } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function isFollowingUser(user_id: number) {
@@ -36,6 +36,12 @@ export async function followUser(user_id: number) {
   await db.insert(follows).values({
     follower_id: session.user.user_id,
     following_id: user_id,
+  });
+
+  await db.insert(notifications).values({
+    user_id,
+    message: `@${session.user.username} started following you`,
+    link: `/user/${session.user.username}`,
   });
 }
 

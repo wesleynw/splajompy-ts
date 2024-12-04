@@ -35,6 +35,8 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown | null>(null);
 
+  // todo: feed provider fetch posts in useEffect
+
   const fetchFeed = async (fetchAllPosts: boolean) => {
     setLoading(true);
     setError(null);
