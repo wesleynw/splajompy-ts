@@ -3,14 +3,20 @@
 import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
+import NotificationBadge from "../notifications/NotificationBadge";
 
 interface BottomNavProps {
+  user_id: number;
   username: string;
 }
 
-export default function BottomNav({ username }: Readonly<BottomNavProps>) {
+export default function BottomNav({
+  user_id,
+  username,
+}: Readonly<BottomNavProps>) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -37,6 +43,16 @@ export default function BottomNav({ username }: Readonly<BottomNavProps>) {
           value="/"
           icon={<HomeIcon />}
           onClick={(event) => handleNavigation(event, "/")}
+          disableRipple
+        />
+        <BottomNavigationAction
+          value="/notifications"
+          icon={
+            <NotificationBadge user_id={user_id}>
+              <NotificationsIcon />
+            </NotificationBadge>
+          }
+          onClick={(event) => handleNavigation(event, "/notifications")}
           disableRipple
         />
         <BottomNavigationAction

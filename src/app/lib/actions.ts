@@ -7,7 +7,7 @@ import { CredentialsSignin } from "next-auth";
 import zod from "zod";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { comments, images, posts, users } from "@/db/schema";
+import { comments, images, notifications, posts, users } from "@/db/schema";
 import { eq, or, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -108,8 +108,11 @@ export async function insertPost(formData: FormData, includesImage: boolean) {
   return post[0];
 }
 
-export async function insertComment(text: string, post_id: number) {
-  "use server";
+export async function insertComment(
+  text: string,
+  post_id: number,
+  poster: number
+) {
   const session = await auth();
   if (!session) {
     return;
@@ -132,7 +135,11 @@ export async function insertComment(text: string, post_id: number) {
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
 
-    revalidatePath("/");
+    await db.insert(notifications).values({
+      user_id: poster,
+      message: `${session.user.username} commented on your post`,
+      link: `/post/${post_id}`,
+    });
 
     return result;
   }

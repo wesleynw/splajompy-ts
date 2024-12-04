@@ -1,33 +1,73 @@
 "use client";
 
-import React from "react";
-import { Box, Typography, Stack, useTheme, Button } from "@mui/material";
+import React, { useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Stack,
+  useTheme,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import Post from "../post/Post";
 import BackButton from "../navigation/BackButton";
 import { signOut, useSession } from "next-auth/react";
-import { deletePost, PostData } from "@/app/lib/posts";
+import { PostData } from "@/app/lib/posts";
 import FollowButton from "../follows/FollowButton";
-import { useRouter } from "next/navigation";
+import { useFeed } from "@/app/data/FeedProvider";
 
-interface AccountViewProps {
+interface Props {
   user: {
     user_id: number;
     email: string;
     password: string;
     username: string;
   };
-  posts: PostData[];
 }
 
-export default function AccountView({
-  user,
-  posts,
-}: Readonly<AccountViewProps>) {
-  const router = useRouter();
+export default function UserView({ user }: Readonly<Props>) {
+  const { posts, fetchFeed, deletePostFromFeed, updatePost, loading, error } =
+    useFeed();
   const { data: session } = useSession();
   const theme = useTheme();
 
   const isOwnProfile = session?.user?.user_id === user.user_id;
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      await fetchFeed(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="30vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="30vh"
+      >
+        <div>Something went wrong. Please try again later.</div>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ px: { xs: 2, md: 4 } }}>
@@ -101,24 +141,29 @@ export default function AccountView({
 
       <Box sx={{ marginBottom: "100px" }}>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <Post
-              key={post.post_id}
-              id={post.post_id}
-              date={new Date(post.postdate + "Z")}
-              content={post.text}
-              user_id={post.user_id}
-              poster={post.poster}
-              comment_count={post.comment_count}
-              imagePath={post.imageBlobUrl}
-              imageWidth={post.imageWidth}
-              imageHeight={post.imageHeight}
-              onDelete={() => {
-                deletePost(post.post_id);
-                router.refresh(); // TODO: something more efficient than this, use client component with local state?
-              }}
-            />
-          ))
+          posts
+            .filter((post) => post.user_id == session?.user.user_id)
+            .map((post) => (
+              <Post
+                key={post.post_id}
+                id={post.post_id}
+                date={new Date(post.postdate + "Z")}
+                content={post.text}
+                user_id={post.user_id}
+                poster={post.poster}
+                comment_count={post.comment_count}
+                imagePath={post.imageBlobUrl}
+                imageWidth={post.imageWidth}
+                imageHeight={post.imageHeight}
+                likedByCurrentUser={post.liked}
+                updateParentContext={(updatedAttributes: Partial<PostData>) => {
+                  updatePost(post.post_id, updatedAttributes);
+                }}
+                onDelete={() => {
+                  deletePostFromFeed(post.post_id);
+                }}
+              />
+            ))
         ) : (
           <Typography
             variant="h6"

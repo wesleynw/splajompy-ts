@@ -1,0 +1,1 @@
+ALTER TABLE "notifications" DROP CONSTRAINT "notifications_user_id_message_unique";

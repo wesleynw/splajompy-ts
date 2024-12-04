@@ -2,8 +2,8 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { comments, follows, images, posts, users } from "@/db/schema";
-import { and, or, count, desc, eq, exists } from "drizzle-orm";
+import { comments, follows, images, likes, posts, users } from "@/db/schema";
+import { and, or, count, desc, eq, exists, sql } from "drizzle-orm";
 import { deleteObject } from "./s3";
 
 export type PostData = {
@@ -19,6 +19,11 @@ export type PostData = {
 };
 
 export async function getAllPosts() {
+  const session = await auth();
+  if (!session) {
+    return [];
+  }
+
   const results = await db
     .select({
       post_id: posts.post_id,
@@ -30,6 +35,14 @@ export async function getAllPosts() {
       imageBlobUrl: images.imageBlobUrl,
       imageWidth: images.width,
       imageHeight: images.height,
+      liked: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${likes}
+          WHERE ${likes.post_id} = ${posts.post_id}
+            AND ${likes.user_id} = ${session.user.user_id}
+        )
+      `,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
@@ -47,7 +60,13 @@ export async function getAllPosts() {
   return results;
 }
 
-export async function getAllPostsForFollowing(user_id: number) {
+export async function getAllPostsForFollowing() {
+  const session = await auth();
+  if (!session) {
+    return [];
+  }
+  const user_id = session.user.user_id;
+
   const results = await db
     .select({
       post_id: posts.post_id,
@@ -59,11 +78,20 @@ export async function getAllPostsForFollowing(user_id: number) {
       imageBlobUrl: images.imageBlobUrl,
       imageWidth: images.width,
       imageHeight: images.height,
+      liked: sql<boolean>`
+      EXISTS (
+        SELECT 1
+        FROM ${likes}
+        WHERE ${likes.post_id} = ${posts.post_id}
+          AND ${likes.user_id} = ${user_id}
+      )
+    `,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
     .leftJoin(comments, eq(posts.post_id, comments.post_id))
     .leftJoin(images, eq(posts.post_id, images.post_id))
+    .leftJoin(likes, eq(posts.post_id, likes.post_id))
     .where(
       or(
         eq(posts.user_id, user_id),

@@ -11,17 +11,20 @@ import {
   Toolbar,
   Box,
 } from "@mui/material";
-import Link from "next/link";
 import HomeIcon from "@mui/icons-material/Home";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
-import { usePathname } from "next/navigation";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { usePathname, useRouter } from "next/navigation";
 import theme from "@/theme";
+import NotificationBadge from "../notifications/NotificationBadge";
 
 export default function DesktopNavigation({
+  user_id,
   username,
-}: Readonly<{ username: string }>) {
+}: Readonly<{ user_id: number; username: string }>) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     {
@@ -35,11 +38,29 @@ export default function DesktopNavigation({
       icon: <PublicIcon fontSize="large" />,
     },
     {
+      label: "Notifications",
+      href: "/notifications",
+      icon: (
+        <NotificationBadge user_id={user_id}>
+          <NotificationsIcon fontSize="large" />
+        </NotificationBadge>
+      ),
+    },
+    {
       label: "Profile",
       href: `/user/${username}`,
       icon: <PersonIcon fontSize="large" />,
     },
   ];
+
+  const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
+    if (targetPath === pathname) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      router.push(targetPath);
+    }
+  };
 
   return (
     <Drawer
@@ -47,7 +68,6 @@ export default function DesktopNavigation({
       anchor="left"
       sx={{
         "& .MuiDrawer-paper": {
-          width: 240,
           backgroundColor: "transparent",
           paddingLeft: "50px",
           borderRight: "none",
@@ -63,8 +83,7 @@ export default function DesktopNavigation({
             return (
               <ListItem key={item.label} disablePadding>
                 <ListItemButton
-                  component={Link}
-                  href={item.href}
+                  onClick={(event) => handleNavigation(event, item.href)}
                   sx={{
                     border: "2px solid transparent",
                     margin: "4px 0",

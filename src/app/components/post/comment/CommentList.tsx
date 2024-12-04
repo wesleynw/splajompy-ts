@@ -6,10 +6,18 @@ import CommentInput from "./CommentInput";
 import Comment from "./Comment";
 
 interface CommentListProps {
+  poster: number;
   post_id: number;
+  commentCount: number;
+  setCommentCount: (count: number) => void;
 }
 
-export default function CommentList({ post_id }: Readonly<CommentListProps>) {
+export default function CommentList({
+  poster,
+  post_id,
+  commentCount,
+  setCommentCount,
+}: Readonly<CommentListProps>) {
   const theme = useTheme();
   const [comments, setComments] = useState<
     { users: SelectUser; comments: SelectComment }[]
@@ -25,12 +33,14 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
   }, [post_id]);
 
   const addComment = async (text: string) => {
-    const result = await insertComment(text, post_id);
+    const result = await insertComment(text, post_id, poster);
     const newComment = result?.[0];
 
     if (!newComment) {
       return;
     }
+
+    setCommentCount(commentCount + 1);
 
     const formattedComment = {
       users: newComment.users,
@@ -40,33 +50,41 @@ export default function CommentList({ post_id }: Readonly<CommentListProps>) {
     setComments((prevComments) => [...prevComments, formattedComment]);
   };
 
+  const renderComments = () => {
+    if (isLoading) {
+      return (
+        <>
+          <Skeleton variant="rounded" height={80} sx={{ marginBottom: 2 }} />
+          <Skeleton variant="rounded" height={60} sx={{ marginBottom: 2 }} />
+          <Skeleton variant="rounded" height={50} />
+        </>
+      );
+    }
+
+    if (comments.length > 0) {
+      return comments.map((comment) => (
+        <Comment
+          key={comment.comments.comment_id}
+          comments={comment.comments}
+          users={comment.users}
+        />
+      ));
+    }
+
+    return (
+      <Typography
+        variant="body2"
+        sx={{ ...theme.applyStyles("dark", { color: "textSecondary" }) }}
+      >
+        No comments yet.
+      </Typography>
+    );
+  };
+
   return (
     <Box>
       <CommentInput onAddComment={addComment} />
-      <Box sx={{ marginTop: 3 }}>
-        {isLoading ? (
-          <>
-            <Skeleton variant="rounded" height={80} sx={{ marginBottom: 2 }} />
-            <Skeleton variant="rounded" height={60} sx={{ marginBottom: 2 }} />
-            <Skeleton variant="rounded" height={50} />
-          </>
-        ) : comments.length > 0 ? (
-          comments.map((comment) => (
-            <Comment
-              key={comment.comments.comment_id}
-              comments={comment.comments} // TODO we can do this better
-              users={comment.users}
-            />
-          ))
-        ) : (
-          <Typography
-            variant="body2"
-            sx={{ ...theme.applyStyles("dark", { color: "textSecondary" }) }}
-          >
-            No comments yet.
-          </Typography>
-        )}
-      </Box>
+      <Box sx={{ marginTop: 3 }}>{renderComments()}</Box>
     </Box>
   );
 }

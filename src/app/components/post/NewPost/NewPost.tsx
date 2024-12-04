@@ -9,14 +9,13 @@ import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { useSession } from "next-auth/react";
-import { Post } from "../../../data/FeedProvider";
+import { PostType } from "../../../data/FeedProvider";
 
 type NewPostProps = {
-  posts: Post[];
-  setPosts: (posts: Post[]) => void;
+  insertPostToFeed: (post: PostType) => void;
 };
 
-export default function Page({ posts, setPosts }: Readonly<NewPostProps>) {
+export default function Page({ insertPostToFeed }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
 
@@ -105,9 +104,10 @@ export default function Page({ posts, setPosts }: Readonly<NewPostProps>) {
       imageBlobUrl: imagePath ?? null,
       imageWidth: selectedFile ? img.width : null,
       imageHeight: selectedFile ? img.height : null,
+      liked: false,
     };
 
-    setPosts([mappedPost, ...posts]);
+    insertPostToFeed(mappedPost);
 
     setTextValue("");
     setPreviewFile(null);

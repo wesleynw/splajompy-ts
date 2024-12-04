@@ -18,9 +18,15 @@ export default function Navigation({
   return (
     <NoSsr>
       {isMobile ? (
-        <MobileNavigation username={session.user.username} />
+        <MobileNavigation
+          user_id={session.user.user_id}
+          username={session.user.username}
+        />
       ) : (
-        <DesktopNavigation username={session.user.username} />
+        <DesktopNavigation
+          user_id={session.user.user_id}
+          username={session.user.username}
+        />
       )}
     </NoSsr>
   );
