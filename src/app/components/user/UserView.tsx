@@ -34,7 +34,11 @@ export default function UserView({ user }: Readonly<Props>) {
   const isOwnProfile = session?.user?.user_id === user.user_id;
 
   useEffect(() => {
-    fetchFeed(false);
+    const fetchPosts = async () => {
+      await fetchFeed(false);
+    };
+
+    fetchPosts();
   }, []);
 
   if (loading) {

@@ -38,7 +38,11 @@ export default function Feed({
       router.push("/login");
     }
 
-    fetchFeed(fetchAllPosts);
+    const fetchPosts = async () => {
+      await fetchFeed(fetchAllPosts);
+    };
+
+    fetchPosts();
   }, []);
 
   if (loading) {
