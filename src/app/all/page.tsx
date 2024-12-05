@@ -24,7 +24,7 @@ export default async function Home() {
             paddingBottom: 20,
           }}
         >
-          <Feed session={session} fetchAllPosts={true} showNewPost={false} />
+          <Feed session={session} feedType="all" showNewPost={false} />
         </Box>
       </main>
       <Navigation session={session} />

@@ -12,6 +12,7 @@ import { useFeed, PostType } from "./FeedProvider";
 export type PostContextType = {
   post: PostType | undefined;
   updatePost: (updatedData: Partial<PostType>) => void;
+  loading: boolean;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -23,22 +24,27 @@ export const PostProvider = ({
   children: React.ReactNode;
   post_id: number;
 }) => {
-  const { allPosts, fetchFeed, updatePost: updateFeedPost } = useFeed();
+  const { fetchSinglePost, updatePost: updateFeedPost } = useFeed();
   const [post, setPost] = useState<PostType | undefined>(undefined);
-  const [hasFetched, setHasFetched] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const foundPost = allPosts.find((p) => p.post_id == post_id);
+    const fetchPost = fetchSinglePost; // Reference the stable function
+    const hydratePost = async () => {
+      setLoading(true);
+      if (post_id) {
+        try {
+          const post = await fetchPost(post_id);
+          setPost(post);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      setLoading(false);
+    };
 
-    if (foundPost != null) {
-      setPost(foundPost);
-    } else if (!hasFetched) {
-      setHasFetched(true);
-      fetchFeed(true).catch((err) =>
-        console.error("Failed to fetch feed:", err)
-      );
-    }
-  }, [post_id, allPosts, hasFetched, fetchFeed]);
+    hydratePost();
+  }, [post_id, fetchSinglePost]); // `fetchSinglePost` is now stable
 
   const updatePost = useMemo(
     () => (updatedData: Partial<PostType>) => {
@@ -55,8 +61,9 @@ export const PostProvider = ({
     () => ({
       post,
       updatePost,
+      loading,
     }),
-    [post, updatePost]
+    [post, updatePost, loading]
   );
 
   return <PostContext.Provider value={value}>{children}</PostContext.Provider>;

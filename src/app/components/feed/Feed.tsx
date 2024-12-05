@@ -3,47 +3,54 @@
 import { Box, CircularProgress } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
-import { PostType, useFeed } from "../../data/FeedProvider";
+import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
 import { SessionProvider, signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
 
+export type Props = {
+  session: Session;
+  feedType: FeedType;
+  showNewPost: boolean;
+};
+
 export default function Feed({
   session,
-  fetchAllPosts,
+  feedType,
   showNewPost,
-}: Readonly<{
-  session: Session;
-  fetchAllPosts: boolean;
-  showNewPost: boolean;
-}>) {
+}: Readonly<Props>) {
   const router = useRouter();
   const {
-    posts,
-    allPosts,
+    getHomePosts,
+    getAllPosts,
+    getProfilePosts,
     loading,
     error,
-    fetchFeed,
+    fetchPosts,
+    updatePost,
     insertPostToFeed,
     deletePostFromFeed,
-    updatePost,
   } = useFeed();
-  const currentPosts = fetchAllPosts ? allPosts : posts;
-
   useEffect(() => {
     if (!session.user.username) {
       signOut();
       router.push("/login");
     }
 
-    const fetchPosts = async () => {
-      await fetchFeed(fetchAllPosts);
+    const hydratePosts = async () => {
+      fetchPosts(feedType, session.user.user_id);
     };
 
-    fetchPosts();
-  }, []);
+    hydratePosts(); // TODO: better name for this function?
+  }, [
+    router,
+    fetchPosts,
+    feedType,
+    session.user.username,
+    session.user.user_id,
+  ]);
 
   if (loading) {
     return (
@@ -73,6 +80,21 @@ export default function Feed({
     );
   }
 
+  let currentPosts;
+  switch (feedType) {
+    case "home":
+      currentPosts = getHomePosts();
+      break;
+    case "all":
+      currentPosts = getAllPosts();
+      break;
+    case "profile":
+      currentPosts = getProfilePosts();
+      break;
+    default:
+      throw new Error("Invalid feed type");
+  }
+
   const isOnlyCurrentUsersPosts = currentPosts.every(
     (post) => post.user_id === session.user.user_id
   );
@@ -80,21 +102,30 @@ export default function Feed({
   return (
     <Box sx={{ marginBottom: "60px", px: { xs: 2, md: 4 } }}>
       <SessionProvider session={session}>
-        {showNewPost && <NewPost insertPostToFeed={insertPostToFeed} />}
+        {/* this lambda is also weird, need to fix */}
+        {showNewPost && (
+          <NewPost
+            insertPostToFeed={(post) => insertPostToFeed(feedType, post)}
+          />
+        )}
         {isOnlyCurrentUsersPosts && <EmptyFeed loading={loading} />}
         {currentPosts.map((post) => (
           <Post
             key={post.post_id}
             id={post.post_id}
             date={new Date(post.postdate + "Z")}
+            user_id={post.user_id}
+            poster={post.poster}
+            imageHeight={post.imageHeight}
+            imageWidth={post.imageWidth}
             content={post.text}
             imagePath={post.imageBlobUrl}
-            {...post}
+            comment_count={post.comment_count}
             likedByCurrentUser={post.liked}
             updateParentContext={(updatedAttributes: Partial<PostType>) => {
               updatePost(post.post_id, updatedAttributes);
             }}
-            onDelete={() => deletePostFromFeed(post.post_id)}
+            onDelete={() => deletePostFromFeed(feedType, post.post_id)}
           />
         ))}
       </SessionProvider>

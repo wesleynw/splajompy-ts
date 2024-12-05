@@ -18,7 +18,7 @@ export type PostData = {
   imageHeight: number | null;
 };
 
-export async function getAllPosts() {
+export async function getAllPostsFromDb() {
   const session = await auth();
   if (!session) {
     return [];
@@ -31,7 +31,7 @@ export async function getAllPosts() {
       postdate: posts.postdate,
       user_id: users.user_id,
       poster: users.username,
-      comment_count: count(comments.comment_id),
+      comment_count: sql<number>`COUNT(DISTINCT ${comments.comment_id})`,
       imageBlobUrl: images.imageBlobUrl,
       imageWidth: images.width,
       imageHeight: images.height,
@@ -74,7 +74,7 @@ export async function getAllPostsForFollowing() {
       postdate: posts.postdate,
       user_id: users.user_id,
       poster: users.username,
-      comment_count: count(comments.comment_id),
+      comment_count: sql<number>`COUNT(DISTINCT ${comments.comment_id})`,
       imageBlobUrl: images.imageBlobUrl,
       imageWidth: images.width,
       imageHeight: images.height,
@@ -132,6 +132,14 @@ export async function getPostsByUserId(user_id: number) {
       imageBlobUrl: images.imageBlobUrl,
       imageWidth: images.width,
       imageHeight: images.height,
+      liked: sql<boolean>`
+      EXISTS (
+        SELECT 1
+        FROM ${likes}
+        WHERE ${likes.post_id} = ${posts.post_id}
+          AND ${likes.user_id} = ${user_id}
+      )
+    `,
     })
     .from(posts)
     .innerJoin(users, eq(posts.user_id, users.user_id))
@@ -148,6 +156,48 @@ export async function getPostsByUserId(user_id: number) {
     .orderBy(desc(posts.postdate));
 
   return results;
+}
+
+export async function getPost(post_id: number) {
+  const session = await auth();
+  if (!session) {
+    return;
+  }
+
+  const results = await db
+    .select({
+      post_id: posts.post_id,
+      text: posts.text,
+      postdate: posts.postdate,
+      user_id: users.user_id,
+      poster: users.username,
+      comment_count: count(comments.comment_id),
+      imageBlobUrl: images.imageBlobUrl,
+      imageWidth: images.width,
+      imageHeight: images.height,
+      liked: sql<boolean>`
+      EXISTS (
+        SELECT 1
+        FROM ${likes}
+        WHERE ${likes.post_id} = ${posts.post_id}
+          AND ${likes.user_id} = ${session.user.user_id}
+      )
+    `,
+    })
+    .from(posts)
+    .innerJoin(users, eq(posts.user_id, users.user_id))
+    .leftJoin(comments, eq(posts.post_id, comments.post_id))
+    .leftJoin(images, eq(posts.post_id, images.post_id))
+    .where(eq(posts.post_id, post_id))
+    .groupBy(
+      posts.post_id,
+      users.user_id,
+      images.imageBlobUrl,
+      images.width,
+      images.height
+    );
+
+  return results[0];
 }
 
 export async function deletePost(post_id: number) {
