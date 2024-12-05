@@ -114,9 +114,13 @@ export default function Feed({
             key={post.post_id}
             id={post.post_id}
             date={new Date(post.postdate + "Z")}
+            user_id={post.user_id}
+            poster={post.poster}
+            imageHeight={post.imageHeight}
+            imageWidth={post.imageWidth}
             content={post.text}
             imagePath={post.imageBlobUrl}
-            {...post}
+            comment_count={post.comment_count}
             likedByCurrentUser={post.liked}
             updateParentContext={(updatedAttributes: Partial<PostType>) => {
               updatePost(post.post_id, updatedAttributes);
