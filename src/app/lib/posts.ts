@@ -164,7 +164,6 @@ export async function getPost(post_id: number) {
     return;
   }
 
-  // TODO: i need a better way of doing this
   const results = await db
     .select({
       post_id: posts.post_id,

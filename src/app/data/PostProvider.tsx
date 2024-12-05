@@ -29,19 +29,22 @@ export const PostProvider = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    const fetchPost = fetchSinglePost; // Reference the stable function
     const hydratePost = async () => {
       setLoading(true);
       if (post_id) {
-        const post = await fetchSinglePost(post_id);
-        if (post) {
+        try {
+          const post = await fetchPost(post_id);
           setPost(post);
+        } catch (err) {
+          console.error(err);
         }
       }
       setLoading(false);
     };
 
     hydratePost();
-  }, [post_id]);
+  }, [post_id, fetchSinglePost]); // `fetchSinglePost` is now stable
 
   const updatePost = useMemo(
     () => (updatedData: Partial<PostType>) => {

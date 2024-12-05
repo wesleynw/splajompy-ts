@@ -7,6 +7,8 @@ import {
   ReactNode,
   useMemo,
   useCallback,
+  useRef,
+  useEffect,
 } from "react";
 import {
   getAllPostsFromDb,
@@ -47,6 +49,7 @@ export type FeedType = "home" | "all" | "profile";
 
 export const FeedProvider = ({ children }: { children: ReactNode }) => {
   const [postMap, setPostMap] = useState<Map<number, PostType>>(new Map());
+  const postMapRef = useRef<Map<number, PostType>>(postMap);
 
   const [homeFeed, setHomeFeed] = useState<number[]>([]);
   const [allFeed, setAllFeed] = useState<number[]>([]);
@@ -54,6 +57,10 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(null);
+
+  useEffect(() => {
+    postMapRef.current = postMap;
+  }, [postMap]);
 
   const fetchPosts = useCallback(
     async (page: "home" | "all" | "profile", user_id?: number) => {
@@ -87,37 +94,25 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const fetchSinglePost = useCallback(
-    async (postId: number) => {
-      setLoading(true);
-      setError(null);
+  const fetchSinglePost = useCallback(async (postId: number) => {
+    const currentMap = postMapRef.current;
 
-      if (postMap.has(postId)) {
-        setLoading(false);
-        return postMap.get(postId);
+    if (currentMap.has(postId)) {
+      return currentMap.get(postId);
+    }
+
+    try {
+      const result = await getPost(postId);
+      if (!result) {
+        throw new Error("Post not found");
       }
-
-      try {
-        const result = await getPost(postId);
-        if (!result) {
-          throw new Error("Post not found");
-        }
-
-        // Update the postMap and feeds
-        updatePosts("all", [result]);
-
-        // Return the fetched post directly
-        return result;
-      } catch (err) {
-        setError(err);
-        console.error(err);
-        return undefined;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [postMap]
-  );
+      updatePosts("all", [result]);
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }, []);
 
   const updatePosts = (page: "home" | "all" | "profile", posts: PostType[]) => {
     setPostMap((prev) => {
