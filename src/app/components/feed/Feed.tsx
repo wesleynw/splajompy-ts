@@ -23,9 +23,9 @@ export default function Feed({
 }: Readonly<Props>) {
   const router = useRouter();
   const {
-    homePosts,
-    allPosts,
-    profilePosts,
+    getHomePosts,
+    getAllPosts,
+    getProfilePosts,
     loading,
     error,
     fetchPosts,
@@ -83,13 +83,13 @@ export default function Feed({
   let currentPosts;
   switch (feedType) {
     case "home":
-      currentPosts = homePosts;
+      currentPosts = getHomePosts();
       break;
     case "all":
-      currentPosts = allPosts;
+      currentPosts = getAllPosts();
       break;
     case "profile":
-      currentPosts = profilePosts;
+      currentPosts = getProfilePosts();
       break;
     default:
       throw new Error("Invalid feed type");

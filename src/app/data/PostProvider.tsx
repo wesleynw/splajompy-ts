@@ -12,6 +12,7 @@ import { useFeed, PostType } from "./FeedProvider";
 export type PostContextType = {
   post: PostType | undefined;
   updatePost: (updatedData: Partial<PostType>) => void;
+  loading: boolean;
 };
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -23,21 +24,24 @@ export const PostProvider = ({
   children: React.ReactNode;
   post_id: number;
 }) => {
-  const { allPosts, fetchSinglePost, updatePost: updateFeedPost } = useFeed();
+  const { fetchSinglePost, updatePost: updateFeedPost } = useFeed();
   const [post, setPost] = useState<PostType | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const hydratePost = async () => {
+      setLoading(true);
       if (post_id) {
         const post = await fetchSinglePost(post_id);
         if (post) {
           setPost(post);
         }
       }
+      setLoading(false);
     };
 
     hydratePost();
-  }, [post_id, allPosts, fetchSinglePost]);
+  }, [post_id]);
 
   const updatePost = useMemo(
     () => (updatedData: Partial<PostType>) => {
@@ -54,8 +58,9 @@ export const PostProvider = ({
     () => ({
       post,
       updatePost,
+      loading,
     }),
-    [post, updatePost]
+    [post, updatePost, loading]
   );
 
   return <PostContext.Provider value={value}>{children}</PostContext.Provider>;

@@ -27,7 +27,7 @@ interface Props {
 
 export default function UserView({ user }: Readonly<Props>) {
   const {
-    profilePosts,
+    getProfilePosts,
     loading,
     error,
     fetchPosts,
@@ -40,11 +40,7 @@ export default function UserView({ user }: Readonly<Props>) {
   const isOwnProfile = session?.user?.user_id === user.user_id;
 
   useEffect(() => {
-    const hydratePosts = async () => {
-      fetchPosts("profile", user.user_id);
-    };
-
-    hydratePosts();
+    fetchPosts("profile", user.user_id);
   }, [fetchPosts, user.user_id]);
 
   if (loading) {
@@ -74,6 +70,8 @@ export default function UserView({ user }: Readonly<Props>) {
       </Box>
     );
   }
+
+  const profilePosts = getProfilePosts();
 
   return (
     <Box sx={{ px: { xs: 2, md: 4 } }}>
@@ -148,7 +146,7 @@ export default function UserView({ user }: Readonly<Props>) {
       <Box sx={{ marginBottom: "100px" }}>
         {profilePosts.length > 0 ? (
           profilePosts
-            // .filter((post) => post.user_id == session?.user.user_id)
+            .filter((post) => post.user_id === user.user_id)
             .map((post) => (
               <Post
                 key={post.post_id}

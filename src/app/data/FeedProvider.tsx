@@ -9,7 +9,7 @@ import {
   useCallback,
 } from "react";
 import {
-  getAllPosts,
+  getAllPostsFromDb,
   getAllPostsForFollowing,
   getPost,
   getPostsByUserId,
@@ -29,9 +29,9 @@ export type PostType = {
 };
 
 type FeedContextType = {
-  homePosts: PostType[];
-  allPosts: PostType[];
-  profilePosts: PostType[];
+  getHomePosts: () => PostType[];
+  getAllPosts: () => PostType[];
+  getProfilePosts: () => PostType[];
   loading: boolean;
   error: unknown | null;
   fetchPosts: (page: "home" | "all" | "profile", user_id?: number) => void;
@@ -64,7 +64,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
         let results;
         switch (page) {
           case "home":
-            results = await getAllPosts();
+            results = await getAllPostsFromDb();
             break;
           case "all":
             results = await getAllPostsForFollowing();
@@ -88,38 +88,57 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const fetchSinglePost = useCallback(
-    async (postId: number) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const results = await getPost(postId);
-        if (!results) {
-          throw new Error("Post not found");
-        }
+  const fetchSinglePost = useCallback(async (postId: number) => {
+    setLoading(true);
+    setError(null);
 
-        updatePosts("all", [results]);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-        return postMap.get(postId);
+    if (postMap.has(postId)) {
+      setLoading(false);
+      return postMap.get(postId);
+    }
+
+    try {
+      const result = await getPost(postId);
+      if (!result) {
+        throw new Error("Post not found");
       }
-    },
-    [postMap]
-  );
+
+      // Update the postMap and feeds
+      updatePosts("all", [result]);
+
+      // Return the fetched post directly
+      return result;
+    } catch (err) {
+      setError(err);
+      console.error(err);
+      return undefined;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const updatePosts = (page: "home" | "all" | "profile", posts: PostType[]) => {
     setPostMap((prev) => {
       const newMap = new Map(prev);
-      posts.forEach((post) => newMap.set(post.post_id, post));
+      posts.forEach((post) => {
+        newMap.set(post.post_id, post);
+      });
       return newMap;
     });
 
     const postIds = posts.map((post) => post.post_id);
-    if (page === "home") setHomeFeed((prev) => [...prev, ...postIds]);
-    if (page === "all") setAllFeed((prev) => [...prev, ...postIds]);
-    if (page === "profile") setProfileFeed((prev) => [...prev, ...postIds]);
+
+    if (page === "home") {
+      setHomeFeed((prev) => [...new Set([...prev, ...postIds])]);
+    }
+
+    if (page === "all") {
+      setAllFeed((prev) => [...new Set([...prev, ...postIds])]);
+    }
+
+    if (page === "profile") {
+      setProfileFeed(postIds);
+    }
   };
 
   const updatePost = (postId: number, updatedData: Partial<PostType>) => {
@@ -160,21 +179,31 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const homePosts = homeFeed
-    .map((id) => postMap.get(id))
-    .filter((post): post is PostType => Boolean(post));
-  const allPosts = allFeed
-    .map((id) => postMap.get(id))
-    .filter((post): post is PostType => Boolean(post));
-  const profilePosts = profileFeed
-    .map((id) => postMap.get(id))
-    .filter((post): post is PostType => Boolean(post));
+  const getHomePosts = useCallback(
+    () =>
+      homeFeed
+        .map((id) => postMap.get(id))
+        .filter((post): post is PostType => Boolean(post)),
+    [homeFeed, postMap]
+  );
+  const getAllPosts = useCallback(
+    () =>
+      allFeed
+        .map((id) => postMap.get(id))
+        .filter((post): post is PostType => Boolean(post)),
+    [allFeed, postMap]
+  );
+  const getProfilePosts = useCallback(() => {
+    return profileFeed
+      .map((id) => postMap.get(id))
+      .filter((post): post is PostType => Boolean(post));
+  }, [profileFeed, postMap]);
 
   const value = useMemo(
     () => ({
-      homePosts,
-      allPosts,
-      profilePosts,
+      getHomePosts,
+      getAllPosts,
+      getProfilePosts,
       loading,
       error,
       fetchPosts,
@@ -184,9 +213,9 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       deletePostFromFeed,
     }),
     [
-      homePosts,
-      allPosts,
-      profilePosts,
+      getHomePosts,
+      getAllPosts,
+      getProfilePosts,
       loading,
       error,
       fetchPosts,

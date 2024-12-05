@@ -18,7 +18,7 @@ export type PostData = {
   imageHeight: number | null;
 };
 
-export async function getAllPosts() {
+export async function getAllPostsFromDb() {
   const session = await auth();
   if (!session) {
     return [];

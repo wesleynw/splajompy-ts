@@ -1,7 +1,13 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -26,12 +32,26 @@ dayjs.extend(timezone);
 export default function PostPageContent() {
   const theme = useTheme();
   const router = useRouter();
-  const { post, updatePost } = usePost();
+  const { post, updatePost, loading } = usePost();
   const { data: session } = useSession();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="30vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!post) {
     return <Typography variant="h6">Post not found.</Typography>;
