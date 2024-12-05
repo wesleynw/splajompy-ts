@@ -33,7 +33,7 @@ type FeedContextType = {
   getAllPosts: () => PostType[];
   getProfilePosts: () => PostType[];
   loading: boolean;
-  error: unknown | null;
+  error: unknown;
   fetchPosts: (page: "home" | "all" | "profile", user_id?: number) => void;
   fetchSinglePost: (postId: number) => Promise<PostType | undefined>;
   updatePost: (postId: number, updatedData: Partial<PostType>) => void;
@@ -53,9 +53,8 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   const [profileFeed, setProfileFeed] = useState<number[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<unknown | null>(null);
+  const [error, setError] = useState<unknown>(null);
 
-  // TODO: paging... offset: number, limit: number
   const fetchPosts = useCallback(
     async (page: "home" | "all" | "profile", user_id?: number) => {
       setLoading(true);
@@ -88,34 +87,37 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const fetchSinglePost = useCallback(async (postId: number) => {
-    setLoading(true);
-    setError(null);
+  const fetchSinglePost = useCallback(
+    async (postId: number) => {
+      setLoading(true);
+      setError(null);
 
-    if (postMap.has(postId)) {
-      setLoading(false);
-      return postMap.get(postId);
-    }
-
-    try {
-      const result = await getPost(postId);
-      if (!result) {
-        throw new Error("Post not found");
+      if (postMap.has(postId)) {
+        setLoading(false);
+        return postMap.get(postId);
       }
 
-      // Update the postMap and feeds
-      updatePosts("all", [result]);
+      try {
+        const result = await getPost(postId);
+        if (!result) {
+          throw new Error("Post not found");
+        }
 
-      // Return the fetched post directly
-      return result;
-    } catch (err) {
-      setError(err);
-      console.error(err);
-      return undefined;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        // Update the postMap and feeds
+        updatePosts("all", [result]);
+
+        // Return the fetched post directly
+        return result;
+      } catch (err) {
+        setError(err);
+        console.error(err);
+        return undefined;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [postMap]
+  );
 
   const updatePosts = (page: "home" | "all" | "profile", posts: PostType[]) => {
     setPostMap((prev) => {
@@ -153,7 +155,6 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
 
   const insertPostToFeed = (feed: FeedType, post: PostType) => {
     setPostMap((prev) => new Map(prev).set(post.post_id, post));
-    // TODO: can i clean this up? this is a lot of repetition
     if (feed === "home") {
       setHomeFeed((prev) => [post.post_id, ...prev]);
     } else if (feed === "all") {
