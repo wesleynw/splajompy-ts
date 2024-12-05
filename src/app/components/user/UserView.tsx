@@ -26,20 +26,26 @@ interface Props {
 }
 
 export default function UserView({ user }: Readonly<Props>) {
-  const { posts, fetchFeed, deletePostFromFeed, updatePost, loading, error } =
-    useFeed();
+  const {
+    profilePosts,
+    loading,
+    error,
+    fetchPosts,
+    updatePost,
+    deletePostFromFeed,
+  } = useFeed();
   const { data: session } = useSession();
   const theme = useTheme();
 
   const isOwnProfile = session?.user?.user_id === user.user_id;
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      await fetchFeed(false);
+    const hydratePosts = async () => {
+      fetchPosts("profile", user.user_id);
     };
 
-    fetchPosts();
-  }, []);
+    hydratePosts();
+  }, [fetchPosts, user.user_id]);
 
   if (loading) {
     return (
@@ -140,9 +146,9 @@ export default function UserView({ user }: Readonly<Props>) {
       </Box>
 
       <Box sx={{ marginBottom: "100px" }}>
-        {posts.length > 0 ? (
-          posts
-            .filter((post) => post.user_id == session?.user.user_id)
+        {profilePosts.length > 0 ? (
+          profilePosts
+            // .filter((post) => post.user_id == session?.user.user_id)
             .map((post) => (
               <Post
                 key={post.post_id}
@@ -160,7 +166,7 @@ export default function UserView({ user }: Readonly<Props>) {
                   updatePost(post.post_id, updatedAttributes);
                 }}
                 onDelete={() => {
-                  deletePostFromFeed(post.post_id);
+                  deletePostFromFeed("profile", post.post_id);
                 }}
               />
             ))

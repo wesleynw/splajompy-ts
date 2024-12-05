@@ -1,7 +1,19 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useMemo } from "react";
-import { getAllPosts, getAllPostsForFollowing } from "../lib/posts";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  getAllPosts,
+  getAllPostsForFollowing,
+  getPost,
+  getPostsByUserId,
+} from "../lib/posts";
 
 export type PostType = {
   post_id: number;
@@ -17,81 +29,169 @@ export type PostType = {
 };
 
 type FeedContextType = {
-  posts: PostType[];
+  homePosts: PostType[];
   allPosts: PostType[];
+  profilePosts: PostType[];
   loading: boolean;
   error: unknown | null;
-  fetchFeed: (fetchAllPosts: boolean) => Promise<void>;
+  fetchPosts: (page: "home" | "all" | "profile", user_id?: number) => void;
+  fetchSinglePost: (postId: number) => Promise<PostType | undefined>;
   updatePost: (postId: number, updatedData: Partial<PostType>) => void;
-  insertPostToFeed: (post: PostType) => void;
-  deletePostFromFeed: (postId: number) => void;
+  insertPostToFeed: (feed: FeedType, post: PostType) => void;
+  deletePostFromFeed: (feed: FeedType, postId: number) => void;
 };
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
 
+export type FeedType = "home" | "all" | "profile";
+
 export const FeedProvider = ({ children }: { children: ReactNode }) => {
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [allPosts, setAllPosts] = useState<PostType[]>([]);
+  const [postMap, setPostMap] = useState<Map<number, PostType>>(new Map());
+
+  const [homeFeed, setHomeFeed] = useState<number[]>([]);
+  const [allFeed, setAllFeed] = useState<number[]>([]);
+  const [profileFeed, setProfileFeed] = useState<number[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown | null>(null);
 
-  // todo: feed provider fetch posts in useEffect
-
-  const fetchFeed = async (fetchAllPosts: boolean) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const results = fetchAllPosts
-        ? await getAllPosts()
-        : await getAllPostsForFollowing();
-      if (fetchAllPosts) {
-        setAllPosts(results);
-      } else {
-        setPosts(results);
+  // TODO: paging... offset: number, limit: number
+  const fetchPosts = useCallback(
+    async (page: "home" | "all" | "profile", user_id?: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        let results;
+        switch (page) {
+          case "home":
+            results = await getAllPosts();
+            break;
+          case "all":
+            results = await getAllPostsForFollowing();
+            break;
+          case "profile":
+            if (!user_id) {
+              throw new Error("user_id is required for profile feed");
+            }
+            results = await getPostsByUserId(user_id);
+            break;
+          default:
+            throw new Error("Invalid page type");
+        }
+        updatePosts(page, results);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to fetch posts:", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
+    },
+    []
+  );
+
+  const fetchSinglePost = useCallback(
+    async (postId: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const results = await getPost(postId);
+        if (!results) {
+          throw new Error("Post not found");
+        }
+
+        updatePosts("all", [results]);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+        return postMap.get(postId);
+      }
+    },
+    [postMap]
+  );
+
+  const updatePosts = (page: "home" | "all" | "profile", posts: PostType[]) => {
+    setPostMap((prev) => {
+      const newMap = new Map(prev);
+      posts.forEach((post) => newMap.set(post.post_id, post));
+      return newMap;
+    });
+
+    const postIds = posts.map((post) => post.post_id);
+    if (page === "home") setHomeFeed((prev) => [...prev, ...postIds]);
+    if (page === "all") setAllFeed((prev) => [...prev, ...postIds]);
+    if (page === "profile") setProfileFeed((prev) => [...prev, ...postIds]);
   };
 
   const updatePost = (postId: number, updatedData: Partial<PostType>) => {
-    setPosts((prev) =>
-      prev.map((post) =>
-        post.post_id === postId ? { ...post, ...updatedData } : post
-      )
-    );
-    setAllPosts((prev) =>
-      prev.map((post) =>
-        post.post_id === postId ? { ...post, ...updatedData } : post
-      )
-    );
+    setPostMap((prev) => {
+      const post = prev.get(postId);
+      if (!post) {
+        return prev;
+      }
+      return new Map(prev).set(postId, { ...post, ...updatedData });
+    });
   };
 
-  const insertPostToFeed = (post: PostType) => {
-    setPosts((prev) => [post, ...prev]);
-    setAllPosts((prev) => [post, ...prev]);
+  const insertPostToFeed = (feed: FeedType, post: PostType) => {
+    setPostMap((prev) => new Map(prev).set(post.post_id, post));
+    // TODO: can i clean this up? this is a lot of repetition
+    if (feed === "home") {
+      setHomeFeed((prev) => [post.post_id, ...prev]);
+    } else if (feed === "all") {
+      setAllFeed((prev) => [post.post_id, ...prev]);
+    } else if (feed === "profile") {
+      setProfileFeed((prev) => [post.post_id, ...prev]);
+    }
   };
 
-  const deletePostFromFeed = (postId: number) => {
-    setPosts((prev) => prev.filter((post) => post.post_id !== postId));
-    setAllPosts((prev) => prev.filter((post) => post.post_id !== postId));
+  const deletePostFromFeed = (feed: FeedType, postId: number) => {
+    setPostMap((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(postId);
+      return newMap;
+    });
+
+    if (feed === "home") {
+      setHomeFeed((prev) => prev.filter((id) => id !== postId));
+    } else if (feed === "all") {
+      setAllFeed((prev) => prev.filter((id) => id !== postId));
+    } else if (feed === "profile") {
+      setProfileFeed((prev) => prev.filter((id) => id !== postId));
+    }
   };
+
+  const homePosts = homeFeed
+    .map((id) => postMap.get(id))
+    .filter((post): post is PostType => Boolean(post));
+  const allPosts = allFeed
+    .map((id) => postMap.get(id))
+    .filter((post): post is PostType => Boolean(post));
+  const profilePosts = profileFeed
+    .map((id) => postMap.get(id))
+    .filter((post): post is PostType => Boolean(post));
 
   const value = useMemo(
     () => ({
-      posts,
+      homePosts,
       allPosts,
+      profilePosts,
       loading,
       error,
-      fetchFeed,
+      fetchPosts,
+      fetchSinglePost,
       updatePost,
       insertPostToFeed,
       deletePostFromFeed,
     }),
-    [posts, allPosts, loading, error]
+    [
+      homePosts,
+      allPosts,
+      profilePosts,
+      loading,
+      error,
+      fetchPosts,
+      fetchSinglePost,
+    ]
   );
 
   return <FeedContext.Provider value={value}>{children}</FeedContext.Provider>;

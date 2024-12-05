@@ -23,22 +23,21 @@ export const PostProvider = ({
   children: React.ReactNode;
   post_id: number;
 }) => {
-  const { allPosts, fetchFeed, updatePost: updateFeedPost } = useFeed();
+  const { allPosts, fetchSinglePost, updatePost: updateFeedPost } = useFeed();
   const [post, setPost] = useState<PostType | undefined>(undefined);
-  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    const foundPost = allPosts.find((p) => p.post_id == post_id);
+    const hydratePost = async () => {
+      if (post_id) {
+        const post = await fetchSinglePost(post_id);
+        if (post) {
+          setPost(post);
+        }
+      }
+    };
 
-    if (foundPost != null) {
-      setPost(foundPost);
-    } else if (!hasFetched) {
-      setHasFetched(true);
-      fetchFeed(true).catch((err) =>
-        console.error("Failed to fetch feed:", err)
-      );
-    }
-  }, [post_id, allPosts, hasFetched, fetchFeed]);
+    hydratePost();
+  }, [post_id, allPosts, fetchSinglePost]);
 
   const updatePost = useMemo(
     () => (updatedData: Partial<PostType>) => {
