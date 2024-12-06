@@ -10,6 +10,7 @@ import timezone from "dayjs/plugin/timezone";
 import { setNotificationAsViewedForUser } from "@/app/lib/notifications";
 import { Session } from "next-auth";
 import Link from "next/link";
+import { useEffect } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -22,9 +23,19 @@ export default function NotificationView({
   const userTimezone = dayjs.tz.guess();
 
   // 2 seconds after loading this component, mark all notifications as read
-  setTimeout(() => {
-    setNotificationAsViewedForUser(session.user.user_id);
-  }, 2000);
+  useEffect(() => {
+    // Only run this code in the client, 2 seconds after the component mounts
+    const timer = setTimeout(async () => {
+      try {
+        // Make a client-side request to an API endpoint that marks notifications as viewed
+        await setNotificationAsViewedForUser(session.user.user_id);
+      } catch (error) {
+        console.error("Failed to mark notifications as viewed:", error);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [session.user.user_id]);
 
   if (notifications.length === 0) {
     return (

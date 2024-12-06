@@ -54,7 +54,17 @@ export default function PostPageContent() {
   }
 
   if (!post) {
-    return <Typography variant="h6">Post not found.</Typography>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="30vh"
+      >
+        <Typography variant="h6">Post not found.</Typography>
+      </Box>
+    );
   }
 
   const handleDelete = async () => {

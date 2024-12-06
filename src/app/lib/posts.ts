@@ -121,6 +121,12 @@ export async function getAllPostsForFollowing() {
 }
 
 export async function getPostsByUserId(user_id: number) {
+  const session = await auth();
+
+  if (!session) {
+    return [];
+  }
+
   const results = await db
     .select({
       post_id: posts.post_id,
@@ -137,7 +143,7 @@ export async function getPostsByUserId(user_id: number) {
         SELECT 1
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
-          AND ${likes.user_id} = ${user_id}
+          AND ${likes.user_id} = ${session.user.user_id}
       )
     `,
     })
