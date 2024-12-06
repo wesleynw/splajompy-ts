@@ -135,11 +135,13 @@ export async function insertComment(
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
 
-    await db.insert(notifications).values({
-      user_id: poster,
-      message: `${session.user.username} commented on your post`,
-      link: `/post/${post_id}`,
-    });
+    if (poster !== session.user.user_id) {
+      await db.insert(notifications).values({
+        user_id: poster,
+        message: `@${session.user.username} commented on your post`,
+        link: `/post/${post_id}`,
+      });
+    }
 
     return result;
   }

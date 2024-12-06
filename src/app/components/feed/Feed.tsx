@@ -43,7 +43,7 @@ export default function Feed({
       fetchPosts(feedType, session.user.user_id);
     };
 
-    hydratePosts(); // TODO: better name for this function?
+    hydratePosts();
   }, [
     router,
     fetchPosts,
@@ -108,7 +108,9 @@ export default function Feed({
             insertPostToFeed={(post) => insertPostToFeed(feedType, post)}
           />
         )}
-        {isOnlyCurrentUsersPosts && <EmptyFeed loading={loading} />}
+        {isOnlyCurrentUsersPosts && feedType == "home" && (
+          <EmptyFeed loading={loading} />
+        )}
         {currentPosts.map((post) => (
           <Post
             key={post.post_id}

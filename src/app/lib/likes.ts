@@ -15,11 +15,13 @@ export async function likePost(
     user_id,
   });
 
-  await db.insert(notifications).values({
-    user_id: poster_id,
-    message: `${username} liked your post`,
-    link: `/post/${post_id}`,
-  });
+  if (poster_id !== user_id) {
+    await db.insert(notifications).values({
+      user_id: poster_id,
+      message: `@${username} liked your post`,
+      link: `/post/${post_id}`,
+    });
+  }
 }
 
 export async function unlikePost(post_id: number, user_id: number) {
