@@ -4,12 +4,12 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBar from "./components/navigation/TopBar";
 import { FeedProvider } from "./data/FeedProvider";
+import PlausibleProvider from "next-plausible";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -30,6 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <PlausibleProvider
+          domain="splajompy.com"
+          customDomain="https://analytics.splajompy.com"
+          selfHosted
+        />
+      </head>
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
@@ -39,7 +46,6 @@ export default function RootLayout({
               <FeedProvider>{children}</FeedProvider>
             </Box>
 
-            <Analytics />
             <SpeedInsights />
           </ThemeProvider>
         </AppRouterCacheProvider>
