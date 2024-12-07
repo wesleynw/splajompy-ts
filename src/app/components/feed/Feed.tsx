@@ -1,70 +1,90 @@
 "use client";
 
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
 import { SessionProvider, signOut } from "next-auth/react";
 import { Session } from "next-auth";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
 
 export type Props = {
   session: Session;
   feedType: FeedType;
+  ofUser?: number;
   showNewPost: boolean;
 };
 
 export default function Feed({
   session,
   feedType,
+  ofUser,
   showNewPost,
 }: Readonly<Props>) {
   const router = useRouter();
+  const observerRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+
   const {
     getHomePosts,
     getAllPosts,
     getProfilePosts,
     loading,
     error,
+    morePostsToFetch,
     fetchPosts,
     updatePost,
     insertPostToFeed,
     deletePostFromFeed,
   } = useFeed();
+
+  const user = feedType === "profile" ? ofUser : session.user.user_id;
+
+  useEffect(() => {
+    fetchPosts(feedType, 0, user);
+    setOffset(10);
+  }, [fetchPosts, feedType, user]);
+
   useEffect(() => {
     if (!session.user.username) {
       signOut();
       router.push("/login");
     }
 
-    const hydratePosts = async () => {
-      fetchPosts(feedType, session.user.user_id);
-    };
+    const currentObserverRef = observerRef.current;
 
-    hydratePosts();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading && morePostsToFetch) {
+          fetchPosts(feedType, offset, user);
+          setOffset(offset + 10);
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    );
+
+    if (currentObserverRef) {
+      observer.observe(currentObserverRef);
+    }
+
+    return () => {
+      if (currentObserverRef) {
+        observer.unobserve(currentObserverRef);
+      }
+    };
   }, [
     router,
     fetchPosts,
     feedType,
     session.user.username,
     session.user.user_id,
+    loading,
+    offset,
+    morePostsToFetch,
+    user,
   ]);
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   if (error) {
     return (
@@ -100,9 +120,14 @@ export default function Feed({
   );
 
   return (
-    <Box sx={{ marginBottom: "60px", px: { xs: 2, md: 4 } }}>
+    <Box
+      sx={{
+        marginBottom: "60px",
+        px: { xs: 2, md: 4 },
+        width: "100%",
+      }}
+    >
       <SessionProvider session={session}>
-        {/* this lambda is also weird, need to fix */}
         {showNewPost && (
           <NewPost
             insertPostToFeed={(post) => insertPostToFeed(feedType, post)}
@@ -130,6 +155,47 @@ export default function Feed({
             onDelete={() => deletePostFromFeed(feedType, post.post_id)}
           />
         ))}
+        <div ref={observerRef} style={{ height: "1px" }} />
+        {loading && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            width="100%"
+            height="30vh"
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        {currentPosts.length > 0 && !morePostsToFetch && feedType === "all" && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            margin="0 auto"
+            width="100%"
+            maxWidth="600px"
+            height="30vh"
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                color: "#777777",
+                paddingBottom: 2,
+              }}
+            >
+              Is that the very first post? <br />
+              What came before that? <br />
+              Nothing at all? <br />
+              It always just{" "}
+              <Box fontWeight="800" display="inline">
+                Splajompy
+              </Box>
+              .
+            </Typography>
+          </Box>
+        )}
       </SessionProvider>
     </Box>
   );

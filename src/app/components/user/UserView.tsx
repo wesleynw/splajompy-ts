@@ -1,20 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Stack,
-  useTheme,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import Post from "../post/Post";
+import React from "react";
+import { Box, Typography, Stack, useTheme, Button } from "@mui/material";
 import BackButton from "../navigation/BackButton";
 import { signOut, useSession } from "next-auth/react";
-import { PostData } from "@/app/lib/posts";
 import FollowButton from "../follows/FollowButton";
-import { useFeed } from "@/app/data/FeedProvider";
+import Feed from "../feed/Feed";
+import { useRouter } from "next/navigation";
 
 interface Props {
   user: {
@@ -26,52 +18,16 @@ interface Props {
 }
 
 export default function UserView({ user }: Readonly<Props>) {
-  const {
-    getProfilePosts,
-    loading,
-    error,
-    fetchPosts,
-    updatePost,
-    deletePostFromFeed,
-  } = useFeed();
   const { data: session } = useSession();
+  const router = useRouter();
   const theme = useTheme();
 
+  if (!session) {
+    router.push("/login");
+    return null;
+  }
+
   const isOwnProfile = session?.user?.user_id === user.user_id;
-
-  useEffect(() => {
-    fetchPosts("profile", user.user_id);
-  }, [fetchPosts, user.user_id]);
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <div>Something went wrong. Please try again later.</div>
-      </Box>
-    );
-  }
-
-  const profilePosts = getProfilePosts();
 
   return (
     <Box sx={{ px: { xs: 2, md: 4 } }}>
@@ -142,47 +98,13 @@ export default function UserView({ user }: Readonly<Props>) {
           </Typography>
         </Stack>
       </Box>
-
-      <Box sx={{ marginBottom: "100px" }}>
-        {profilePosts.length > 0 ? (
-          profilePosts
-            .filter((post) => post.user_id === user.user_id)
-            .map((post) => (
-              <Post
-                key={post.post_id}
-                id={post.post_id}
-                date={new Date(post.postdate + "Z")}
-                content={post.text}
-                user_id={post.user_id}
-                poster={post.poster}
-                comment_count={post.comment_count}
-                imagePath={post.imageBlobUrl}
-                imageWidth={post.imageWidth}
-                imageHeight={post.imageHeight}
-                likedByCurrentUser={post.liked}
-                updateParentContext={(updatedAttributes: Partial<PostData>) => {
-                  updatePost(post.post_id, updatedAttributes);
-                }}
-                onDelete={() => {
-                  deletePostFromFeed("profile", post.post_id);
-                }}
-              />
-            ))
-        ) : (
-          <Typography
-            variant="h6"
-            sx={{
-              textAlign: "center",
-              marginTop: 4,
-              color: "#777777",
-              ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-            }}
-          >
-            {isOwnProfile
-              ? "You haven't posted anything yet."
-              : "This user hasn't posted anything yet."}
-          </Typography>
-        )}
+      <Box sx={{}}>
+        <Feed
+          session={session}
+          feedType="profile"
+          ofUser={user.user_id}
+          showNewPost={false}
+        />
       </Box>
     </Box>
   );

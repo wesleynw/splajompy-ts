@@ -8,7 +8,6 @@ import {
   useMemo,
   useCallback,
   useRef,
-  useEffect,
 } from "react";
 import {
   getAllPostsFromDb,
@@ -36,7 +35,12 @@ type FeedContextType = {
   getProfilePosts: () => PostType[];
   loading: boolean;
   error: unknown;
-  fetchPosts: (page: "home" | "all" | "profile", user_id?: number) => void;
+  fetchPosts: (
+    page: "home" | "all" | "profile",
+    offset: number,
+    user_id?: number
+  ) => void;
+  morePostsToFetch: boolean;
   fetchSinglePost: (postId: number) => Promise<PostType | undefined>;
   updatePost: (postId: number, updatedData: Partial<PostType>) => void;
   insertPostToFeed: (feed: FeedType, post: PostType) => void;
@@ -48,8 +52,7 @@ const FeedContext = createContext<FeedContextType | undefined>(undefined);
 export type FeedType = "home" | "all" | "profile";
 
 export const FeedProvider = ({ children }: { children: ReactNode }) => {
-  const [postMap, setPostMap] = useState<Map<number, PostType>>(new Map());
-  const postMapRef = useRef<Map<number, PostType>>(postMap);
+  const postMapRef = useRef<Map<number, PostType>>(new Map());
 
   const [homeFeed, setHomeFeed] = useState<number[]>([]);
   const [allFeed, setAllFeed] = useState<number[]>([]);
@@ -57,32 +60,37 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(null);
-
-  useEffect(() => {
-    postMapRef.current = postMap;
-  }, [postMap]);
+  const [morePostsToFetch, setMorePostsToFetch] = useState<boolean>(true);
 
   const fetchPosts = useCallback(
-    async (page: "home" | "all" | "profile", user_id?: number) => {
+    async (
+      page: "home" | "all" | "profile",
+      offset: number,
+      user_id?: number
+    ) => {
       setLoading(true);
       setError(null);
       try {
         let results;
         switch (page) {
           case "home":
-            results = await getAllPostsFromDb();
+            results = await getAllPostsForFollowing(offset);
             break;
           case "all":
-            results = await getAllPostsForFollowing();
+            results = await getAllPostsFromDb(offset);
             break;
           case "profile":
             if (!user_id) {
               throw new Error("user_id is required for profile feed");
             }
-            results = await getPostsByUserId(user_id);
+            results = await getPostsByUserId(user_id, offset);
             break;
           default:
             throw new Error("Invalid page type");
+        }
+
+        if (results.length < 10) {
+          setMorePostsToFetch(false);
         }
         updatePosts(page, results);
       } catch (err) {
@@ -115,13 +123,11 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const updatePosts = (page: "home" | "all" | "profile", posts: PostType[]) => {
-    setPostMap((prev) => {
-      const newMap = new Map(prev);
-      posts.forEach((post) => {
-        newMap.set(post.post_id, post);
-      });
-      return newMap;
-    });
+    const map = postMapRef.current;
+
+    for (const post of posts) {
+      map.set(post.post_id, post);
+    }
 
     const postIds = posts.map((post) => post.post_id);
 
@@ -139,17 +145,19 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updatePost = (postId: number, updatedData: Partial<PostType>) => {
-    setPostMap((prev) => {
-      const post = prev.get(postId);
-      if (!post) {
-        return prev;
-      }
-      return new Map(prev).set(postId, { ...post, ...updatedData });
-    });
+    const map = postMapRef.current;
+
+    const post = map.get(postId);
+
+    if (post) {
+      map.set(postId, { ...post, ...updatedData });
+    }
   };
 
   const insertPostToFeed = (feed: FeedType, post: PostType) => {
-    setPostMap((prev) => new Map(prev).set(post.post_id, post));
+    const map = postMapRef.current;
+    map.set(post.post_id, post);
+
     if (feed === "home") {
       setHomeFeed((prev) => [post.post_id, ...prev]);
     } else if (feed === "all") {
@@ -160,11 +168,9 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deletePostFromFeed = (feed: FeedType, postId: number) => {
-    setPostMap((prev) => {
-      const newMap = new Map(prev);
-      newMap.delete(postId);
-      return newMap;
-    });
+    const map = postMapRef.current;
+
+    map.delete(postId);
 
     if (feed === "home") {
       setHomeFeed((prev) => prev.filter((id) => id !== postId));
@@ -178,22 +184,22 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
   const getHomePosts = useCallback(
     () =>
       homeFeed
-        .map((id) => postMap.get(id))
+        .map((id) => postMapRef.current.get(id))
         .filter((post): post is PostType => Boolean(post)),
-    [homeFeed, postMap]
+    [homeFeed]
   );
   const getAllPosts = useCallback(
     () =>
       allFeed
-        .map((id) => postMap.get(id))
+        .map((id) => postMapRef.current.get(id))
         .filter((post): post is PostType => Boolean(post)),
-    [allFeed, postMap]
+    [allFeed]
   );
   const getProfilePosts = useCallback(() => {
     return profileFeed
-      .map((id) => postMap.get(id))
+      .map((id) => postMapRef.current.get(id))
       .filter((post): post is PostType => Boolean(post));
-  }, [profileFeed, postMap]);
+  }, [profileFeed]);
 
   const value = useMemo(
     () => ({
@@ -202,6 +208,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       getProfilePosts,
       loading,
       error,
+      morePostsToFetch,
       fetchPosts,
       fetchSinglePost,
       updatePost,
@@ -214,6 +221,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       getProfilePosts,
       loading,
       error,
+      morePostsToFetch,
       fetchPosts,
       fetchSinglePost,
     ]

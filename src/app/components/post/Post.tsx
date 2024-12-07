@@ -64,6 +64,7 @@ export default function Post({
         sx={{
           borderRadius: "8px",
           margin: "10px auto",
+          width: "100%",
           maxWidth: 600,
           padding: 3,
           display: "flex",
