@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -103,7 +103,15 @@ export default function Post({
               router.push(`/user/${poster}`);
             }}
           >
-            @{poster}
+            @{poster}{" "}
+            {["splajompy", "wesley", "sophie"].includes(poster) && (
+              <Chip
+                label="Admin"
+                color="primary"
+                variant="outlined"
+                size="small"
+              />
+            )}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {session?.user?.user_id == user_id && onDelete && (
