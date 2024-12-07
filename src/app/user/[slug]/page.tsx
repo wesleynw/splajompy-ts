@@ -57,7 +57,7 @@ export default async function Page({
       <Box
         sx={{
           width: "100%",
-          maxWidth: { xs: "100%", md: "600px" },
+          maxWidth: { xs: "100%", md: "600" },
           margin: "auto",
           boxSizing: "border-box",
           paddingBottom: 20,
