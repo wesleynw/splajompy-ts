@@ -96,7 +96,7 @@ export default function UserView({ user }: Readonly<Props>) {
               variant="contained"
               size="medium"
               onClick={() => {
-                signOut();
+                signOut({ redirectTo: "/login" });
               }}
               sx={{
                 textTransform: "none",
