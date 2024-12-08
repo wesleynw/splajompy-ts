@@ -18,7 +18,9 @@ export type PostData = {
   imageHeight: number | null;
 };
 
-export async function getAllPostsFromDb() {
+const FETCH_LIMIT = 10;
+
+export async function getAllPostsFromDb(offset: number) {
   const session = await auth();
   if (!session) {
     return [];
@@ -55,12 +57,14 @@ export async function getAllPostsFromDb() {
       images.width,
       images.height
     )
-    .orderBy(desc(posts.postdate));
+    .orderBy(desc(posts.postdate))
+    .limit(FETCH_LIMIT)
+    .offset(offset);
 
   return results;
 }
 
-export async function getAllPostsForFollowing() {
+export async function getAllPostsForFollowing(offset: number) {
   const session = await auth();
   if (!session) {
     return [];
@@ -115,12 +119,14 @@ export async function getAllPostsForFollowing() {
       images.width,
       images.height
     )
-    .orderBy(desc(posts.postdate));
+    .orderBy(desc(posts.postdate))
+    .limit(FETCH_LIMIT)
+    .offset(offset);
 
   return results;
 }
 
-export async function getPostsByUserId(user_id: number) {
+export async function getPostsByUserId(user_id: number, offset: number) {
   const session = await auth();
 
   if (!session) {
@@ -159,7 +165,9 @@ export async function getPostsByUserId(user_id: number) {
       images.width,
       images.height
     )
-    .orderBy(desc(posts.postdate));
+    .orderBy(desc(posts.postdate))
+    .limit(FETCH_LIMIT)
+    .offset(offset);
 
   return results;
 }

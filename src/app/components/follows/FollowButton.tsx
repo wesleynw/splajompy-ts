@@ -60,6 +60,7 @@ export default function FollowButton({
       console.error("Failed to update follow status:", error);
     } finally {
       setLoading(false);
+      // TODO: find another schema for this
       fetchPosts("home", session.user.user_id);
     }
   };
