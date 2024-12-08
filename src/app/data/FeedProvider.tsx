@@ -152,7 +152,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (page === "profile") {
-      setProfileFeed(postIds);
+      setProfileFeed((prev) => [...new Set([...prev, ...postIds])]);
     }
   };
 
