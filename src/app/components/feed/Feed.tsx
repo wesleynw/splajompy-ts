@@ -33,7 +33,7 @@ export default function Feed({
     getProfilePosts,
     loading,
     error,
-    morePostsToFetch,
+    checkMorePostsToFetch,
     fetchPosts,
     updatePost,
     insertPostToFeed,
@@ -45,7 +45,7 @@ export default function Feed({
   useEffect(() => {
     fetchPosts(feedType, 0, user);
     setOffset(10);
-  }, [fetchPosts, feedType, user]);
+  }, [fetchPosts, feedType, user, session]);
 
   useEffect(() => {
     if (!session.user.username) {
@@ -53,11 +53,15 @@ export default function Feed({
       router.push("/login");
     }
 
+    if (loading || !checkMorePostsToFetch(feedType) || !observerRef.current) {
+      return;
+    }
+
     const currentObserverRef = observerRef.current;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading && morePostsToFetch) {
+        if (entries[0].isIntersecting && !loading) {
           fetchPosts(feedType, offset, user);
           setOffset(offset + 10);
         }
@@ -82,7 +86,7 @@ export default function Feed({
     session.user.user_id,
     loading,
     offset,
-    morePostsToFetch,
+    checkMorePostsToFetch,
     user,
   ]);
 
@@ -167,35 +171,37 @@ export default function Feed({
             <CircularProgress />
           </Box>
         )}
-        {currentPosts.length > 0 && !morePostsToFetch && feedType === "all" && (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            margin="0 auto"
-            width="100%"
-            maxWidth="600px"
-            height="30vh"
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                textAlign: "center",
-                color: "#777777",
-                paddingBottom: 2,
-              }}
+        {currentPosts.length > 0 &&
+          !checkMorePostsToFetch(feedType) &&
+          feedType === "all" && (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              margin="0 auto"
+              width="100%"
+              maxWidth="600px"
+              height="30vh"
             >
-              Is that the very first post? <br />
-              What came before that? <br />
-              Nothing at all? <br />
-              It always just{" "}
-              <Box fontWeight="800" display="inline">
-                Splajompy
-              </Box>
-              .
-            </Typography>
-          </Box>
-        )}
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  color: "#777777",
+                  paddingBottom: 2,
+                }}
+              >
+                Is that the very first post? <br />
+                What came before that? <br />
+                Nothing at all? <br />
+                It always just{" "}
+                <Box fontWeight="800" display="inline">
+                  Splajompy
+                </Box>
+                .
+              </Typography>
+            </Box>
+          )}
       </SessionProvider>
     </Box>
   );

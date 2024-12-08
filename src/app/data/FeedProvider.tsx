@@ -35,12 +35,8 @@ type FeedContextType = {
   getProfilePosts: () => PostType[];
   loading: boolean;
   error: unknown;
-  fetchPosts: (
-    page: "home" | "all" | "profile",
-    offset: number,
-    user_id?: number
-  ) => void;
-  morePostsToFetch: boolean;
+  fetchPosts: (page: FeedType, offset: number, user_id?: number) => void;
+  checkMorePostsToFetch: (feed: FeedType) => boolean;
   fetchSinglePost: (postId: number) => Promise<PostType | undefined>;
   updatePost: (postId: number, updatedData: Partial<PostType>) => void;
   insertPostToFeed: (feed: FeedType, post: PostType) => void;
@@ -60,7 +56,16 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(null);
-  const [morePostsToFetch, setMorePostsToFetch] = useState<boolean>(true);
+
+  const [morePostsToFetchMap, setMorePostsToFetchMap] = useState<{
+    home: boolean;
+    all: boolean;
+    profile: boolean;
+  }>({
+    home: true,
+    all: true,
+    profile: true,
+  });
 
   const fetchPosts = useCallback(
     async (
@@ -90,7 +95,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (results.length < 10) {
-          setMorePostsToFetch(false);
+          setMorePostsToFetchMap((prev) => ({ ...prev, [page]: false }));
         }
         updatePosts(page, results);
       } catch (err) {
@@ -100,6 +105,13 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     []
+  );
+
+  const checkMorePostsToFetch = useCallback(
+    (feed: FeedType) => {
+      return morePostsToFetchMap[feed];
+    },
+    [morePostsToFetchMap]
   );
 
   const fetchSinglePost = useCallback(async (postId: number) => {
@@ -208,7 +220,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       getProfilePosts,
       loading,
       error,
-      morePostsToFetch,
+      checkMorePostsToFetch,
       fetchPosts,
       fetchSinglePost,
       updatePost,
@@ -221,7 +233,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       getProfilePosts,
       loading,
       error,
-      morePostsToFetch,
+      checkMorePostsToFetch,
       fetchPosts,
       fetchSinglePost,
     ]
