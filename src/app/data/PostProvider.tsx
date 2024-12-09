@@ -29,7 +29,7 @@ export const PostProvider = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchPost = fetchSinglePost; // Reference the stable function
+    const fetchPost = fetchSinglePost;
     const hydratePost = async () => {
       setLoading(true);
       if (post_id) {
@@ -44,7 +44,7 @@ export const PostProvider = ({
     };
 
     hydratePost();
-  }, [post_id, fetchSinglePost]); // `fetchSinglePost` is now stable
+  }, [post_id, fetchSinglePost]);
 
   const updatePost = useMemo(
     () => (updatedData: Partial<PostType>) => {
