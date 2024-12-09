@@ -160,9 +160,14 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     const map = postMapRef.current;
 
     const post = map.get(postId);
-
     if (post) {
-      map.set(postId, { ...post, ...updatedData });
+      const updatedPost = { ...post, ...updatedData };
+      map.set(postId, updatedPost);
+
+      // force re-render of feeds, TODO: find a more efficient way to do this?
+      setHomeFeed((prev) => [...prev]);
+      setAllFeed((prev) => [...prev]);
+      setProfileFeed((prev) => [...prev]);
     }
   };
 
