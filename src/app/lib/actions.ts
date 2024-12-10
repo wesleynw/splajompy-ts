@@ -18,9 +18,9 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
     if (err instanceof CredentialsSignin) {
       if (err.type === "CredentialsSignin") {
         return "Invalid credentials";
-      } else {
-        return "Something went wrong.";
       }
+    } else {
+      return "Something went wrong.";
     }
   }
   revalidatePath("/");
