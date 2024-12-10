@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { authenticate } from "@/app/lib/actions";
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { useFormState, useFormStatus } from "react-dom";
 import theme from "@/theme";
 
 const FormContainer = styled(Box)(({ theme }) => ({
@@ -89,7 +88,23 @@ const StyledFormLabel = styled(FormLabel)(() => ({
 }));
 
 export default function LoginPage() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const result = await authenticate(null, formData);
+
+    if (typeof result === "string") {
+      setErrorMessage(result);
+    } else {
+      setErrorMessage(null);
+    }
+    setLoading(false);
+  };
 
   return (
     <Box
@@ -106,7 +121,7 @@ export default function LoginPage() {
         ...theme.applyStyles("dark", { backgroundColor: "#121212" }),
       }}
     >
-      <form action={dispatch}>
+      <form onSubmit={handleSubmit}>
         <FormContainer>
           <StyledFormControl>
             <StyledFormLabel>Email or Username</StyledFormLabel>
@@ -138,7 +153,9 @@ export default function LoginPage() {
               {errorMessage}
             </Box>
           )}
-          <LoginButton />
+          <StyledButton variant="contained" disabled={loading} type="submit">
+            {loading ? <CircularProgress size={24} /> : "Login"}
+          </StyledButton>
           <Stack direction="row" spacing={1} sx={{ marginTop: "20px" }}>
             <Typography>New here?</Typography>
             <Typography
@@ -156,15 +173,5 @@ export default function LoginPage() {
         </FormContainer>
       </form>
     </Box>
-  );
-}
-
-function LoginButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <StyledButton variant="contained" disabled={pending} type="submit">
-      {pending ? <CircularProgress size={24} /> : "Login"}
-    </StyledButton>
   );
 }
