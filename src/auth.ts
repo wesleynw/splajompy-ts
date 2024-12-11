@@ -36,8 +36,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const user = await getUserPWHashFromDb(identifier);
 
-          console.log("user", user);
-
           if (user != null) {
             const match = await bcrypt.compare(password, user.password);
 
@@ -51,8 +49,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (err instanceof zod.ZodError) {
             throw new Error(err.errors.map((e) => e.message).join(", "));
           }
-
-          console.log("err", err);
         }
         return null;
       },
