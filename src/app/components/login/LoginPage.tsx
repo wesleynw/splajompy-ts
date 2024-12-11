@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { authenticate } from "@/app/lib/actions";
 import {
   Box,
   Button,
-  CircularProgress,
   FormControl,
   FormLabel,
   Input,
@@ -15,6 +14,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import theme from "@/theme";
+import { useFormState } from "react-dom";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -88,23 +88,7 @@ const StyledFormLabel = styled(FormLabel)(() => ({
 }));
 
 export default function LoginPage() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(event.currentTarget);
-    const result = await authenticate(null, formData);
-
-    if (typeof result === "string") {
-      setErrorMessage(result);
-    } else {
-      setErrorMessage(null);
-    }
-    setLoading(false);
-  };
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <Box
@@ -121,7 +105,7 @@ export default function LoginPage() {
         ...theme.applyStyles("dark", { backgroundColor: "#121212" }),
       }}
     >
-      <form onSubmit={handleSubmit}>
+      <form action={dispatch}>
         <FormContainer>
           <StyledFormControl>
             <StyledFormLabel>Email or Username</StyledFormLabel>
@@ -153,8 +137,8 @@ export default function LoginPage() {
               {errorMessage}
             </Box>
           )}
-          <StyledButton variant="contained" disabled={loading} type="submit">
-            {loading ? <CircularProgress size={24} /> : "Login"}
+          <StyledButton variant="contained" type="submit">
+            {"Login"}
           </StyledButton>
           <Stack direction="row" spacing={1} sx={{ marginTop: "20px" }}>
             <Typography>New here?</Typography>

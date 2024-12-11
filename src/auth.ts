@@ -47,7 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("User not found!");
         } catch (err) {
           if (err instanceof zod.ZodError) {
-            return null;
+            throw new Error(err.errors.map((e) => e.message).join(", "));
           }
         }
         return null;
