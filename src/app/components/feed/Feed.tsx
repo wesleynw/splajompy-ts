@@ -9,6 +9,7 @@ import { Session } from "next-auth";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
+import useSWR from "swr";
 
 export type Props = {
   session: Session;
@@ -24,8 +25,10 @@ export default function Feed({
   showNewPost,
 }: Readonly<Props>) {
   const router = useRouter();
-  const observerRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
+
+  const observerRef = useRef<HTMLDivElement>(null);
+  const user = feedType === "profile" ? ofUser : session.user.user_id;
 
   const {
     getHomePosts,
@@ -40,12 +43,15 @@ export default function Feed({
     deletePostFromFeed,
   } = useFeed();
 
-  const user = feedType === "profile" ? ofUser : session.user.user_id;
-
   useEffect(() => {
     fetchPosts(feedType, 0, user);
     setOffset(10);
   }, [fetchPosts, feedType, user, session]);
+
+  const { isLoading } = useSWR(`feed-${feedType}`, () => {
+    fetchPosts(feedType, 0, user);
+    return null;
+  });
 
   useEffect(() => {
     if (!session.user.username) {
@@ -89,6 +95,20 @@ export default function Feed({
     checkMorePostsToFetch,
     user,
   ]);
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        height="30vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (error) {
     return (
