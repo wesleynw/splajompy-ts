@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
