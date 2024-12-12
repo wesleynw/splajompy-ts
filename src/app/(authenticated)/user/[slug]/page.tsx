@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { Suspense } from "react";
-import UserProfileSkeleton from "@/app/components/loading/UserProfileSkeleton";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
+import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -64,7 +65,13 @@ export default async function Page({
         paddingBottom: 20,
       }}
     >
-      <Suspense fallback={<UserProfileSkeleton />}>
+      <Suspense
+        fallback={
+          <StandardWrapper>
+            <FeedSkeleton />
+          </StandardWrapper>
+        }
+      >
         <UserView user={user} />
       </Suspense>
     </Box>

@@ -155,7 +155,21 @@ export default function Feed({
         />
       ))}
       <div ref={observerRef} style={{ height: "1px" }} />
-      {loading && <FeedSkeleton />}
+      {loading && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            maxWidth: 600,
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 auto",
+          }}
+        >
+          <FeedSkeleton />
+        </Box>
+      )}
       {currentPosts.length > 0 &&
         !checkMorePostsToFetch(feedType) &&
         feedType === "all" && (

@@ -12,6 +12,7 @@ import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
 import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -58,7 +59,13 @@ export default async function Page({
   const id = (await params).id;
 
   return (
-    <Suspense fallback={<SinglePostSkeleton />}>
+    <Suspense
+      fallback={
+        <StandardWrapper>
+          <SinglePostSkeleton />
+        </StandardWrapper>
+      }
+    >
       <PostProvider post_id={id}>
         <PostPageContent />
       </PostProvider>
