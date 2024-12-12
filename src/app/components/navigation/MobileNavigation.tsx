@@ -14,7 +14,7 @@ export default function MobileNavigation() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const isStandalone = typeof window !== "undefined";
+  const isStandalone = typeof window === "undefined";
 
   const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
     if (targetPath === pathname) {
