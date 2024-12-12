@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
+import { Suspense } from "react";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -64,7 +65,9 @@ export default async function Page({
           paddingBottom: 20,
         }}
       >
-        <UserView user={user} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <UserView user={user} />
+        </Suspense>
       </Box>
     </SessionProvider>
   );

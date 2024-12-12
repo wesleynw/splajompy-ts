@@ -114,8 +114,10 @@ export default function DesktopNavigation() {
                   </ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    primaryTypographyProps={{
-                      fontSize: "20px",
+                    slotProps={{
+                      primary: {
+                        fontSize: "20px",
+                      },
                     }}
                     sx={{
                       color: "#333333",

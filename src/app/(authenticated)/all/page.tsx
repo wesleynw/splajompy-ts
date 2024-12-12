@@ -1,9 +1,12 @@
 import styles from "../../page.module.css";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+// import { auth } from "@/auth";
+// import { redirect } from "next/navigation";
 import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
 import Navigation from "@/app/components/navigation/Navigation";
+import { Suspense } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -24,7 +27,9 @@ export default async function Home() {
             paddingBottom: 20,
           }}
         >
-          <Feed session={session} feedType="all" showNewPost={false} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Feed session={session} feedType="all" showNewPost={false} />
+          </Suspense>
         </Box>
       </main>
       <Navigation />
