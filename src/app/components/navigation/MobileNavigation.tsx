@@ -58,7 +58,9 @@ export default function MobileNavigation() {
         <BottomNavigationAction
           value={`/user/${session?.user?.username}`}
           icon={<PersonIcon />}
-          onClick={(event) => handleNavigation(event, `/user/me`)}
+          onClick={(event) =>
+            handleNavigation(event, `/user/${session?.user?.username}`)
+          }
           disableRipple
         />
       </BottomNavigation>
