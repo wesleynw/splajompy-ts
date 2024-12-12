@@ -4,6 +4,7 @@ import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
 import { Suspense } from "react";
 import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
 
 export default function Home() {
   return (
@@ -16,7 +17,13 @@ export default function Home() {
         paddingBottom: 20,
       }}
     >
-      <Suspense fallback={<FeedSkeleton />}>
+      <Suspense
+        fallback={
+          <StandardWrapper>
+            <FeedSkeleton />
+          </StandardWrapper>
+        }
+      >
         <Feed feedType="all" showNewPost={false} />
       </Suspense>
     </Box>
