@@ -8,9 +8,9 @@ import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
 import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
+import { Suspense } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -56,12 +56,10 @@ export default async function Page({
   const id = (await params).id;
 
   return (
-    <>
-      <SessionProvider session={session}>
-        <PostProvider post_id={id}>
-          <PostPageContent />
-        </PostProvider>
-      </SessionProvider>
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <PostProvider post_id={id}>
+        <PostPageContent />
+      </PostProvider>
+    </Suspense>
   );
 }

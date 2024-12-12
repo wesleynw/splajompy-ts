@@ -1,4 +1,3 @@
-import styles from "../../page.module.css";
 import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
 import { Suspense } from "react";
@@ -13,22 +12,18 @@ export default async function Home() {
   }
 
   return (
-    <div>
-      <main className={styles.main}>
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: { xs: "100%", md: "600px" },
-            margin: "auto",
-            boxSizing: "border-box",
-            paddingBottom: 20,
-          }}
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <Feed session={session} feedType="all" showNewPost={false} />
-          </Suspense>
-        </Box>
-      </main>
-    </div>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { xs: "100%", md: "600px" },
+        margin: "auto",
+        boxSizing: "border-box",
+        paddingBottom: 20,
+      }}
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        <Feed session={session} feedType="all" showNewPost={false} />
+      </Suspense>
+    </Box>
   );
 }

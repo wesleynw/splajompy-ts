@@ -1,7 +1,6 @@
 import UserView from "@/app/components/user/UserView";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
-import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { Suspense } from "react";
@@ -55,20 +54,18 @@ export default async function Page({
   }
 
   return (
-    <SessionProvider session={session}>
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: { xs: "100%", md: "600" },
-          margin: "auto",
-          boxSizing: "border-box",
-          paddingBottom: 20,
-        }}
-      >
-        <Suspense fallback={<div>Loading...</div>}>
-          <UserView user={user} />
-        </Suspense>
-      </Box>
-    </SessionProvider>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { xs: "100%", md: "600" },
+        margin: "auto",
+        boxSizing: "border-box",
+        paddingBottom: 20,
+      }}
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        <UserView user={user} />
+      </Suspense>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -39,6 +39,11 @@ export default async function Notifications() {
   const notifications = getNotificationsForUser(session.user.user_id);
 
   return (
-    <NotificationsView session={session} notificationsPromise={notifications} />
+    <Suspense fallback={<div>Loading...</div>}>
+      <NotificationsView
+        session={session}
+        notificationsPromise={notifications}
+      />
+    </Suspense>
   );
 }
