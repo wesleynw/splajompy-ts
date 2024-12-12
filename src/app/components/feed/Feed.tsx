@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
 import useSWR from "swr";
+import FeedSkeleton from "../loading/FeedSkeleton";
 
 export type Props = {
   session: Session;
@@ -160,17 +161,7 @@ export default function Feed({
         />
       ))}
       <div ref={observerRef} style={{ height: "1px" }} />
-      {loading && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          width="100%"
-          height="30vh"
-        >
-          <CircularProgress />
-        </Box>
-      )}
+      {loading && <FeedSkeleton />}
       {currentPosts.length > 0 &&
         !checkMorePostsToFetch(feedType) &&
         feedType === "all" && (

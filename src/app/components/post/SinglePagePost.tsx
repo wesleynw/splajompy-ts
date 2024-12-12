@@ -24,6 +24,7 @@ import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
 import { usePost } from "@/app/data/PostProvider";
+import SinglePostSkeleton from "../loading/SinglePostSkeleton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -40,17 +41,7 @@ export default function PostPageContent() {
   const handleClose = () => setOpen(false);
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <SinglePostSkeleton />;
   }
 
   if (!post) {
