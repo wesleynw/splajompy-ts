@@ -16,8 +16,7 @@ export default function MobileNavigation() {
 
   const is_standalone =
     typeof window !== "undefined" &&
-    (window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true);
+    (window.matchMedia("(display-mode: standalone)").matches || false);
 
   const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
     if (targetPath === pathname) {
