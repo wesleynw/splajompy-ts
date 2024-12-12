@@ -100,12 +100,7 @@ export default function UserView({ user }: Readonly<Props>) {
         </Box>
       </Box>
       <Box>
-        <Feed
-          session={session}
-          feedType="profile"
-          ofUser={user.user_id}
-          showNewPost={false}
-        />
+        <Feed feedType="profile" ofUser={user.user_id} showNewPost={false} />
       </Box>
     </Box>
   );

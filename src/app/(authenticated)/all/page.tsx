@@ -1,17 +1,11 @@
+"use client";
+
 import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
 import { Suspense } from "react";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
 
-export default async function Home() {
-  const session = await auth();
-
-  if (!session) {
-    redirect("/login");
-  }
-
+export default function Home() {
   return (
     <Box
       sx={{
@@ -23,7 +17,7 @@ export default async function Home() {
       }}
     >
       <Suspense fallback={<FeedSkeleton />}>
-        <Feed session={session} feedType="all" showNewPost={false} />
+        <Feed feedType="all" showNewPost={false} />
       </Suspense>
     </Box>
   );

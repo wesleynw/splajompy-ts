@@ -1,5 +1,0 @@
-import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
-
-export default function Loading() {
-  return <FeedSkeleton />;
-}

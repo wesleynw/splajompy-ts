@@ -4,8 +4,7 @@ import { Box, Typography } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
-import { signOut } from "next-auth/react";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
@@ -13,23 +12,23 @@ import useSWR from "swr";
 import FeedSkeleton from "../loading/FeedSkeleton";
 
 export type Props = {
-  session: Session;
   feedType: FeedType;
   ofUser?: number;
   showNewPost: boolean;
 };
 
 export default function Feed({
-  session,
   feedType,
   ofUser,
   showNewPost,
 }: Readonly<Props>) {
   const router = useRouter();
+  const { data: session } = useSession();
+
   const [offset, setOffset] = useState(0);
 
   const observerRef = useRef<HTMLDivElement>(null);
-  const user = feedType === "profile" ? ofUser : session.user.user_id;
+  const user = feedType === "profile" ? ofUser : session?.user?.user_id;
 
   const {
     getHomePosts,
@@ -50,11 +49,6 @@ export default function Feed({
   });
 
   useEffect(() => {
-    if (!session.user.username) {
-      signOut();
-      router.push("/login");
-    }
-
     if (loading || !checkMorePostsToFetch(feedType) || !observerRef.current) {
       return;
     }
@@ -120,9 +114,9 @@ export default function Feed({
       throw new Error("Invalid feed type");
   }
 
-  const isOnlyCurrentUsersPosts = currentPosts.every(
-    (post) => post.user_id === session.user.user_id
-  );
+  const isOnlyCurrentUsersPosts = session
+    ? currentPosts.every((post) => post.user_id === session.user.user_id)
+    : false;
 
   return (
     <Box
