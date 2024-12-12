@@ -1,9 +1,6 @@
 import styles from "../../page.module.css";
-// import { auth } from "@/auth";
-// import { redirect } from "next/navigation";
 import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
-import Navigation from "@/app/components/navigation/Navigation";
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -32,7 +29,6 @@ export default async function Home() {
           </Suspense>
         </Box>
       </main>
-      <Navigation />
     </div>
   );
 }

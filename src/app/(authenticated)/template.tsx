@@ -1,7 +1,7 @@
 import { SessionProvider } from "next-auth/react";
 import Navigation from "../components/navigation/Navigation";
 
-export default function AuthenticatedLayout({
+export default async function AuthenticatedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
