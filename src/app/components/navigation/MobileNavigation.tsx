@@ -8,27 +8,13 @@ import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
 export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
 
-  const [isStandalone, setIsStandalone] = useState(false);
-
-  useEffect(() => {
-    const checkStandaloneMode = () => {
-      const isStandaloneMode = window.matchMedia(
-        "(display-mode: standalone)"
-      ).matches;
-      setIsStandalone(isStandaloneMode);
-    };
-
-    checkStandaloneMode();
-    window.addEventListener("resize", checkStandaloneMode); // Update on resize for responsive checks
-    return () => window.removeEventListener("resize", checkStandaloneMode);
-  }, []);
+  const isStandalone = typeof window !== "undefined";
 
   const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
     if (targetPath === pathname) {
@@ -46,13 +32,14 @@ export default function MobileNavigation() {
         bottom: 0,
         left: 0,
         right: 0,
+        backgroundColor: "background.paper",
+        zIndex: 10,
       }}
     >
       <BottomNavigation
         value={pathname}
         sx={{
-          height: isStandalone ? "90px" : "56px",
-          paddingBottom: isStandalone ? "10px" : "0px",
+          height: isStandalone ? "72px" : "56px", // Custom height for standalone mode
         }}
       >
         <BottomNavigationAction
