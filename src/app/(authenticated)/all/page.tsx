@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
 
 export default async function Home() {
   const session = await auth();
@@ -21,7 +22,7 @@ export default async function Home() {
         paddingBottom: 20,
       }}
     >
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<FeedSkeleton />}>
         <Feed session={session} feedType="all" showNewPost={false} />
       </Suspense>
     </Box>

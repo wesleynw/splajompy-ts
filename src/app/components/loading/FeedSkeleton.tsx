@@ -1,6 +1,6 @@
 import { Box, Skeleton } from "@mui/material";
 
-export default function Loading() {
+export default function FeedSkeleton() {
   return (
     <Box
       sx={{

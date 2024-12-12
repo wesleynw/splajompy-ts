@@ -11,6 +11,7 @@ import { Metadata } from "next";
 import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
 import { Suspense } from "react";
+import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -53,10 +54,11 @@ export default async function Page({
   if (!session) {
     redirect("/login");
   }
+
   const id = (await params).id;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<SinglePostSkeleton />}>
       <PostProvider post_id={id}>
         <PostPageContent />
       </PostProvider>

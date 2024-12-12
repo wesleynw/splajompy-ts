@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { Suspense } from "react";
+import UserProfileSkeleton from "@/app/components/loading/UserProfileSkeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -63,7 +64,7 @@ export default async function Page({
         paddingBottom: 20,
       }}
     >
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<UserProfileSkeleton />}>
         <UserView user={user} />
       </Suspense>
     </Box>
