@@ -1,10 +1,11 @@
 import UserView from "@/app/components/user/UserView";
-import Navigation from "@/app/components/navigation/Navigation";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
-import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
+import { Suspense } from "react";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
+import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -55,19 +56,24 @@ export default async function Page({
   }
 
   return (
-    <SessionProvider session={session}>
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: { xs: "100%", md: "600" },
-          margin: "auto",
-          boxSizing: "border-box",
-          paddingBottom: 20,
-        }}
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { xs: "100%", md: "600" },
+        margin: "auto",
+        boxSizing: "border-box",
+        paddingBottom: 20,
+      }}
+    >
+      <Suspense
+        fallback={
+          <StandardWrapper>
+            <FeedSkeleton />
+          </StandardWrapper>
+        }
       >
         <UserView user={user} />
-      </Box>
-      <Navigation session={session} />
-    </SessionProvider>
+      </Suspense>
+    </Box>
   );
 }

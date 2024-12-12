@@ -4,7 +4,6 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBar from "./components/navigation/TopBar";
@@ -45,8 +44,6 @@ export default function RootLayout({
             <Box component="main" sx={{ paddingTop: "60px" }}>
               <FeedProvider>{children}</FeedProvider>
             </Box>
-
-            <SpeedInsights />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

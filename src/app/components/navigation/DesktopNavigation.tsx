@@ -18,13 +18,12 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { usePathname, useRouter } from "next/navigation";
 import theme from "@/theme";
 import NotificationBadge from "../notifications/NotificationBadge";
+import { useSession } from "next-auth/react";
 
-export default function DesktopNavigation({
-  user_id,
-  username,
-}: Readonly<{ user_id: number; username: string }>) {
+export default function DesktopNavigation() {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const navItems = [
     {
@@ -41,14 +40,14 @@ export default function DesktopNavigation({
       label: "Notifications",
       href: "/notifications",
       icon: (
-        <NotificationBadge user_id={user_id}>
+        <NotificationBadge>
           <NotificationsIcon fontSize="large" />
         </NotificationBadge>
       ),
     },
     {
       label: "Profile",
-      href: `/user/${username}`,
+      href: `/user/${session?.user?.username}`,
       icon: <PersonIcon fontSize="large" />,
     },
   ];
@@ -115,8 +114,10 @@ export default function DesktopNavigation({
                   </ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    primaryTypographyProps={{
-                      fontSize: "20px",
+                    slotProps={{
+                      primary: {
+                        fontSize: "20px",
+                      },
                     }}
                     sx={{
                       color: "#333333",

@@ -3,31 +3,24 @@
 import { NoSsr, useMediaQuery, useTheme } from "@mui/material";
 import MobileNavigation from "./MobileNavigation";
 import DesktopNavigation from "./DesktopNavigation";
-import { Session } from "next-auth";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default function Navigation({
-  session,
-}: Readonly<{ session: Session }>) {
+export default function Navigation() {
+  const router = useRouter();
   const theme = useTheme();
+  const { data: session } = useSession();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
 
-  if (!session?.user) {
-    return null;
-  }
+  useEffect(() => {
+    router.prefetch("/");
+    router.prefetch("/notifications");
+    router.prefetch("/all");
+    router.prefetch(`/user/${session?.user?.username}`);
+  }, [router, session]);
 
   return (
-    <NoSsr>
-      {isMobile ? (
-        <MobileNavigation
-          user_id={session.user.user_id}
-          username={session.user.username}
-        />
-      ) : (
-        <DesktopNavigation
-          user_id={session.user.user_id}
-          username={session.user.username}
-        />
-      )}
-    </NoSsr>
+    <NoSsr>{isMobile ? <MobileNavigation /> : <DesktopNavigation />}</NoSsr>
   );
 }

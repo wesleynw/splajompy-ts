@@ -1,31 +1,34 @@
 "use client";
 
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
-import { SessionProvider, signOut } from "next-auth/react";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Post from "../post/Post";
+import useSWR from "swr";
+import FeedSkeleton from "../loading/FeedSkeleton";
 
 export type Props = {
-  session: Session;
   feedType: FeedType;
   ofUser?: number;
   showNewPost: boolean;
 };
 
 export default function Feed({
-  session,
   feedType,
   ofUser,
   showNewPost,
 }: Readonly<Props>) {
   const router = useRouter();
-  const observerRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
+
   const [offset, setOffset] = useState(0);
+
+  const observerRef = useRef<HTMLDivElement>(null);
+  const user = feedType === "profile" ? ofUser : session?.user?.user_id;
 
   const {
     getHomePosts,
@@ -36,23 +39,16 @@ export default function Feed({
     checkMorePostsToFetch,
     fetchPosts,
     updatePost,
-    insertPostToFeed,
+    insertPostsToFeed,
     deletePostFromFeed,
   } = useFeed();
 
-  const user = feedType === "profile" ? ofUser : session.user.user_id;
-
-  useEffect(() => {
+  const { isLoading } = useSWR(`feed-${feedType}`, () => {
     fetchPosts(feedType, 0, user);
-    setOffset(10);
-  }, [fetchPosts, feedType, user, session]);
+    return null;
+  });
 
   useEffect(() => {
-    if (!session.user.username) {
-      signOut();
-      router.push("/login");
-    }
-
     if (loading || !checkMorePostsToFetch(feedType) || !observerRef.current) {
       return;
     }
@@ -82,8 +78,7 @@ export default function Feed({
     router,
     fetchPosts,
     feedType,
-    session.user.username,
-    session.user.user_id,
+    session,
     loading,
     offset,
     checkMorePostsToFetch,
@@ -119,9 +114,9 @@ export default function Feed({
       throw new Error("Invalid feed type");
   }
 
-  const isOnlyCurrentUsersPosts = currentPosts.every(
-    (post) => post.user_id === session.user.user_id
-  );
+  const isOnlyCurrentUsersPosts = session
+    ? currentPosts.every((post) => post.user_id === session.user.user_id)
+    : false;
 
   return (
     <Box
@@ -131,78 +126,81 @@ export default function Feed({
         width: "100%",
       }}
     >
-      <SessionProvider session={session}>
-        {showNewPost && (
-          <NewPost
-            insertPostToFeed={(post) => insertPostToFeed(feedType, post)}
-          />
-        )}
-        {isOnlyCurrentUsersPosts && feedType == "home" && (
+      {showNewPost && (
+        <NewPost
+          insertPostToFeed={(post) => insertPostsToFeed(feedType, [post])}
+        />
+      )}
+      {isLoading ||
+        (isOnlyCurrentUsersPosts && feedType == "home" && (
           <EmptyFeed loading={loading} />
-        )}
-        {currentPosts.map((post) => (
-          <Post
-            key={post.post_id}
-            id={post.post_id}
-            date={new Date(post.postdate + "Z")}
-            user_id={post.user_id}
-            poster={post.poster}
-            imageHeight={post.imageHeight}
-            imageWidth={post.imageWidth}
-            content={post.text}
-            imagePath={post.imageBlobUrl}
-            comment_count={post.comment_count}
-            likedByCurrentUser={post.liked}
-            updateParentContext={(updatedAttributes: Partial<PostType>) => {
-              updatePost(post.post_id, updatedAttributes);
-            }}
-            onDelete={() => deletePostFromFeed(feedType, post.post_id)}
-          />
         ))}
-        <div ref={observerRef} style={{ height: "1px" }} />
-        {loading && (
+      {currentPosts.map((post) => (
+        <Post
+          key={post.post_id}
+          id={post.post_id}
+          date={new Date(post.postdate + "Z")}
+          user_id={post.user_id}
+          poster={post.poster}
+          imageHeight={post.imageHeight}
+          imageWidth={post.imageWidth}
+          content={post.text}
+          imagePath={post.imageBlobUrl}
+          comment_count={post.comment_count}
+          likedByCurrentUser={post.liked}
+          updateParentContext={(updatedAttributes: Partial<PostType>) => {
+            updatePost(post.post_id, updatedAttributes);
+          }}
+          onDelete={() => deletePostFromFeed(feedType, post.post_id)}
+        />
+      ))}
+      <div ref={observerRef} style={{ height: "1px" }} />
+      {loading && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            maxWidth: 600,
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 auto",
+          }}
+        >
+          <FeedSkeleton />
+        </Box>
+      )}
+      {currentPosts.length > 0 &&
+        !checkMorePostsToFetch(feedType) &&
+        feedType === "all" && (
           <Box
             display="flex"
             justifyContent="center"
             alignItems="center"
+            margin="0 auto"
             width="100%"
+            maxWidth="600px"
             height="30vh"
           >
-            <CircularProgress />
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                color: "#777777",
+                paddingBottom: 2,
+              }}
+            >
+              Is that the very first post? <br />
+              What came before that? <br />
+              Nothing at all? <br />
+              It always just{" "}
+              <Box fontWeight="800" display="inline">
+                Splajompy
+              </Box>
+              .
+            </Typography>
           </Box>
         )}
-        {currentPosts.length > 0 &&
-          !checkMorePostsToFetch(feedType) &&
-          feedType === "all" && (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              margin="0 auto"
-              width="100%"
-              maxWidth="600px"
-              height="30vh"
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  textAlign: "center",
-                  color: "#777777",
-                  paddingBottom: 2,
-                }}
-              >
-                Is that the very first post? <br />
-                What came before that? <br />
-                Nothing at all? <br />
-                It always just{" "}
-                <Box fontWeight="800" display="inline">
-                  Splajompy
-                </Box>
-                .
-              </Typography>
-            </Box>
-          )}
-      </SessionProvider>
     </Box>
   );
 }

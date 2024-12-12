@@ -10,7 +10,7 @@ import timezone from "dayjs/plugin/timezone";
 import { setNotificationAsViewedForUser } from "@/app/lib/notifications";
 import { Session } from "next-auth";
 import Link from "next/link";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -18,9 +18,13 @@ dayjs.extend(timezone);
 
 export default function NotificationView({
   session,
-  notifications,
-}: Readonly<{ session: Session; notifications: SelectNotification[] }>) {
+  notificationsPromise,
+}: Readonly<{
+  session: Session;
+  notificationsPromise: Promise<SelectNotification[]>;
+}>) {
   const userTimezone = dayjs.tz.guess();
+  const notifications = use(notificationsPromise);
 
   // 2 seconds after loading this component, mark all notifications as read
   useEffect(() => {

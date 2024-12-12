@@ -1,13 +1,7 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -24,6 +18,7 @@ import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
 import { usePost } from "@/app/data/PostProvider";
+import SinglePostSkeleton from "../loading/SinglePostSkeleton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -40,17 +35,7 @@ export default function PostPageContent() {
   const handleClose = () => setOpen(false);
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <SinglePostSkeleton />;
   }
 
   if (!post) {

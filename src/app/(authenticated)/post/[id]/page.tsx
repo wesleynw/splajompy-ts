@@ -8,10 +8,11 @@ import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
-import Navigation from "@/app/components/navigation/Navigation";
 import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
+import { Suspense } from "react";
+import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -54,16 +55,20 @@ export default async function Page({
   if (!session) {
     redirect("/login");
   }
+
   const id = (await params).id;
 
   return (
-    <>
-      <SessionProvider session={session}>
-        <PostProvider post_id={id}>
-          <PostPageContent />
-        </PostProvider>
-      </SessionProvider>
-      <Navigation session={session} />
-    </>
+    <Suspense
+      fallback={
+        <StandardWrapper>
+          <SinglePostSkeleton />
+        </StandardWrapper>
+      }
+    >
+      <PostProvider post_id={id}>
+        <PostPageContent />
+      </PostProvider>
+    </Suspense>
   );
 }

@@ -6,7 +6,6 @@ import BackButton from "../navigation/BackButton";
 import { signOut, useSession } from "next-auth/react";
 import FollowButton from "../follows/FollowButton";
 import Feed from "../feed/Feed";
-import { useRouter } from "next/navigation";
 
 interface Props {
   user: {
@@ -19,11 +18,9 @@ interface Props {
 
 export default function UserView({ user }: Readonly<Props>) {
   const { data: session } = useSession();
-  const router = useRouter();
   const theme = useTheme();
 
   if (!session) {
-    router.push("/login");
     return null;
   }
 
@@ -103,12 +100,7 @@ export default function UserView({ user }: Readonly<Props>) {
         </Box>
       </Box>
       <Box>
-        <Feed
-          session={session}
-          feedType="profile"
-          ofUser={user.user_id}
-          showNewPost={false}
-        />
+        <Feed feedType="profile" ofUser={user.user_id} showNewPost={false} />
       </Box>
     </Box>
   );
