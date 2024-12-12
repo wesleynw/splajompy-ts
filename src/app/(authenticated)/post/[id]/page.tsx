@@ -9,7 +9,6 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import Navigation from "@/app/components/navigation/Navigation";
 import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
 
@@ -63,7 +62,6 @@ export default async function Page({
           <PostPageContent />
         </PostProvider>
       </SessionProvider>
-      <Navigation session={session} />
     </>
   );
 }

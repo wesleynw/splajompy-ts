@@ -4,7 +4,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import NewPost from "../post/NewPost/NewPost";
 import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
-import { SessionProvider, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -39,14 +39,9 @@ export default function Feed({
     checkMorePostsToFetch,
     fetchPosts,
     updatePost,
-    insertPostToFeed,
+    insertPostsToFeed,
     deletePostFromFeed,
   } = useFeed();
-
-  useEffect(() => {
-    fetchPosts(feedType, 0, user);
-    setOffset(10);
-  }, [fetchPosts, feedType, user, session]);
 
   const { isLoading } = useSWR(`feed-${feedType}`, () => {
     fetchPosts(feedType, 0, user);
@@ -88,27 +83,12 @@ export default function Feed({
     router,
     fetchPosts,
     feedType,
-    session.user.username,
-    session.user.user_id,
+    session,
     loading,
     offset,
     checkMorePostsToFetch,
     user,
   ]);
-
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   if (error) {
     return (
@@ -151,78 +131,77 @@ export default function Feed({
         width: "100%",
       }}
     >
-      <SessionProvider session={session}>
-        {showNewPost && (
-          <NewPost
-            insertPostToFeed={(post) => insertPostToFeed(feedType, post)}
-          />
-        )}
-        {isOnlyCurrentUsersPosts && feedType == "home" && (
+      {showNewPost && (
+        <NewPost
+          insertPostToFeed={(post) => insertPostsToFeed(feedType, [post])}
+        />
+      )}
+      {isLoading ||
+        (isOnlyCurrentUsersPosts && feedType == "home" && (
           <EmptyFeed loading={loading} />
-        )}
-        {currentPosts.map((post) => (
-          <Post
-            key={post.post_id}
-            id={post.post_id}
-            date={new Date(post.postdate + "Z")}
-            user_id={post.user_id}
-            poster={post.poster}
-            imageHeight={post.imageHeight}
-            imageWidth={post.imageWidth}
-            content={post.text}
-            imagePath={post.imageBlobUrl}
-            comment_count={post.comment_count}
-            likedByCurrentUser={post.liked}
-            updateParentContext={(updatedAttributes: Partial<PostType>) => {
-              updatePost(post.post_id, updatedAttributes);
-            }}
-            onDelete={() => deletePostFromFeed(feedType, post.post_id)}
-          />
         ))}
-        <div ref={observerRef} style={{ height: "1px" }} />
-        {loading && (
+      {currentPosts.map((post) => (
+        <Post
+          key={post.post_id}
+          id={post.post_id}
+          date={new Date(post.postdate + "Z")}
+          user_id={post.user_id}
+          poster={post.poster}
+          imageHeight={post.imageHeight}
+          imageWidth={post.imageWidth}
+          content={post.text}
+          imagePath={post.imageBlobUrl}
+          comment_count={post.comment_count}
+          likedByCurrentUser={post.liked}
+          updateParentContext={(updatedAttributes: Partial<PostType>) => {
+            updatePost(post.post_id, updatedAttributes);
+          }}
+          onDelete={() => deletePostFromFeed(feedType, post.post_id)}
+        />
+      ))}
+      <div ref={observerRef} style={{ height: "1px" }} />
+      {loading && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="30vh"
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      {currentPosts.length > 0 &&
+        !checkMorePostsToFetch(feedType) &&
+        feedType === "all" && (
           <Box
             display="flex"
             justifyContent="center"
             alignItems="center"
+            margin="0 auto"
             width="100%"
+            maxWidth="600px"
             height="30vh"
           >
-            <CircularProgress />
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                color: "#777777",
+                paddingBottom: 2,
+              }}
+            >
+              Is that the very first post? <br />
+              What came before that? <br />
+              Nothing at all? <br />
+              It always just{" "}
+              <Box fontWeight="800" display="inline">
+                Splajompy
+              </Box>
+              .
+            </Typography>
           </Box>
         )}
-        {currentPosts.length > 0 &&
-          !checkMorePostsToFetch(feedType) &&
-          feedType === "all" && (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              margin="0 auto"
-              width="100%"
-              maxWidth="600px"
-              height="30vh"
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  textAlign: "center",
-                  color: "#777777",
-                  paddingBottom: 2,
-                }}
-              >
-                Is that the very first post? <br />
-                What came before that? <br />
-                Nothing at all? <br />
-                It always just{" "}
-                <Box fontWeight="800" display="inline">
-                  Splajompy
-                </Box>
-                .
-              </Typography>
-            </Box>
-          )}
-      </SessionProvider>
     </Box>
   );
 }

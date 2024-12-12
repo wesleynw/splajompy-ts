@@ -39,7 +39,7 @@ type FeedContextType = {
   checkMorePostsToFetch: (feed: FeedType) => boolean;
   fetchSinglePost: (postId: number) => Promise<PostType | undefined>;
   updatePost: (postId: number, updatedData: Partial<PostType>) => void;
-  insertPostToFeed: (feed: FeedType, post: PostType) => void;
+  insertPostsToFeed: (feed: FeedType, posts: PostType[]) => void;
   deletePostFromFeed: (feed: FeedType, postId: number) => void;
 };
 
@@ -171,16 +171,25 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const insertPostToFeed = (feed: FeedType, post: PostType) => {
+  const insertPostsToFeed = (feed: FeedType, posts: PostType[]) => {
     const map = postMapRef.current;
-    map.set(post.post_id, post);
+
+    for (const post of posts) {
+      map.set(post.post_id, post);
+    }
 
     if (feed === "home") {
-      setHomeFeed((prev) => [post.post_id, ...prev]);
+      setHomeFeed((prev) => [
+        ...new Set([...posts.map((post) => post.post_id), ...prev]),
+      ]);
     } else if (feed === "all") {
-      setAllFeed((prev) => [post.post_id, ...prev]);
+      setAllFeed((prev) => [
+        ...new Set([...posts.map((post) => post.post_id), ...prev]),
+      ]);
     } else if (feed === "profile") {
-      setProfileFeed((prev) => [post.post_id, ...prev]);
+      setProfileFeed((prev) => [
+        ...new Set([...posts.map((post) => post.post_id), ...prev]),
+      ]);
     }
   };
 
@@ -229,7 +238,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       fetchPosts,
       fetchSinglePost,
       updatePost,
-      insertPostToFeed,
+      insertPostsToFeed,
       deletePostFromFeed,
     }),
     [

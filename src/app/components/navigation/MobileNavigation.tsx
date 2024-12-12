@@ -7,18 +7,12 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
+import { useSession } from "next-auth/react";
 
-interface BottomNavProps {
-  user_id: number;
-  username: string;
-}
-
-export default function BottomNav({
-  user_id,
-  username,
-}: Readonly<BottomNavProps>) {
+export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
     if (targetPath === pathname) {
@@ -48,7 +42,7 @@ export default function BottomNav({
         <BottomNavigationAction
           value="/notifications"
           icon={
-            <NotificationBadge user_id={user_id}>
+            <NotificationBadge>
               <NotificationsIcon />
             </NotificationBadge>
           }
@@ -62,9 +56,9 @@ export default function BottomNav({
           disableRipple
         />
         <BottomNavigationAction
-          value={`/user/${username}`}
+          value={`/user/${session?.user?.username}`}
           icon={<PersonIcon />}
-          onClick={(event) => handleNavigation(event, `/user/${username}`)}
+          onClick={(event) => handleNavigation(event, `/user/me`)}
           disableRipple
         />
       </BottomNavigation>

@@ -1,5 +1,4 @@
 import UserView from "@/app/components/user/UserView";
-import Navigation from "@/app/components/navigation/Navigation";
 import { getUserByUsername } from "@/app/lib/users";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
@@ -67,7 +66,6 @@ export default async function Page({
       >
         <UserView user={user} />
       </Box>
-      <Navigation session={session} />
     </SessionProvider>
   );
 }

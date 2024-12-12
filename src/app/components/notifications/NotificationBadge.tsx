@@ -1,21 +1,28 @@
 import { getUnreadNotificationCountForUser } from "@/app/lib/notifications";
 import { Badge } from "@mui/material";
-import { ReactNode, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { ReactNode } from "react";
+import useSWR from "swr";
 
 export default function NotificationBadge({
-  user_id,
   children,
-}: Readonly<{ user_id: number; children: ReactNode }>) {
-  const [notificationCount, setNotificationCount] = useState(0);
+}: Readonly<{ children: ReactNode }>) {
+  const { data: session } = useSession();
+  const user_id = session?.user?.user_id;
 
-  useEffect(() => {
-    const fetchNotificationCount = async () => {
-      const count = await getUnreadNotificationCountForUser(user_id);
-      setNotificationCount(count);
-    };
+  const { data } = useSWR(
+    user_id ? `notification-count-${user_id}` : null,
+    () => {
+      if (user_id) {
+        return getUnreadNotificationCountForUser(user_id);
+      }
+      return 0;
+    }
+  );
 
-    fetchNotificationCount();
-  });
+  if (!user_id) {
+    return children;
+  }
 
-  return <Badge badgeContent={notificationCount}>{children}</Badge>;
+  return <Badge badgeContent={data}>{children}</Badge>;
 }

@@ -3,9 +3,8 @@ import { Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { auth } from "@/auth";
-import { getNotificationsForUser } from "../lib/notifications";
-import NotificationsView from "../components/notifications/NotificationView";
-import Navigation from "../components/navigation/Navigation";
+import { getNotificationsForUser } from "@/app/lib/notifications";
+import NotificationsView from "@/app/components/notifications/NotificationView";
 
 dayjs.extend(relativeTime);
 
@@ -37,11 +36,9 @@ export default async function Notifications() {
     );
   }
 
-  const notifications = await getNotificationsForUser(session.user.user_id);
+  const notifications = getNotificationsForUser(session.user.user_id);
+
   return (
-    <>
-      <NotificationsView session={session} notifications={notifications} />
-      <Navigation session={session} />
-    </>
+    <NotificationsView session={session} notificationsPromise={notifications} />
   );
 }

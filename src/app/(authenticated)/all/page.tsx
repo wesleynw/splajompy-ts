@@ -1,9 +1,9 @@
-import styles from "../page.module.css";
+import styles from "../../page.module.css";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Feed from "../components/feed/Feed";
+import Feed from "@/app/components/feed/Feed";
 import { Box } from "@mui/material";
-import Navigation from "../components/navigation/Navigation";
+import Navigation from "@/app/components/navigation/Navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -27,7 +27,7 @@ export default async function Home() {
           <Feed session={session} feedType="all" showNewPost={false} />
         </Box>
       </main>
-      <Navigation session={session} />
+      <Navigation />
     </div>
   );
 }
