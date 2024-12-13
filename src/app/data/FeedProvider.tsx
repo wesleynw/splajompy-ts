@@ -73,6 +73,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       offset: number,
       user_id?: number
     ) => {
+      console.log("fetchPosts", page, offset, user_id);
       setLoading(true);
       setError(null);
       try {
@@ -152,7 +153,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (page === "profile") {
-      setProfileFeed((prev) => [...new Set([...prev, ...postIds])]);
+      setProfileFeed(postIds);
     }
   };
 

@@ -43,8 +43,9 @@ export default function Feed({
     deletePostFromFeed,
   } = useFeed();
 
-  const { isLoading } = useSWR(`feed-${feedType}`, () => {
+  const { isLoading } = useSWR(`feed-${feedType}-${ofUser}`, () => {
     fetchPosts(feedType, 0, user);
+    setOffset(10);
     return null;
   });
 

@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Stack, useTheme, Button } from "@mui/material";
+import { Box, Typography, Stack, Button } from "@mui/material";
 import BackButton from "../navigation/BackButton";
 import { signOut, useSession } from "next-auth/react";
 import FollowButton from "../follows/FollowButton";
 import Feed from "../feed/Feed";
+import theme from "@/theme";
 
 interface Props {
   user: {
@@ -18,7 +19,6 @@ interface Props {
 
 export default function UserView({ user }: Readonly<Props>) {
   const { data: session } = useSession();
-  const theme = useTheme();
 
   if (!session) {
     return null;

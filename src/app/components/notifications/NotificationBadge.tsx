@@ -16,7 +16,7 @@ export default function NotificationBadge({
       if (user_id) {
         return getUnreadNotificationCountForUser(user_id);
       }
-      return 0;
+      return null;
     }
   );
 
@@ -24,5 +24,18 @@ export default function NotificationBadge({
     return children;
   }
 
-  return <Badge badgeContent={data}>{children}</Badge>;
+  return (
+    <Badge
+      badgeContent={data}
+      sx={{
+        "& .MuiBadge-badge": {
+          position: "absolute",
+          transform: "translate(50%, -50%)",
+          zIndex: 1,
+        },
+      }}
+    >
+      {children}
+    </Badge>
+  );
 }
