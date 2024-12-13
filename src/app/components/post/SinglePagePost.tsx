@@ -19,6 +19,7 @@ import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
 import { usePost } from "@/app/data/PostProvider";
 import SinglePostSkeleton from "../loading/SinglePostSkeleton";
+import StandardWrapper from "../loading/StandardWrapper";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -35,7 +36,11 @@ export default function PostPageContent() {
   const handleClose = () => setOpen(false);
 
   if (loading) {
-    return <SinglePostSkeleton />;
+    return (
+      <StandardWrapper>
+        <SinglePostSkeleton />
+      </StandardWrapper>
+    );
   }
 
   if (!post) {
