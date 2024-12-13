@@ -99,6 +99,10 @@ export default function Feed({
     );
   }
 
+  if (!session) {
+    return null;
+  }
+
   let currentPosts;
   switch (feedType) {
     case "home":
@@ -137,6 +141,7 @@ export default function Feed({
         ))}
       {currentPosts.map((post) => (
         <Post
+          session={session}
           key={post.post_id}
           id={post.post_id}
           date={new Date(post.postdate + "Z")}

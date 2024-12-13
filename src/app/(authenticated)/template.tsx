@@ -1,5 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import Navigation from "../components/navigation/Navigation";
+import RequireAuth from "../components/RequireAuth";
 
 export default async function AuthenticatedLayout({
   children,
@@ -8,7 +9,7 @@ export default async function AuthenticatedLayout({
 }>) {
   return (
     <SessionProvider>
-      {children}
+      <RequireAuth>{children}</RequireAuth>
       <Navigation />
     </SessionProvider>
   );

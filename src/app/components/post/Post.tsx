@@ -11,17 +11,18 @@ import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
 import theme from "@/theme";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
 import { PostType } from "@/app/data/FeedProvider";
 import CommentCount from "./comment/CommentCount";
+import { Session } from "next-auth";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface Props {
+  session: Session;
   id: number;
   date: Date;
   content: string | null;
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export default function Post({
+  session,
   id,
   date,
   content,
@@ -55,8 +57,6 @@ export default function Post({
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-
-  const { data: session } = useSession();
 
   return (
     <Link href={`/post/${id}`}>

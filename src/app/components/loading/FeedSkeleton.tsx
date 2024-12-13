@@ -6,26 +6,26 @@ export default function FeedSkeleton() {
       <Skeleton
         variant="rounded"
         width="100%"
-        height={200}
-        sx={{ margin: "10px" }}
+        height={150}
+        sx={{ margin: "10px auto" }}
       />
       <Skeleton
         variant="rounded"
         width="100%"
-        height={200}
-        sx={{ margin: "10px" }}
+        height={175}
+        sx={{ margin: "10px auto" }}
       />
       <Skeleton
         variant="rounded"
         width="100%"
-        height={200}
-        sx={{ margin: "10px" }}
+        height={185}
+        sx={{ margin: "10px auto" }}
       />
       <Skeleton
         variant="rounded"
         width="100%"
-        height={200}
-        sx={{ margin: "10px" }}
+        height={195}
+        sx={{ margin: "10px auto" }}
       />
     </>
   );
