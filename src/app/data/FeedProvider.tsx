@@ -183,15 +183,15 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       setHomeFeed((prev) => [
         ...new Set([...posts.map((post) => post.post_id), ...prev]),
       ]);
-    } else if (feed === "all") {
-      setAllFeed((prev) => [
-        ...new Set([...posts.map((post) => post.post_id), ...prev]),
-      ]);
     } else if (feed === "profile") {
       setProfileFeed((prev) => [
         ...new Set([...posts.map((post) => post.post_id), ...prev]),
       ]);
     }
+
+    setAllFeed((prev) => [
+      ...new Set([...posts.map((post) => post.post_id), ...prev]),
+    ]);
   };
 
   const deletePostFromFeed = (feed: FeedType, postId: number) => {
