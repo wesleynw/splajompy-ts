@@ -73,6 +73,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       offset: number,
       user_id?: number
     ) => {
+      console.log("fetchPosts", page, offset, user_id);
       setLoading(true);
       setError(null);
       try {
@@ -152,7 +153,7 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (page === "profile") {
-      setProfileFeed((prev) => [...new Set([...prev, ...postIds])]);
+      setProfileFeed(postIds);
     }
   };
 
@@ -182,15 +183,15 @@ export const FeedProvider = ({ children }: { children: ReactNode }) => {
       setHomeFeed((prev) => [
         ...new Set([...posts.map((post) => post.post_id), ...prev]),
       ]);
-    } else if (feed === "all") {
-      setAllFeed((prev) => [
-        ...new Set([...posts.map((post) => post.post_id), ...prev]),
-      ]);
     } else if (feed === "profile") {
       setProfileFeed((prev) => [
         ...new Set([...posts.map((post) => post.post_id), ...prev]),
       ]);
     }
+
+    setAllFeed((prev) => [
+      ...new Set([...posts.map((post) => post.post_id), ...prev]),
+    ]);
   };
 
   const deletePostFromFeed = (feed: FeedType, postId: number) => {

@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { getNotificationsForUser } from "@/app/lib/notifications";
 import NotificationsView from "@/app/components/notifications/NotificationView";
 import NotificationsPageSkeleton from "@/app/components/loading/NotificationsPageSkeleton";
+import StandardWrapper from "@/app/components/loading/StandardWrapper";
 
 dayjs.extend(relativeTime);
 
@@ -40,7 +41,13 @@ export default async function Notifications() {
   const notifications = getNotificationsForUser(session.user.user_id);
 
   return (
-    <Suspense fallback={<NotificationsPageSkeleton />}>
+    <Suspense
+      fallback={
+        <StandardWrapper>
+          <NotificationsPageSkeleton />
+        </StandardWrapper>
+      }
+    >
       <NotificationsView
         session={session}
         notificationsPromise={notifications}

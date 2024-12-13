@@ -6,7 +6,6 @@ import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Post from "../post/Post";
 import useSWR from "swr";
 import FeedSkeleton from "../loading/FeedSkeleton";
@@ -22,7 +21,6 @@ export default function Feed({
   ofUser,
   showNewPost,
 }: Readonly<Props>) {
-  const router = useRouter();
   const { data: session } = useSession();
 
   const [offset, setOffset] = useState(0);
@@ -43,8 +41,9 @@ export default function Feed({
     deletePostFromFeed,
   } = useFeed();
 
-  const { isLoading } = useSWR(`feed-${feedType}`, () => {
+  const { isLoading } = useSWR(`feed-${feedType}-${ofUser}`, () => {
     fetchPosts(feedType, 0, user);
+    setOffset(10);
     return null;
   });
 
@@ -74,16 +73,7 @@ export default function Feed({
         observer.unobserve(currentObserverRef);
       }
     };
-  }, [
-    router,
-    fetchPosts,
-    feedType,
-    session,
-    loading,
-    offset,
-    checkMorePostsToFetch,
-    user,
-  ]);
+  }, [fetchPosts, feedType, loading, offset, checkMorePostsToFetch, user]);
 
   if (error) {
     return (
