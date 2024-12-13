@@ -12,9 +12,9 @@ export default function StandardWrapper({
         flexDirection: "column",
         width: "100%",
         maxWidth: 600,
+        paddingX: 3,
+        paddingBottom: 1,
         margin: "10px auto",
-        padding: 3,
-        gap: 1,
       }}
     >
       {children}
