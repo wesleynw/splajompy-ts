@@ -6,22 +6,26 @@ import EmptyFeed from "./EmptyFeed";
 import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Post from "../post/Post";
 import useSWR from "swr";
 import FeedSkeleton from "../loading/FeedSkeleton";
+import { Session } from "next-auth";
 
 export type Props = {
+  session: Session;
   feedType: FeedType;
   ofUser?: number;
   showNewPost: boolean;
 };
 
 export default function Feed({
+  session,
   feedType,
   ofUser,
   showNewPost,
 }: Readonly<Props>) {
-  const { data: session } = useSession();
+  const router = useRouter();
 
   const [offset, setOffset] = useState(0);
 
@@ -41,9 +45,8 @@ export default function Feed({
     deletePostFromFeed,
   } = useFeed();
 
-  const { isLoading } = useSWR(`feed-${feedType}-${ofUser}`, () => {
+  const { isLoading } = useSWR(`feed-${feedType}`, () => {
     fetchPosts(feedType, 0, user);
-    setOffset(10);
     return null;
   });
 
@@ -73,7 +76,16 @@ export default function Feed({
         observer.unobserve(currentObserverRef);
       }
     };
-  }, [fetchPosts, feedType, loading, offset, checkMorePostsToFetch, user]);
+  }, [
+    router,
+    fetchPosts,
+    feedType,
+    session,
+    loading,
+    offset,
+    checkMorePostsToFetch,
+    user,
+  ]);
 
   if (error) {
     return (
@@ -87,10 +99,6 @@ export default function Feed({
         <div>Something went wrong. Please try again later.</div>
       </Box>
     );
-  }
-
-  if (!session) {
-    return null;
   }
 
   let currentPosts;
