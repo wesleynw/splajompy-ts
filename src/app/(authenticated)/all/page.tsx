@@ -30,7 +30,7 @@ export default async function Home() {
           </StandardWrapper>
         }
       >
-        <Feed session={session} feedType="all" showNewPost={false} />
+        <Feed session={session} page="all" />
       </Suspense>
     </Box>
   );

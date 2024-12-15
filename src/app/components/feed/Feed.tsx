@@ -1,72 +1,36 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import NewPost from "../post/NewPost/NewPost";
-import EmptyFeed from "./EmptyFeed";
-import { FeedType, PostType, useFeed } from "../../data/FeedProvider";
-import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import Post from "../post/Post";
-import useSWR from "swr";
-import FeedSkeleton from "../loading/FeedSkeleton";
 import { Session } from "next-auth";
+import { useEffect, useRef } from "react";
+import { useFeed } from "@/app/data/posts";
+import Post from "../post/Post";
+import NewPost from "../post/NewPost/NewPost";
 
-export type Props = {
+type Props = {
   session: Session;
-  feedType: FeedType;
-  ofUser?: number;
-  showNewPost: boolean;
+  page: "home" | "all" | "profile";
+  user_id?: number;
 };
 
-export default function Feed({
-  session,
-  feedType,
-  ofUser,
-  showNewPost,
-}: Readonly<Props>) {
-  const router = useRouter();
-
-  const [offset, setOffset] = useState(0);
-
-  const observerRef = useRef<HTMLDivElement>(null);
-  const user = feedType === "profile" ? ofUser : session?.user?.user_id;
-
-  const {
-    getHomePosts,
-    getAllPosts,
-    getProfilePosts,
-    loading,
-    error,
-    checkMorePostsToFetch,
-    fetchPosts,
-    updatePost,
-    insertPostsToFeed,
-    deletePostFromFeed,
-  } = useFeed();
-
-  const { isLoading } = useSWR(`feed-${feedType}`, () => {
-    fetchPosts(feedType, 0, user);
-    return null;
-  });
+export default function Feed({ session, page, user_id }: Readonly<Props>) {
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const { data, hasMore, setSize, updatePost, insertPost, deletePost } =
+    useFeed(page, user_id);
 
   useEffect(() => {
-    if (loading || !checkMorePostsToFetch(feedType) || !observerRef.current) {
-      return;
-    }
-
-    const currentObserverRef = observerRef.current;
-
+    console.log("hasMore", hasMore);
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading) {
-          fetchPosts(feedType, offset, user);
-          setOffset(offset + 10);
+        if (entries[0].isIntersecting && hasMore) {
+          console.log("Intersecting");
+          setSize((prevSize) => prevSize + 1);
         }
       },
-      { root: null, rootMargin: "200px", threshold: 0 }
+      { root: null, rootMargin: "400px", threshold: 0 }
     );
 
+    const currentObserverRef = observerRef.current;
     if (currentObserverRef) {
       observer.observe(currentObserverRef);
     }
@@ -76,49 +40,15 @@ export default function Feed({
         observer.unobserve(currentObserverRef);
       }
     };
-  }, [
-    router,
-    fetchPosts,
-    feedType,
-    session,
-    loading,
-    offset,
-    checkMorePostsToFetch,
-    user,
-  ]);
+  }, [data, setSize, hasMore]);
 
-  if (error) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <div>Something went wrong. Please try again later.</div>
-      </Box>
-    );
+  if (!data) {
+    return <div>loading</div>;
   }
 
-  let currentPosts;
-  switch (feedType) {
-    case "home":
-      currentPosts = getHomePosts();
-      break;
-    case "all":
-      currentPosts = getAllPosts();
-      break;
-    case "profile":
-      currentPosts = getProfilePosts();
-      break;
-    default:
-      throw new Error("Invalid feed type");
+  if (data.length === 0) {
+    return <div>No posts to display</div>;
   }
-
-  const isOnlyCurrentUsersPosts = session
-    ? currentPosts.every((post) => post.user_id === session.user.user_id)
-    : false;
 
   return (
     <Box
@@ -128,82 +58,57 @@ export default function Feed({
         width: "100%",
       }}
     >
-      {showNewPost && (
-        <NewPost
-          insertPostToFeed={(post) => insertPostsToFeed(feedType, [post])}
-        />
+      {page !== "profile" && <NewPost insertPostToCache={insertPost} />}
+      {data.map((posts) =>
+        posts.map((post) => (
+          <Post
+            updatePost={updatePost}
+            deletePost={deletePost}
+            key={post.post_id}
+            session={session}
+            id={post.post_id}
+            date={new Date(post.postdate + "Z")}
+            user_id={post.user_id}
+            poster={post.poster}
+            imageHeight={post.imageHeight}
+            imageWidth={post.imageWidth}
+            content={post.text}
+            imagePath={post.imageBlobUrl}
+            comment_count={post.comment_count}
+            likedByCurrentUser={post.liked}
+          />
+        ))
       )}
-      {isLoading ||
-        (isOnlyCurrentUsersPosts && feedType == "home" && (
-          <EmptyFeed loading={loading} />
-        ))}
-      {currentPosts.map((post) => (
-        <Post
-          session={session}
-          key={post.post_id}
-          id={post.post_id}
-          date={new Date(post.postdate + "Z")}
-          user_id={post.user_id}
-          poster={post.poster}
-          imageHeight={post.imageHeight}
-          imageWidth={post.imageWidth}
-          content={post.text}
-          imagePath={post.imageBlobUrl}
-          comment_count={post.comment_count}
-          likedByCurrentUser={post.liked}
-          updateParentContext={(updatedAttributes: Partial<PostType>) => {
-            updatePost(post.post_id, updatedAttributes);
-          }}
-          onDelete={() => deletePostFromFeed(feedType, post.post_id)}
-        />
-      ))}
       <div ref={observerRef} style={{ height: "1px" }} />
-      {loading && (
+      {!hasMore && page === "all" && (
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: 600,
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "0 auto",
-          }}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          margin="0 auto"
+          width="100%"
+          maxWidth="600px"
+          height="30vh"
         >
-          <FeedSkeleton />
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "center",
+              color: "#777777",
+              paddingBottom: 2,
+            }}
+          >
+            Is that the very first post? <br />
+            What came before that? <br />
+            Nothing at all? <br />
+            It always just{" "}
+            <Box fontWeight="800" display="inline">
+              Splajompy
+            </Box>
+            .
+          </Typography>
         </Box>
       )}
-      {currentPosts.length > 0 &&
-        !checkMorePostsToFetch(feedType) &&
-        feedType === "all" && (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            margin="0 auto"
-            width="100%"
-            maxWidth="600px"
-            height="30vh"
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                textAlign: "center",
-                color: "#777777",
-                paddingBottom: 2,
-              }}
-            >
-              Is that the very first post? <br />
-              What came before that? <br />
-              Nothing at all? <br />
-              It always just{" "}
-              <Box fontWeight="800" display="inline">
-                Splajompy
-              </Box>
-              .
-            </Typography>
-          </Box>
-        )}
     </Box>
   );
 }

@@ -5,37 +5,40 @@ import { likePost, unlikePost } from "@/app/lib/likes";
 import { IconButton, Stack } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { PostType } from "@/app/data/FeedProvider";
 
 type Props = {
   post_id: number;
+  liked: boolean;
+  updatePost: (updatedPost: Partial<PostType>) => void;
   poster_id: number;
   user_id: number;
   username: string;
-  liked: boolean;
-  setLiked: (liked: boolean) => void;
 };
 
 export default function LikeButton({
   post_id,
+  liked,
+  updatePost,
   poster_id,
   user_id,
   username,
-  liked,
-  setLiked,
 }: Readonly<Props>) {
   const toggleLike = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    // Optimistic update
+    updatePost({ post_id, liked: !liked });
+
     try {
       if (liked) {
-        setLiked(false);
         await unlikePost(post_id, user_id);
       } else {
-        setLiked(true);
         await likePost(post_id, poster_id, user_id, username);
       }
-    } catch (error) {
-      console.error("Error toggling like:", error);
+    } catch {
+      // Revert optimistic update on failure
+      updatePost({ post_id, liked });
     }
   };
 

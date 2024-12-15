@@ -8,12 +8,12 @@ import { deletePost } from "@/app/lib/posts";
 
 interface PostDropdownProps {
   post_id: number;
-  onDelete: () => void;
+  deletePostFromCache: (post_id: number) => void;
 }
 
 export default function PostDropdown({
   post_id,
-  onDelete,
+  deletePostFromCache,
 }: Readonly<PostDropdownProps>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
@@ -35,8 +35,8 @@ export default function PostDropdown({
     setAnchorEl(null);
 
     try {
-      onDelete();
-      await deletePost(post_id);
+      deletePostFromCache(post_id);
+      deletePost(post_id);
     } catch (error) {
       console.error("Error deleting post:", error);
     }

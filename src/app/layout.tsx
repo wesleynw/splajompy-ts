@@ -7,7 +7,6 @@ import theme from "../theme";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBar from "./components/navigation/TopBar";
-import { FeedProvider } from "./data/FeedProvider";
 import PlausibleProvider from "next-plausible";
 
 const roboto = Roboto({
@@ -42,7 +41,7 @@ export default function RootLayout({
             <TopBar />
             <InitColorSchemeScript attribute="class" />
             <Box component="main" sx={{ paddingTop: "60px" }}>
-              <FeedProvider>{children}</FeedProvider>
+              {children}
             </Box>
           </ThemeProvider>
         </AppRouterCacheProvider>

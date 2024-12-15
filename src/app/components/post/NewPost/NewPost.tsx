@@ -12,10 +12,10 @@ import { useSession } from "next-auth/react";
 import { PostType } from "../../../data/FeedProvider";
 
 type NewPostProps = {
-  insertPostToFeed: (post: PostType) => void;
+  insertPostToCache: (post: PostType) => void;
 };
 
-export default function Page({ insertPostToFeed }: Readonly<NewPostProps>) {
+export default function Page({ insertPostToCache }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
 
@@ -107,7 +107,7 @@ export default function Page({ insertPostToFeed }: Readonly<NewPostProps>) {
       liked: false,
     };
 
-    insertPostToFeed(mappedPost);
+    insertPostToCache(mappedPost);
 
     setTextValue("");
     setPreviewFile(null);

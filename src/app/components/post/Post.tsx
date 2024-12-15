@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -9,19 +9,21 @@ import timezone from "dayjs/plugin/timezone";
 import Link from "next/link";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
-import PostDropdown from "./PostDropdown";
 import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
-import { PostType } from "@/app/data/FeedProvider";
 import CommentCount from "./comment/CommentCount";
 import { Session } from "next-auth";
+import { PostType } from "@/app/data/FeedProvider";
+import PostDropdown from "./PostDropdown";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface Props {
+  updatePost: (updatedPost: Partial<PostType>) => void;
+  deletePost: (post_id: number) => void;
   session: Session;
   id: number;
   date: Date;
@@ -33,11 +35,11 @@ interface Props {
   imageWidth: number | null;
   imageHeight: number | null;
   likedByCurrentUser: boolean;
-  onDelete?: () => void;
-  updateParentContext?: (updatedAttributes: Partial<PostType>) => void;
 }
 
 export default function Post({
+  updatePost,
+  deletePost,
   session,
   id,
   date,
@@ -49,8 +51,6 @@ export default function Post({
   imageWidth,
   imageHeight,
   likedByCurrentUser,
-  onDelete,
-  updateParentContext,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -104,19 +104,11 @@ export default function Post({
               router.push(`/user/${poster}`);
             }}
           >
-            @{poster}{" "}
-            {["splajompy", "wesley", "sophie"].includes(poster) && (
-              <Chip
-                label="Admin"
-                color="primary"
-                variant="outlined"
-                size="small"
-              />
-            )}
+            @{poster}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          {session?.user?.user_id == user_id && onDelete && (
-            <PostDropdown post_id={id} onDelete={onDelete} />
+          {session.user.user_id == user_id && (
+            <PostDropdown post_id={id} deletePostFromCache={deletePost} />
           )}
         </Stack>
 
@@ -171,20 +163,14 @@ export default function Post({
           >
             {dayjs.utc(date).tz(userTimezone).fromNow()}
           </Typography>
-          {session?.user?.user_id && (
-            <LikeButton
-              post_id={id}
-              poster_id={user_id}
-              user_id={session?.user?.user_id}
-              username={session?.user?.username}
-              liked={likedByCurrentUser}
-              setLiked={(liked) => {
-                if (updateParentContext) {
-                  updateParentContext({ liked: liked });
-                }
-              }}
-            />
-          )}
+          <LikeButton
+            post_id={id}
+            poster_id={user_id}
+            user_id={session?.user?.user_id}
+            username={session?.user?.username}
+            liked={likedByCurrentUser}
+            updatePost={updatePost}
+          />
         </Stack>
       </Box>
     </Link>

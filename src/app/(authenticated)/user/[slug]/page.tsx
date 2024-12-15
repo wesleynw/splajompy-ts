@@ -72,7 +72,7 @@ export default async function Page({
           </StandardWrapper>
         }
       >
-        <UserView user={user} />
+        <UserView session={session} user={user} />
       </Suspense>
     </Box>
   );
