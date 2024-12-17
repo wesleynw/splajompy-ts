@@ -5,7 +5,7 @@ import { likePost, unlikePost } from "@/app/lib/likes";
 import { IconButton, Stack } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { PostType } from "@/app/data/FeedProvider";
+import { PostType } from "@/app/data/posts";
 
 type Props = {
   post_id: number;

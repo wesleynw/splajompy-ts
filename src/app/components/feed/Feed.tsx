@@ -19,11 +19,9 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
     useFeed(page, user_id);
 
   useEffect(() => {
-    console.log("hasMore", hasMore);
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("Intersecting");
           setSize((prevSize) => prevSize + 1);
         }
       },

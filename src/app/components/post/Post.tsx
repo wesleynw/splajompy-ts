@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
 import CommentCount from "./comment/CommentCount";
 import { Session } from "next-auth";
-import { PostType } from "@/app/data/FeedProvider";
+import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 
 dayjs.extend(relativeTime);

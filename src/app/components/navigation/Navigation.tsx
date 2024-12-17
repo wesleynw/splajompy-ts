@@ -1,15 +1,15 @@
 "use client";
 
-import { NoSsr, useMediaQuery, useTheme } from "@mui/material";
+import { NoSsr, useMediaQuery } from "@mui/material";
 import MobileNavigation from "./MobileNavigation";
 import DesktopNavigation from "./DesktopNavigation";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import theme from "@/theme";
 
 export default function Navigation() {
   const router = useRouter();
-  const theme = useTheme();
   const { data: session } = useSession();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
 

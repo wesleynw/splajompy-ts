@@ -10,32 +10,35 @@ import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
-import { deletePost } from "@/app/lib/posts";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
-import { usePost } from "@/app/data/PostProvider";
 import SinglePostSkeleton from "../loading/SinglePostSkeleton";
 import StandardWrapper from "../loading/StandardWrapper";
+import { useSinglePost } from "@/app/data/SinglePost";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function PostPageContent() {
+type Props = {
+  post_id: number;
+};
+
+export default function PostPageContent({ post_id }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
-  const { post, updatePost, loading } = usePost();
+  const { post, isLoading, updatePost, deletePost } = useSinglePost(post_id);
   const { data: session } = useSession();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <StandardWrapper>
         <SinglePostSkeleton />
@@ -59,7 +62,7 @@ export default function PostPageContent() {
 
   const handleDelete = async () => {
     try {
-      await deletePost(post.post_id);
+      deletePost();
       router.push("/");
     } catch (error) {
       console.error("Failed to delete post:", error);
@@ -92,7 +95,10 @@ export default function PostPageContent() {
       >
         <BackButton />
         {session?.user.user_id === post.user_id ? (
-          <PostDropdown post_id={post.post_id} onDelete={handleDelete} />
+          <PostDropdown
+            post_id={post.post_id}
+            deletePostFromCache={handleDelete}
+          />
         ) : (
           <FollowButton user_id={post.user_id} show_unfollow={false} />
         )}
@@ -166,9 +172,7 @@ export default function PostPageContent() {
             user_id={session?.user.user_id}
             username={session?.user.username}
             liked={post.liked}
-            setLiked={() => {
-              updatePost({ liked: !post.liked });
-            }}
+            updatePost={updatePost}
           />
         )}
       </Box>

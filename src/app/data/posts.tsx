@@ -1,12 +1,28 @@
 "use client";
 
 import useSWRInfinite from "swr/infinite";
-import { FeedType, PostType } from "./FeedProvider";
+import { useSWRConfig } from "swr";
 import {
   getAllPostsForFollowing,
   getAllPostsFromDb,
+  getPost,
   getPostsByUserId,
 } from "../lib/posts";
+
+export type FeedType = "home" | "all" | "profile";
+
+export type PostType = {
+  post_id: number;
+  text: string | null;
+  postdate: string;
+  user_id: number;
+  poster: string;
+  comment_count: number;
+  imageBlobUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  liked: boolean;
+};
 
 const fetcher = (
   fetcher: (offset: number, user_id: number) => Promise<PostType[]>
@@ -38,6 +54,7 @@ const getFetcherForPage = (page: "home" | "all" | "profile") => {
 };
 
 export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
+  const { mutate: globalMutate } = useSWRConfig();
   const { data, size, setSize, mutate } = useSWRInfinite(
     getKeyForPage(page, user_id),
     getFetcherForPage(page)
@@ -53,6 +70,15 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
               : post
           )
         ),
+      false
+    );
+
+    globalMutate(
+      `post-${updatedPost.post_id}`,
+      async () => {
+        const freshPost = await getPost(updatedPost.post_id!);
+        return { ...freshPost, ...updatedPost };
+      },
       false
     );
   };

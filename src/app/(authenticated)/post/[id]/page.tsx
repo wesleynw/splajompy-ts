@@ -8,7 +8,6 @@ import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { PostProvider } from "@/app/data/PostProvider";
 import PostPageContent from "@/app/components/post/SinglePagePost";
 import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
@@ -56,7 +55,7 @@ export default async function Page({
     redirect("/login");
   }
 
-  const id = (await params).id;
+  const post_id = (await params).id;
 
   return (
     <Suspense
@@ -66,9 +65,7 @@ export default async function Page({
         </StandardWrapper>
       }
     >
-      <PostProvider post_id={id}>
-        <PostPageContent />
-      </PostProvider>
+      <PostPageContent post_id={post_id} />
     </Suspense>
   );
 }
