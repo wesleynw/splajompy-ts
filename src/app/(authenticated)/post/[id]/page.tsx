@@ -51,7 +51,7 @@ export default async function Page({
   params: Promise<{ id: number }>;
 }>) {
   const session = await auth();
-  if (!session) {
+  if (!session?.user) {
     redirect("/login");
   }
 
