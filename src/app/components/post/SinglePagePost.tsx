@@ -24,6 +24,7 @@ import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
 import StandardWrapper from "../loading/StandardWrapper";
 import { useSinglePost } from "@/app/data/SinglePost";
+import ShareButton from "./ShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -99,6 +100,8 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
+
+        <ShareButton post_id={post_id} />
         {session?.user.user_id === post.user_id ? (
           <PostDropdown
             post_id={post.post_id}
