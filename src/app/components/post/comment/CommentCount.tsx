@@ -1,17 +1,13 @@
-import { Typography } from "@mui/material";
-import theme from "@/theme";
+import { Stack } from "@mui/material";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 
 export default function CommentCount({ count }: Readonly<{ count: number }>) {
   return (
-    <Typography
-      variant="subtitle2"
-      sx={{
-        color: "#777777",
-        fontSize: 14,
-        ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-      }}
-    >
-      {count} comment{count === 1 ? "" : "s"}
-    </Typography>
+    <Stack direction="row" alignItems="center">
+      <ChatBubbleOutlineOutlinedIcon
+        sx={{ width: "16px", height: "16px", marginRight: "8px" }}
+      />
+      {count}
+    </Stack>
   );
 }
