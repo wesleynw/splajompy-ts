@@ -1,7 +1,13 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -16,7 +22,6 @@ import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
-import SinglePostSkeleton from "../loading/SinglePostSkeleton";
 import StandardWrapper from "../loading/StandardWrapper";
 import { useSinglePost } from "@/app/data/SinglePost";
 
@@ -41,7 +46,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
   if (isPending) {
     return (
       <StandardWrapper>
-        <SinglePostSkeleton />
+        <CircularProgress sx={{ width: "100%", margin: "0px auto" }} />
       </StandardWrapper>
     );
   }

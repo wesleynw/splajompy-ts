@@ -100,10 +100,9 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     );
   };
 
-  // Delete a post by ID from all pages
   const deletePost = (postId: number) => {
-    queryClient.setQueryData<{ pages: PostType[][] }>(
-      ["feed", page, user_id],
+    queryClient.setQueriesData<{ pages: PostType[][] }>(
+      { queryKey: ["feed"] },
       (oldData) => {
         if (!oldData) return oldData;
         return {
