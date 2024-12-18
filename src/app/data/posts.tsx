@@ -78,19 +78,7 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
       }
     );
 
-    console.log(
-      "cache post id",
-      updatedPost.post_id,
-      queryClient.getQueryData(["post", updatedPost.post_id])
-    );
-
     queryClient.setQueryData(["post", updatedPost.post_id], updatedPost);
-
-    console.log(
-      "cache post id",
-      updatedPost.post_id,
-      queryClient.getQueryData(["post", updatedPost.post_id])
-    );
   };
 
   // Insert a new post at the beginning of the first page

@@ -21,7 +21,6 @@ export type PostData = {
 const FETCH_LIMIT = 10;
 
 export async function getAllPostsFromDb(offset: number) {
-  console.log("getAllPostsFromDb, offset:", offset);
   const session = await auth();
   if (!session) {
     return [];
@@ -128,7 +127,6 @@ export async function getAllPostsForFollowing(offset: number) {
 }
 
 export async function getPostsByUserId(offset: number, user_id: number) {
-  console.log("getPostsByUserId, user_id:", user_id, "offset:", offset);
   const session = await auth();
 
   if (!session) {

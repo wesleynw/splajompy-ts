@@ -6,23 +6,13 @@ import { PostType } from "./posts";
 
 export function useSinglePost(post_id: number) {
   const queryClient = useQueryClient();
-  console.log("useSinglePost", post_id);
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["post", post_id],
     queryFn: () => getPost(post_id),
   });
 
-  console.log("query cache: ", queryClient.getQueryCache());
-
   const updatePost = (updatedPost: Partial<PostType>) => {
-    console.log(
-      "cache post id",
-      post_id,
-      queryClient.getQueryData(["post", post_id])
-    );
-
-    console.log("query cache: ", queryClient.getQueryCache());
     // Update the single post query data
     queryClient.setQueryData<PostType>(
       ["post", String(post_id)],

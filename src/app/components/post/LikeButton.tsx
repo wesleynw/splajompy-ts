@@ -39,15 +39,9 @@ export default function LikeButton({
         liked: !liked,
       }));
 
-      console.log(
-        "feed cache",
-        queryClient.getQueriesData({ queryKey: ["feed"] })
-      );
-
       queryClient.setQueriesData(
         { queryKey: ["feed"] },
         (oldData: { pages: PostType[][] }) => {
-          console.log("oldData", oldData);
           if (!oldData) return oldData;
 
           return {

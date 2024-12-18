@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { Session } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useFeed } from "@/app/data/posts";
 import Post from "../post/Post";
 import NewPost from "../post/NewPost/NewPost";
+import StandardWrapper from "../loading/StandardWrapper";
 
 type Props = {
   session: Session;
@@ -51,7 +52,11 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
   }, [hasNextPage, fetchNextPage]);
 
   if (status === "pending") {
-    return <div>loading</div>;
+    return (
+      <StandardWrapper>
+        <CircularProgress sx={{ width: "100%", margin: "0px auto" }} />
+      </StandardWrapper>
+    );
   }
 
   if (status === "error") {
