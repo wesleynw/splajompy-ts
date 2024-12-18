@@ -15,14 +15,24 @@ type Props = {
 
 export default function Feed({ session, page, user_id }: Readonly<Props>) {
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const { data, hasMore, setSize, updatePost, insertPost, deletePost } =
-    useFeed(page, user_id);
+  const {
+    data,
+    // error,
+    fetchNextPage,
+    hasNextPage,
+    // isFetching,
+    // isFetchingNextPage,
+    status,
+    updateCachedPost,
+    insertPost,
+    deletePost,
+  } = useFeed(page, user_id);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setSize((prevSize) => prevSize + 1);
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
         }
       },
       { root: null, rootMargin: "400px", threshold: 0 }
@@ -38,14 +48,18 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
         observer.unobserve(currentObserverRef);
       }
     };
-  }, [data, setSize, hasMore]);
+  }, [hasNextPage, fetchNextPage]);
 
-  if (!data) {
+  if (status === "pending") {
     return <div>loading</div>;
   }
 
-  if (data.length === 0) {
-    return <div>No posts to display</div>;
+  if (status === "error") {
+    return <div>error</div>;
+  }
+
+  if (!data) {
+    return <div>no data</div>;
   }
 
   return (
@@ -57,10 +71,10 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
       }}
     >
       {page !== "profile" && <NewPost insertPostToCache={insertPost} />}
-      {data.map((posts) =>
+      {data.pages.map((posts) =>
         posts.map((post) => (
           <Post
-            updatePost={updatePost}
+            updatePost={updateCachedPost}
             deletePost={deletePost}
             key={post.post_id}
             session={session}
@@ -78,7 +92,7 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
         ))
       )}
       <div ref={observerRef} style={{ height: "1px" }} />
-      {!hasMore && page === "all" && (
+      {!hasNextPage && page === "all" && (
         <Box
           display="flex"
           justifyContent="center"

@@ -1,8 +1,8 @@
 import { getUnreadNotificationCountForUser } from "@/app/lib/notifications";
 import { Badge } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
-import useSWR from "swr";
 
 export default function NotificationBadge({
   children,
@@ -10,15 +10,15 @@ export default function NotificationBadge({
   const { data: session } = useSession();
   const user_id = session?.user?.user_id;
 
-  const { data } = useSWR(
-    user_id ? `notification-count-${user_id}` : null,
-    () => {
+  const { data } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: () => {
       if (user_id) {
-        return getUnreadNotificationCountForUser(user_id);
+        getUnreadNotificationCountForUser(user_id);
       }
       return null;
-    }
-  );
+    },
+  });
 
   if (!user_id) {
     return children;

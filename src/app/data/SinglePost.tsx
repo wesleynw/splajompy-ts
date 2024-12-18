@@ -1,59 +1,61 @@
 "use client";
 
-import useSWR, { useSWRConfig } from "swr";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPost } from "../lib/posts";
 import { PostType } from "./posts";
 
-const fetcher = async (post_id: number) => {
-  return getPost(post_id);
-};
-
 export function useSinglePost(post_id: number) {
-  const { mutate: globalMutate } = useSWRConfig();
-  const { data, mutate, error } = useSWR(`post-${post_id}`, () =>
-    fetcher(post_id)
-  );
+  const queryClient = useQueryClient();
+  console.log("useSinglePost", post_id);
+
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["post", post_id],
+    queryFn: () => getPost(post_id),
+  });
+
+  console.log("query cache: ", queryClient.getQueryCache());
 
   const updatePost = (updatedPost: Partial<PostType>) => {
-    mutate(
-      (currentData: PostType | undefined) =>
-        currentData
-          ? {
-              ...currentData,
-              ...updatedPost,
-            }
-          : undefined,
-      false
+    console.log(
+      "cache post id",
+      post_id,
+      queryClient.getQueryData(["post", post_id])
     );
 
-    globalMutate(
-      (key) => Array.isArray(key) && key[0] === "feed",
+    console.log("query cache: ", queryClient.getQueryCache());
+    // Update the single post query data
+    queryClient.setQueryData<PostType>(
+      ["post", String(post_id)],
       (currentData) => {
-        const newData = currentData
-          ? currentData.map((post: PostType) =>
-              post.post_id === updatedPost.post_id
-                ? { ...post, ...updatedPost }
-                : post
-            )
-          : undefined;
-        console.log("newData", newData);
-        return newData;
-      },
-      true
+        if (!currentData) return currentData;
+        return { ...currentData, ...updatedPost };
+      }
     );
+
+    // Now we want to also reflect this update in the feed queries.
+    // If we know exactly which feed queries need updating, we can do something like:
+    // For example, if feed queries are ["feed", "home"], ["feed", "all"], ["feed", "profile", user_id], etc.
+    // We could do:
+    // queryClient.setQueryData(["feed", "home"], oldData => ...)
+    // queryClient.setQueryData(["feed", "profile", user_id], oldData => ...)
+    //
+    // Without knowledge of the exact keys or wanting complex logic, we can just invalidate them:
+    // queryClient.invalidateQueries(["feed"]);
   };
 
   const deletePost = () => {
-    mutate(undefined, false);
+    // Deleting the post means we set it to undefined locally
+    queryClient.setQueryData(["post", post_id], undefined);
+
+    // Invalidate feed queries so they refetch without this post
+    // queryClient.invalidateQueries(["feed"]);
   };
 
-  const isLoading = !error && !data;
-  const isError = !!error;
-
   return {
-    post: data,
-    isLoading,
+    isPending,
     isError,
+    post: data,
+    error,
     updatePost,
     deletePost,
   };

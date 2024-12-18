@@ -1,11 +1,9 @@
 "use client";
 
-import useSWRInfinite from "swr/infinite";
-import { useSWRConfig } from "swr";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllPostsForFollowing,
   getAllPostsFromDb,
-  getPost,
   getPostsByUserId,
 } from "../lib/posts";
 
@@ -24,93 +22,121 @@ export type PostType = {
   liked: boolean;
 };
 
-const fetcher = (
-  fetcher: (offset: number, user_id: number) => Promise<PostType[]>
-) => {
-  return async ([, , offset, user_id]: [string, FeedType, number, number?]) => {
-    return fetcher(offset, user_id ?? 0);
-  };
-};
-
-const getKeyForPage = (page: FeedType, user_id?: number) => {
-  const key = user_id ?? page;
-  return (pageIndex: number, previousPageData: PostType[]) => {
-    if (previousPageData && !previousPageData.length) return null;
-    return ["feed", key, pageIndex * 10, user_id];
-  };
-};
-
-const getFetcherForPage = (page: "home" | "all" | "profile") => {
+function getFetcherForPage(page: "home" | "all" | "profile", user_id?: number) {
   switch (page) {
     case "home":
-      return fetcher(getAllPostsForFollowing);
+      return getAllPostsForFollowing;
     case "all":
-      return fetcher(getAllPostsFromDb);
+      return getAllPostsFromDb;
     case "profile":
-      return fetcher(getPostsByUserId);
+      return (offset: number) => getPostsByUserId(offset, user_id!);
     default:
       throw new Error("Invalid page type");
   }
-};
+}
 
 export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
-  const { mutate: globalMutate } = useSWRConfig();
-  const { data, size, setSize, mutate } = useSWRInfinite(
-    getKeyForPage(page, user_id),
-    getFetcherForPage(page)
-  );
+  const queryClient = useQueryClient();
 
-  const updatePost = (updatedPost: Partial<PostType>) => {
-    mutate(
-      (pages) =>
-        pages?.map((page) =>
-          page.map((post) =>
-            post.post_id === updatedPost.post_id
-              ? { ...post, ...updatedPost }
-              : post
-          )
-        ),
-      false
+  const fetchFeed = async ({ pageParam }: { pageParam: number }) => {
+    const fetcher = getFetcherForPage(page, user_id);
+    return await fetcher(pageParam);
+  };
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["feed", page],
+    queryFn: fetchFeed,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: PostType[], pages: PostType[][]) => {
+      return lastPage.length === 10 ? pages.length * 10 : undefined;
+    },
+  });
+
+  const updateCachedPost = async (updatedPost: Partial<PostType>) => {
+    queryClient.setQueryData<{ pages: PostType[][]; pageParams: number[] }>(
+      ["feed", page],
+      (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((posts) =>
+            posts.map((post) =>
+              post.post_id === updatedPost.post_id
+                ? { ...post, ...updatedPost }
+                : post
+            )
+          ),
+        };
+      }
     );
 
-    globalMutate(
-      `post-${updatedPost.post_id}`,
-      async () => {
-        const freshPost = await getPost(updatedPost.post_id!);
-        return { ...freshPost, ...updatedPost };
-      },
-      false
+    console.log(
+      "cache post id",
+      updatedPost.post_id,
+      queryClient.getQueryData(["post", updatedPost.post_id])
+    );
+
+    queryClient.setQueryData(["post", updatedPost.post_id], updatedPost);
+
+    console.log(
+      "cache post id",
+      updatedPost.post_id,
+      queryClient.getQueryData(["post", updatedPost.post_id])
     );
   };
 
+  // Insert a new post at the beginning of the first page
   const insertPost = (newPost: PostType) => {
-    mutate(
-      (pages) =>
-        pages
-          ? [pages[0] ? [newPost, ...pages[0]] : [newPost], ...pages]
-          : [[newPost]],
-      false
+    queryClient.setQueryData<{ pages: PostType[][] }>(
+      ["feed", page, user_id],
+      (oldData) => {
+        if (!oldData) {
+          return {
+            pages: [[newPost]],
+            pageParams: [undefined],
+          };
+        }
+        return {
+          ...oldData,
+          pages: [[newPost, ...oldData.pages[0]], ...oldData.pages.slice(1)],
+        };
+      }
     );
   };
 
+  // Delete a post by ID from all pages
   const deletePost = (postId: number) => {
-    mutate(
-      (pages) =>
-        pages?.map((page) =>
-          page.filter((post: PostType) => post.post_id !== postId)
-        ),
-      false
+    queryClient.setQueryData<{ pages: PostType[][] }>(
+      ["feed", page, user_id],
+      (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((posts) =>
+            posts.filter((post) => post.post_id !== postId)
+          ),
+        };
+      }
     );
   };
-
-  const hasMore = data ? data[data.length - 1].length === 10 : true;
 
   return {
     data,
-    size,
-    hasMore,
-    setSize,
-    updatePost,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    updateCachedPost,
     insertPost,
     deletePost,
   };

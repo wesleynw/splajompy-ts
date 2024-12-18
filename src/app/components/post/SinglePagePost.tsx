@@ -28,17 +28,17 @@ type Props = {
   post_id: number;
 };
 
-export default function PostPageContent({ post_id }: Readonly<Props>) {
+export default function SinglePagePost({ post_id }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
-  const { post, isLoading, updatePost, deletePost } = useSinglePost(post_id);
+  const { isPending, post, updatePost, deletePost } = useSinglePost(post_id);
   const { data: session } = useSession();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <StandardWrapper>
         <SinglePostSkeleton />
