@@ -100,16 +100,17 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
-
-        <ShareButton post_id={post_id} />
-        {session?.user.user_id === post.user_id ? (
-          <PostDropdown
-            post_id={post.post_id}
-            deletePostFromCache={handleDelete}
-          />
-        ) : (
-          <FollowButton user_id={post.user_id} show_unfollow={false} />
-        )}
+        <Stack direction="row">
+          <ShareButton />
+          {session?.user.user_id === post.user_id ? (
+            <PostDropdown
+              post_id={post.post_id}
+              deletePostFromCache={handleDelete}
+            />
+          ) : (
+            <FollowButton user_id={post.user_id} show_unfollow={false} />
+          )}
+        </Stack>
       </Stack>
 
       <Link href={`/user/${post.poster}`}>

@@ -54,6 +54,15 @@ importers:
       image-size:
         specifier: ^1.1.1
         version: 1.1.1
+      linkify-html:
+        specifier: ^4.2.0
+        version: 4.2.0(linkifyjs@4.2.0)
+      linkify-react:
+        specifier: ^4.2.0
+        version: 4.2.0(linkifyjs@4.2.0)(react@19.0.0)
+      linkifyjs:
+        specifier: ^4.2.0
+        version: 4.2.0
       material@latest:
         specifier: link:@mui/icons/material@latest
         version: link:@mui/icons/material@latest
@@ -2444,6 +2453,20 @@ packages:
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  linkify-html@4.2.0:
+    resolution: {integrity: sha512-bVXuLiWmGwvlH95hq6q9DFGqTsQeFSGw/nHmvvjGMZv9T3GqkxuW2d2SOgk/a4DV2ajeS4c37EqlF16cjOj7GA==}
+    peerDependencies:
+      linkifyjs: ^4.0.0
+
+  linkify-react@4.2.0:
+    resolution: {integrity: sha512-dIcDGo+n4FP2FPIHDcqB7cUE+omkcEgQJpc7sNNP4+XZ9FUhFAkKjGnHMzsZM+B4yF93sK166z9K5cKTe/JpzA==}
+    peerDependencies:
+      linkifyjs: ^4.0.0
+      react: '>= 15.0.0'
+
+  linkifyjs@4.2.0:
+    resolution: {integrity: sha512-pCj3PrQyATaoTYKHrgWRF3SJwsm61udVh+vuls/Rl6SptiDhgE7ziUIudAedRY9QEfynmM7/RmLEfPUyw1HPCw==}
 
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
@@ -5825,6 +5848,17 @@ snapshots:
       type-check: 0.4.0
 
   lines-and-columns@1.2.4: {}
+
+  linkify-html@4.2.0(linkifyjs@4.2.0):
+    dependencies:
+      linkifyjs: 4.2.0
+
+  linkify-react@4.2.0(linkifyjs@4.2.0)(react@19.0.0):
+    dependencies:
+      linkifyjs: 4.2.0
+      react: 19.0.0
+
+  linkifyjs@4.2.0: {}
 
   locate-path@6.0.0:
     dependencies:

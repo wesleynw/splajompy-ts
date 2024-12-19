@@ -21,7 +21,7 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
     // error,
     fetchNextPage,
     hasNextPage,
-    // isFetching,
+    isFetching,
     // isFetchingNextPage,
     status,
     updateCachedPost,
@@ -95,6 +95,19 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
             likedByCurrentUser={post.liked}
           />
         ))
+      )}
+      {isFetching && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          margin="0 auto"
+          width="100%"
+          maxWidth="600px"
+          height="30vh"
+        >
+          <CircularProgress />
+        </Box>
       )}
       <div ref={observerRef} style={{ height: "1px" }} />
       {!hasNextPage && page === "all" && (

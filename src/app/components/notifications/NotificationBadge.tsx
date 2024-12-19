@@ -7,22 +7,24 @@ import { ReactNode } from "react";
 export default function NotificationBadge({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user_id = session?.user?.user_id;
 
   const { data } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: () => {
-      if (user_id) {
-        getUnreadNotificationCountForUser(user_id);
-      }
-      return null;
-    },
+    queryKey: ["notifications", user_id],
+    queryFn: () => getUnreadNotificationCountForUser(user_id!),
+    enabled: !!user_id,
   });
 
-  if (!user_id) {
-    return children;
+  if (status === "loading") {
+    return <>{children}</>;
   }
+
+  if (!user_id) {
+    return <>{children}</>;
+  }
+
+  console.log("notification data: ", data);
 
   return (
     <Badge
