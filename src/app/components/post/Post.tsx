@@ -58,7 +58,7 @@ export default function Post({
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  const options = { defaultProtocol: "https" };
+  const options = { defaultProtocol: "https", target: "_blank" };
 
   return (
     <Box
@@ -100,6 +100,7 @@ export default function Post({
           }}
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             router.push(`/user/${poster}`);
           }}
         >
@@ -124,9 +125,14 @@ export default function Post({
               color: "lightblue",
               textDecoration: "underline",
             },
+            "& a:hover": {
+              cursor: "pointer",
+            },
           }}
         >
-          <Linkify options={options}>{content}</Linkify>
+          <Box onClick={(e) => e.stopPropagation()}>
+            <Linkify options={options}>{content}</Linkify>
+          </Box>
         </Typography>
       )}
 

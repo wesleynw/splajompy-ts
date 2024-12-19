@@ -20,6 +20,7 @@ export default function PostDropdown({
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
@@ -27,11 +28,13 @@ export default function PostDropdown({
     event: React.MouseEvent<HTMLLIElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(null);
   };
 
   const handleDelete = async (event: React.MouseEvent<HTMLLIElement>) => {
     event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(null);
 
     try {
