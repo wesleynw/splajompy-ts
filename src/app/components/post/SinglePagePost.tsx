@@ -25,6 +25,7 @@ import CommentList from "./comment/CommentList";
 import StandardWrapper from "../loading/StandardWrapper";
 import { useSinglePost } from "@/app/data/SinglePost";
 import ShareButton from "./ShareButton";
+import Linkify from "linkify-react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -74,6 +75,8 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
       console.error("Failed to delete post:", error);
     }
   };
+
+  const options = { defaultProtocol: "https", target: "_blank" };
 
   return (
     <Box
@@ -134,14 +137,17 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
           color: theme.palette.text.primary,
           fontWeight: "bold",
           marginBottom: 2,
+          overflowWrap: "break-word",
+          "& a": {
+            color: "lightblue",
+            textDecoration: "underline",
+          },
+          "& a:hover": {
+            cursor: "pointer",
+          },
         }}
       >
-        {post.text?.split("\n").map((line: string) => (
-          <React.Fragment key={line.substring(0, 10)}>
-            {line}
-            <br />
-          </React.Fragment>
-        ))}
+        <Linkify options={options}>{post.text}</Linkify>
       </Typography>
 
       {post.imageBlobUrl && post.imageWidth && post.imageHeight && (

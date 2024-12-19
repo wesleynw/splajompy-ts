@@ -58,7 +58,17 @@ export default function Post({
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  const options = { defaultProtocol: "https" };
+  const options = { defaultProtocol: "https", target: "_blank" };
+
+  interface LinkClickEvent extends React.MouseEvent<HTMLDivElement> {
+    target: HTMLAnchorElement;
+  }
+
+  const handleLinkClick = (e: LinkClickEvent) => {
+    if (e.target.tagName === "A") {
+      e.stopPropagation();
+    }
+  };
 
   return (
     <Box
@@ -100,6 +110,7 @@ export default function Post({
           }}
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             router.push(`/user/${poster}`);
           }}
         >
@@ -120,13 +131,19 @@ export default function Post({
             marginBottom: 3,
             ...theme.applyStyles("dark", { color: "#ffffff" }),
             whiteSpace: "pre-line",
+            overflowWrap: "break-word", // Breaks lines inside long words
             "& a": {
               color: "lightblue",
               textDecoration: "underline",
             },
+            "& a:hover": {
+              cursor: "pointer",
+            },
           }}
         >
-          <Linkify options={options}>{content}</Linkify>
+          <Box onClick={handleLinkClick}>
+            <Linkify options={options}>{content}</Linkify>
+          </Box>
         </Typography>
       )}
 

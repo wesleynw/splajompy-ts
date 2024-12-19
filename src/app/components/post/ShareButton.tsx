@@ -41,7 +41,7 @@ export default function ShareButton() {
         open={open}
         autoHideDuration={3000}
         onClose={handleClose}
-        message="Text copied to clipboard"
+        message="Link copied to clipboard"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         sx={{ marginBottom: "50px" }}
       />

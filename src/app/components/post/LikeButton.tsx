@@ -62,6 +62,7 @@ export default function LikeButton({
       <IconButton
         onClick={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           handleLike.mutate();
         }}
       >
