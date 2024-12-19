@@ -60,6 +60,16 @@ export default function Post({
 
   const options = { defaultProtocol: "https", target: "_blank" };
 
+  interface LinkClickEvent extends React.MouseEvent<HTMLDivElement> {
+    target: HTMLAnchorElement;
+  }
+
+  const handleLinkClick = (e: LinkClickEvent) => {
+    if (e.target.tagName === "A") {
+      e.stopPropagation();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -121,6 +131,7 @@ export default function Post({
             marginBottom: 3,
             ...theme.applyStyles("dark", { color: "#ffffff" }),
             whiteSpace: "pre-line",
+            overflowWrap: "break-word", // Breaks lines inside long words
             "& a": {
               color: "lightblue",
               textDecoration: "underline",
@@ -130,7 +141,7 @@ export default function Post({
             },
           }}
         >
-          <Box onClick={(e) => e.stopPropagation()}>
+          <Box onClick={handleLinkClick}>
             <Linkify options={options}>{content}</Linkify>
           </Box>
         </Typography>
