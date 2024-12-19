@@ -9,15 +9,17 @@ import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { useSession } from "next-auth/react";
-import { PostType } from "../../../data/FeedProvider";
+import { PostType } from "@/app/data/posts";
+import { useQueryClient } from "@tanstack/react-query";
 
 type NewPostProps = {
-  insertPostToFeed: (post: PostType) => void;
+  insertPostToCache: (post: PostType) => void;
 };
 
-export default function Page({ insertPostToFeed }: Readonly<NewPostProps>) {
+export default function Page({ insertPostToCache }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const [textValue, setTextValue] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -107,12 +109,14 @@ export default function Page({ insertPostToFeed }: Readonly<NewPostProps>) {
       liked: false,
     };
 
-    insertPostToFeed(mappedPost);
+    insertPostToCache(mappedPost);
 
     setTextValue("");
     setPreviewFile(null);
     setSelectedFile(null);
     setIsLoading(false);
+
+    queryClient.invalidateQueries({ queryKey: ["feed"] });
   };
 
   return (

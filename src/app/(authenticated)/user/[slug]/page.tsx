@@ -26,7 +26,7 @@ export default async function Page({
 
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user) {
     redirect("/login");
   }
 
@@ -72,7 +72,7 @@ export default async function Page({
           </StandardWrapper>
         }
       >
-        <UserView user={user} />
+        <UserView session={session} user={user} />
       </Suspense>
     </Box>
   );

@@ -3,12 +3,14 @@
 import React from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
 import BackButton from "../navigation/BackButton";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import FollowButton from "../follows/FollowButton";
 import Feed from "../feed/Feed";
 import theme from "@/theme";
+import { Session } from "next-auth";
 
 interface Props {
+  session: Session;
   user: {
     user_id: number;
     email: string;
@@ -17,14 +19,8 @@ interface Props {
   };
 }
 
-export default function UserView({ user }: Readonly<Props>) {
-  const { data: session } = useSession();
-
-  if (!session) {
-    return null;
-  }
-
-  const isOwnProfile = session?.user?.user_id === user.user_id;
+export default function UserView({ session, user }: Readonly<Props>) {
+  const isOwnProfile = session.user.user_id === user.user_id;
 
   return (
     <Box>
@@ -100,7 +96,7 @@ export default function UserView({ user }: Readonly<Props>) {
         </Box>
       </Box>
       <Box>
-        <Feed feedType="profile" ofUser={user.user_id} showNewPost={false} />
+        <Feed session={session} page="profile" user_id={user.user_id} />
       </Box>
     </Box>
   );

@@ -1,7 +1,13 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -10,35 +16,38 @@ import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
-import { deletePost } from "@/app/lib/posts";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "./comment/CommentList";
-import { usePost } from "@/app/data/PostProvider";
-import SinglePostSkeleton from "../loading/SinglePostSkeleton";
 import StandardWrapper from "../loading/StandardWrapper";
+import { useSinglePost } from "@/app/data/SinglePost";
+import ShareButton from "./ShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function PostPageContent() {
+type Props = {
+  post_id: number;
+};
+
+export default function SinglePagePost({ post_id }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
-  const { post, updatePost, loading } = usePost();
+  const { isPending, post, updatePost, deletePost } = useSinglePost(post_id);
   const { data: session } = useSession();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  if (loading) {
+  if (isPending) {
     return (
       <StandardWrapper>
-        <SinglePostSkeleton />
+        <CircularProgress sx={{ width: "100%", margin: "0px auto" }} />
       </StandardWrapper>
     );
   }
@@ -59,7 +68,7 @@ export default function PostPageContent() {
 
   const handleDelete = async () => {
     try {
-      await deletePost(post.post_id);
+      deletePost();
       router.push("/");
     } catch (error) {
       console.error("Failed to delete post:", error);
@@ -91,11 +100,17 @@ export default function PostPageContent() {
         sx={{ marginBottom: 2 }}
       >
         <BackButton />
-        {session?.user.user_id === post.user_id ? (
-          <PostDropdown post_id={post.post_id} onDelete={handleDelete} />
-        ) : (
-          <FollowButton user_id={post.user_id} show_unfollow={false} />
-        )}
+        <Stack direction="row">
+          <ShareButton />
+          {session?.user.user_id === post.user_id ? (
+            <PostDropdown
+              post_id={post.post_id}
+              deletePostFromCache={handleDelete}
+            />
+          ) : (
+            <FollowButton user_id={post.user_id} show_unfollow={false} />
+          )}
+        </Stack>
       </Stack>
 
       <Link href={`/user/${post.poster}`}>
@@ -166,9 +181,7 @@ export default function PostPageContent() {
             user_id={session?.user.user_id}
             username={session?.user.username}
             liked={post.liked}
-            setLiked={() => {
-              updatePost({ liked: !post.liked });
-            }}
+            updatePost={updatePost}
           />
         )}
       </Box>

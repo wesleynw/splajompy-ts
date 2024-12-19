@@ -8,8 +8,7 @@ import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { PostProvider } from "@/app/data/PostProvider";
-import PostPageContent from "@/app/components/post/SinglePagePost";
+import SinglePagePost from "@/app/components/post/SinglePagePost";
 import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
@@ -52,11 +51,11 @@ export default async function Page({
   params: Promise<{ id: number }>;
 }>) {
   const session = await auth();
-  if (!session) {
+  if (!session?.user) {
     redirect("/login");
   }
 
-  const id = (await params).id;
+  const post_id = (await params).id;
 
   return (
     <Suspense
@@ -66,9 +65,7 @@ export default async function Page({
         </StandardWrapper>
       }
     >
-      <PostProvider post_id={id}>
-        <PostPageContent />
-      </PostProvider>
+      <SinglePagePost post_id={post_id} />
     </Suspense>
   );
 }

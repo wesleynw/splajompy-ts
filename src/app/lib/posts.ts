@@ -126,7 +126,7 @@ export async function getAllPostsForFollowing(offset: number) {
   return results;
 }
 
-export async function getPostsByUserId(user_id: number, offset: number) {
+export async function getPostsByUserId(offset: number, user_id: number) {
   const session = await auth();
 
   if (!session) {

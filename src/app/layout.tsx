@@ -7,8 +7,8 @@ import theme from "../theme";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import TopBar from "./components/navigation/TopBar";
-import { FeedProvider } from "./data/FeedProvider";
 import PlausibleProvider from "next-plausible";
+import { ReactQueryProvider } from "./providers/ReacyQueryProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -39,11 +39,13 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <TopBar />
-            <InitColorSchemeScript attribute="class" />
-            <Box component="main" sx={{ paddingTop: "60px" }}>
-              <FeedProvider>{children}</FeedProvider>
-            </Box>
+            <ReactQueryProvider>
+              <TopBar />
+              <InitColorSchemeScript attribute="class" />
+              <Box component="main" sx={{ paddingTop: "60px" }}>
+                {children}
+              </Box>
+            </ReactQueryProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

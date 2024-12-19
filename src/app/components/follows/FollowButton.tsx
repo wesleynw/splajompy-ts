@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
 import { Button, useTheme } from "@mui/material";
-import { useFeed } from "@/app/data/FeedProvider";
 
 type Props = {
   user_id: number;
@@ -22,8 +21,6 @@ export default function FollowButton({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const theme = useTheme();
-
-  const { fetchPosts } = useFeed();
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
@@ -60,8 +57,6 @@ export default function FollowButton({
       console.error("Failed to update follow status:", error);
     } finally {
       setLoading(false);
-      // TODO: find another schema for this
-      fetchPosts("home", session.user.user_id);
     }
   };
 
