@@ -48,7 +48,7 @@ export const comments = pgTable("comments", {
     .references(() => users.user_id, {
       onDelete: "cascade",
     }),
-  text: varchar({ length: 255 }).notNull(),
+  text: text().notNull(),
   comment_date: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
 });
 

@@ -137,6 +137,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
           color: theme.palette.text.primary,
           fontWeight: "bold",
           marginBottom: 2,
+          whiteSpace: "pre-line",
           overflowWrap: "break-word",
           "& a": {
             color: "lightblue",

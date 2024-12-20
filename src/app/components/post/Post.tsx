@@ -123,15 +123,14 @@ export default function Post({
       </Stack>
 
       {content && (
-        <Typography
-          variant="body1"
+        <Box
           sx={{
             color: "#333333",
             fontWeight: "bold",
             marginBottom: 3,
             ...theme.applyStyles("dark", { color: "#ffffff" }),
             whiteSpace: "pre-line",
-            overflowWrap: "break-word", // Breaks lines inside long words
+            overflowWrap: "break-word",
             "& a": {
               color: "lightblue",
               textDecoration: "underline",
@@ -144,7 +143,7 @@ export default function Post({
           <Box onClick={handleLinkClick}>
             <Linkify options={options}>{content}</Linkify>
           </Box>
-        </Typography>
+        </Box>
       )}
 
       {imagePath && imageHeight && imageWidth && (
