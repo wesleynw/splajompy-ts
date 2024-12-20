@@ -1,8 +1,7 @@
-"use client";
-
-import theme from "@/theme";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
+import NewPostModal from "../post/new/NewPostModal";
+import { SessionProvider } from "next-auth/react";
 
 export default function TopBar() {
   return (
@@ -15,14 +14,8 @@ export default function TopBar() {
         height: "60px",
         zIndex: 100,
         borderBottom: "0.5px solid rgba(160, 160, 160, 0.3)",
-        ...theme.applyStyles("light", {
-          backdropFilter: "blur(15px)",
-          color: "#000",
-        }),
-        ...theme.applyStyles("dark", {
-          backdropFilter: "blur(15px)",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
-        }),
+        backdropFilter: "blur(15px)",
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
       }}
     >
       <Box
@@ -38,6 +31,11 @@ export default function TopBar() {
             Splajompy
           </Typography>
         </Link>
+        <Box sx={{ position: "absolute", right: "20px" }}>
+          <SessionProvider>
+            <NewPostModal />
+          </SessionProvider>
+        </Box>
       </Box>
     </Box>
   );
