@@ -27,6 +27,7 @@ export default function NewPostDialog({ open, toggleOpen }: Readonly<Props>) {
       onTransitionEnd={() => inputRef.current?.focus()}
       TransitionComponent={Transition}
       fullScreen
+      keepMounted
       sx={{
         top: "60px",
         "& .MuiDialog-container": {

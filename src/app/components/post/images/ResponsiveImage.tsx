@@ -23,10 +23,16 @@ export default function ResponsiveImage({
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
 
   return (
-    <Box>
+    <Box
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setOpen(true);
+      }}
+    >
       <img
+        alt="Image"
         src={src}
-        alt="post image"
         style={{
           objectFit: isNonStandardSize! ? "cover" : "contain",
           maxHeight: isTall ? "200px" : "510px",
@@ -35,10 +41,6 @@ export default function ResponsiveImage({
           minHeight: "100px",
           borderRadius: "8px",
           cursor: "pointer",
-        }}
-        onClick={(e) => {
-          e.preventDefault();
-          setOpen(true);
         }}
       />
     </Box>
