@@ -2,9 +2,10 @@
 
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import NewPostDialog from "../post/new/NewPostDialog";
 import NewPostButton from "../post/new/NewPostButton";
+import DownloadPrompt from "../pwa/DownloadPrompt";
 
 export default function TopBar() {
   const [open, setOpen] = useState(false);
@@ -38,6 +39,16 @@ export default function TopBar() {
             height: "100%",
           }}
         >
+          <Box
+            sx={{
+              position: "fixed",
+              left: "20px",
+            }}
+          >
+            <Suspense>
+              <DownloadPrompt />
+            </Suspense>
+          </Box>
           <Link href="/">
             <Typography variant="h5" fontWeight={700} sx={{ paddingX: 2 }}>
               Splajompy
