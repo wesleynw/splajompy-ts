@@ -25,8 +25,7 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
         size="large"
         onClick={toggleOpen}
         sx={{
-          paddingX: "10px",
-          paddingY: "5px",
+          padding: "5px",
         }}
         disableRipple
       >

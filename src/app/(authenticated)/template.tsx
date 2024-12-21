@@ -1,5 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import Navigation from "../components/navigation/Navigation";
+import TopBar from "../components/navigation/TopBar";
 
 export default async function AuthenticatedLayout({
   children,
@@ -8,6 +9,7 @@ export default async function AuthenticatedLayout({
 }>) {
   return (
     <SessionProvider>
+      <TopBar />
       {children}
       <Navigation />
     </SessionProvider>

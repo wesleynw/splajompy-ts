@@ -21,7 +21,7 @@ export function TextInput({
       onChange={onChange}
       name="text"
       variant="outlined"
-      placeholder="What's on your mind?"
+      placeholder="What do you have to say for yourself?"
       fullWidth
       multiline
       sx={{

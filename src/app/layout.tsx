@@ -6,10 +6,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import TopBar from "./components/navigation/TopBar";
 import PlausibleProvider from "next-plausible";
 import { ReactQueryProvider } from "./providers/ReacyQueryProvider";
-import AuthProvider from "./components/AuthProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -45,9 +43,6 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <ReactQueryProvider>
-              <AuthProvider>
-                <TopBar />
-              </AuthProvider>
               <InitColorSchemeScript attribute="class" />
               <Box component="main" sx={{ paddingTop: "60px" }}>
                 {children}

@@ -124,22 +124,14 @@ export default function Page({
 
     queryClient.invalidateQueries({ queryKey: ["feed"] });
     onPost();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <Box
       sx={{
-        position: "absolute",
-        top: "30%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
         width: "100%",
-        // width: 800,
-        // height: 400,
-        // bgcolor: "background.paper",
-        // border: "2px solid #000",
-        // boxShadow: 24,
-        p: 4,
+        padding: 1,
       }}
     >
       <Stack
@@ -189,7 +181,7 @@ export default function Page({
             justifyContent: "space-between",
             alignItems: "center",
             position: "relative",
-            marginTop: "16px",
+            paddingTop: "16px",
           }}
         >
           <FileInput
