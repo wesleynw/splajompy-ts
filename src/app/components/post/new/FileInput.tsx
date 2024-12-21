@@ -29,7 +29,13 @@ export default function FileInput({
       }
 
       setFile(file);
-      setPreviewFile(file);
+      if (file.type.split("/")[0] !== "image") {
+        setError("File must be an image.");
+        setFile(null);
+        setPreviewFile(null);
+      } else {
+        setPreviewFile(file);
+      }
     }
   };
 
@@ -42,6 +48,7 @@ export default function FileInput({
         onChange={handleFileSelect}
         style={{ display: "none" }}
         id="file-upload"
+        accept="image/*"
       />
       <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
         <AddPhotoAlternateIcon

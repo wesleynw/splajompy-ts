@@ -27,7 +27,6 @@ export default function ImageModal({
 }: Readonly<ImageModalProps>) {
   const [loaded, setLoaded] = useState(false);
 
-  // The direct link to the image
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
 
   const handleDownload = (e: React.MouseEvent) => {
@@ -60,7 +59,6 @@ export default function ImageModal({
           }}
         >
           <VerticalAlignBottomIcon />
-          {/* <ArrowDownwardIcon /> */}
         </IconButton>
         <IconButton
           onClick={(e) => {
