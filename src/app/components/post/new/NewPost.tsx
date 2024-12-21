@@ -15,11 +15,13 @@ import { useQueryClient } from "@tanstack/react-query";
 type NewPostProps = {
   onPost: () => void;
   insertPostToCache: (post: PostType) => void;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export default function Page({
   onPost,
   insertPostToCache,
+  inputRef,
 }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
@@ -131,8 +133,8 @@ export default function Page({
         top: "30%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        // width: 400,
-        // height: 400,
+        width: 800,
+        height: 400,
         // bgcolor: "background.paper",
         // border: "2px solid #000",
         // boxShadow: 24,
@@ -169,6 +171,7 @@ export default function Page({
           sx={{ width: "100%" }}
         >
           <TextInput
+            inputRef={inputRef}
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
           />
