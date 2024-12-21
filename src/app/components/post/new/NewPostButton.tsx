@@ -13,11 +13,12 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
     <Box
       sx={{
         borderRadius: "30px",
-        border: "1px solid #1DA1F2",
-        backgroundColor: "#1DA1F2",
+        border: isOpen ? "1px solid #ffffff" : "1px solid #1DA1F2",
+        backgroundColor: isOpen ? "#111111" : "#1DA1F2",
         color: "white",
         padding: 0,
         zIndex: 9000,
+        transition: "background-color 0.3s ease-in-out",
       }}
     >
       <IconButton
@@ -27,6 +28,7 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
           paddingX: "10px",
           paddingY: "5px",
         }}
+        disableRipple
       >
         <AddCircleIcon
           sx={{
