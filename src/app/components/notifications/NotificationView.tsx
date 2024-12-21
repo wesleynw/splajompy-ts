@@ -70,6 +70,7 @@ export default function NotificationView({
       sx={{
         maxWidth: 600,
         margin: "20px auto",
+        marginBottom: "100px",
         padding: 3,
         borderRadius: "8px",
       }}
