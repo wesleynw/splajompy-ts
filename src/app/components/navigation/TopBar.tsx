@@ -11,12 +11,6 @@ export default function TopBar() {
 
   const toggleOpen = () => {
     setOpen((prev) => {
-      if (!prev) {
-        console.log("adding class");
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "scroll";
-      }
       return !prev;
     });
   };
@@ -30,7 +24,7 @@ export default function TopBar() {
           top: 0,
           width: "100%",
           height: "60px",
-          zIndex: 1300,
+          zIndex: 1900,
           borderBottom: "0.5px solid rgba(160, 160, 160, 0.3)",
           backdropFilter: "blur(15px)",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
