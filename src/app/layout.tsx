@@ -6,7 +6,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import TopBar from "./components/navigation/TopBar";
 import PlausibleProvider from "next-plausible";
 import { ReactQueryProvider } from "./providers/ReacyQueryProvider";
 
@@ -44,7 +43,6 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <ReactQueryProvider>
-              <TopBar />
               <InitColorSchemeScript attribute="class" />
               <Box component="main" sx={{ paddingTop: "60px" }}>
                 {children}

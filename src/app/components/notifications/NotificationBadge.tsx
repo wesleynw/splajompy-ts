@@ -24,8 +24,6 @@ export default function NotificationBadge({
     return <>{children}</>;
   }
 
-  console.log("notification data: ", data);
-
   return (
     <Badge
       badgeContent={data}
