@@ -44,7 +44,14 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <ReactQueryProvider>
               <InitColorSchemeScript attribute="class" />
-              <Box component="main" sx={{ paddingTop: "60px" }}>
+              <Box
+                component="main"
+                sx={{
+                  paddingTop: "60px",
+                  backgroundColor: "#007f00",
+                  height: "100vh",
+                }}
+              >
                 {children}
               </Box>
             </ReactQueryProvider>

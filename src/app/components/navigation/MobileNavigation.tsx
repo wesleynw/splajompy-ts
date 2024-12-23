@@ -34,7 +34,7 @@ export default function MobileNavigation() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "background.paper",
+        backgroundColor: "#005000", // Darker green background
         zIndex: 10,
       }}
     >
@@ -43,11 +43,16 @@ export default function MobileNavigation() {
         sx={{
           height: is_standalone ? "80px" : "56px", // Custom height for standalone mode
           alignItems: "flex-start", // Align items closer to the top
+          backgroundColor: "#005000", // Darker green background
         }}
       >
         <BottomNavigationAction
           value="/"
-          icon={<HomeIcon />}
+          icon={
+            <HomeIcon
+              sx={{ color: pathname === "/" ? "#ff0000" : "inherit" }}
+            />
+          } // Active icon red
           onClick={(event) => handleNavigation(event, "/")}
           disableRipple
           sx={{
@@ -58,7 +63,11 @@ export default function MobileNavigation() {
           value="/notifications"
           icon={
             <NotificationBadge>
-              <NotificationsIcon />
+              <NotificationsIcon
+                sx={{
+                  color: pathname === "/notifications" ? "#ff0000" : "inherit",
+                }}
+              />
             </NotificationBadge>
           }
           onClick={(event) => handleNavigation(event, "/notifications")}
@@ -69,7 +78,11 @@ export default function MobileNavigation() {
         />
         <BottomNavigationAction
           value="/all"
-          icon={<PublicIcon />}
+          icon={
+            <PublicIcon
+              sx={{ color: pathname === "/all" ? "#ff0000" : "inherit" }}
+            />
+          } // Active icon red
           onClick={(event) => handleNavigation(event, "/all")}
           disableRipple
           sx={{
@@ -78,7 +91,16 @@ export default function MobileNavigation() {
         />
         <BottomNavigationAction
           value={`/user/${session?.user?.username}`}
-          icon={<PersonIcon />}
+          icon={
+            <PersonIcon
+              sx={{
+                color:
+                  pathname === `/user/${session?.user?.username}`
+                    ? "#ff0000"
+                    : "inherit",
+              }}
+            />
+          }
           onClick={(event) =>
             handleNavigation(event, `/user/${session?.user?.username}`)
           }

@@ -44,6 +44,7 @@ export default function DownloadPrompt() {
           padding: 0,
           zIndex: 9000,
           transition: "background-color 0.3s ease-in-out",
+          backgroundColor: "#ffffff", // White background for candy cane effect
         }}
       >
         <IconButton
@@ -54,7 +55,7 @@ export default function DownloadPrompt() {
         >
           <LightbulbIcon
             sx={{
-              color: "#0cce6b",
+              color: "#ff0000", // Red color for icon
               padding: "3px",
               paddingBottom: "5px",
             }}
@@ -63,7 +64,7 @@ export default function DownloadPrompt() {
             variant="body2"
             fontWeight={800}
             sx={{ marginLeft: "2px", marginRight: "6px" }}
-            color="#0cce6b"
+            color="#ff0000" // Red color for text
           >
             Install
           </Typography>
@@ -82,7 +83,7 @@ export default function DownloadPrompt() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
+            bgcolor: "#ffffff", // White background for modal
             borderRadius: 2,
             boxShadow: 24,
             p: 4,

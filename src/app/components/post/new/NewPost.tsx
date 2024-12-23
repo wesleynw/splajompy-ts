@@ -151,7 +151,7 @@ export default function Page({
           backgroundColor: "#ffffff",
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
           ...theme.applyStyles("dark", {
-            backgroundColor: "#1c1c1c",
+            backgroundColor: "#007f00",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
           }),
         }}

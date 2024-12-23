@@ -90,15 +90,15 @@ export default function DesktopNavigation() {
                     minHeight: "48px",
                     outline: "none",
                     borderRadius: "30px",
-                    backgroundColor: isActive ? "#e3f2fd" : "transparent",
+                    backgroundColor: isActive ? "#ff0000" : "transparent",
                     transition: "background-color 0.3s, border-color 0.3s",
                     "&:hover": {
-                      backgroundColor: "#f5f5f5",
+                      backgroundColor: isActive ? "#cc0000" : "#f5f5f5",
                     },
                     ...theme.applyStyles("dark", {
-                      backgroundColor: isActive ? "#333333" : "transparent",
+                      backgroundColor: isActive ? "#800000" : "transparent",
                       "&:hover": {
-                        backgroundColor: "#444444",
+                        backgroundColor: "#660000",
                       },
                     }),
                   }}
@@ -106,8 +106,10 @@ export default function DesktopNavigation() {
                 >
                   <ListItemIcon
                     sx={{
-                      color: "#333333",
-                      ...theme.applyStyles("dark", { color: "#ffffff" }),
+                      color: isActive ? "#ffffff" : "#333333",
+                      ...theme.applyStyles("dark", {
+                        color: isActive ? "#ffffff" : "#ffffff",
+                      }),
                     }}
                   >
                     {item.icon}
@@ -120,8 +122,10 @@ export default function DesktopNavigation() {
                       },
                     }}
                     sx={{
-                      color: "#333333",
-                      ...theme.applyStyles("dark", { color: "#ffffff" }),
+                      color: isActive ? "#ffffff" : "#333333",
+                      ...theme.applyStyles("dark", {
+                        color: isActive ? "#ffffff" : "#ffffff",
+                      }),
                     }}
                   />
                 </ListItemButton>

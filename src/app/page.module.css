@@ -14,6 +14,7 @@
   padding: 80px;
   gap: 64px;
   font-family: var(--font-roboto);
+  background-color: #007f00; /* Christmas green */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +25,8 @@
 
     --button-primary-hover: #ccc;
     --button-secondary-hover: #1a1a1a;
+    background-color: #004d00; /* Darker green for dark mode */
+    min-height: 100svh;
   }
 }
 
@@ -105,7 +108,6 @@ a.secondary {
   flex-shrink: 0;
 }
 
-/* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
     background: var(--button-primary-hover);
