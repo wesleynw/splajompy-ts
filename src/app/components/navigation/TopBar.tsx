@@ -31,7 +31,7 @@ export default function TopBar() {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
           backgroundImage: `repeating-linear-gradient(
             45deg,
-            #ff0000 0px, #ff0000 10px,
+            #ff0000 0px, #800000 10px,
             #ffffff 10px, #ffffff 20px
           )`,
         }}
@@ -60,7 +60,7 @@ export default function TopBar() {
               fontWeight={700}
               sx={{
                 paddingX: 2,
-                color: "#ff0000",
+                color: "#800000",
                 backgroundColor: "#ffffff",
                 borderRadius: "30px",
               }}

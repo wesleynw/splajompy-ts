@@ -81,6 +81,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
   return (
     <Box
       sx={{
+        // height: "100%",
         maxWidth: 600,
         margin: "6px auto",
         padding: 3,

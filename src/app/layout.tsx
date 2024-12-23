@@ -46,7 +46,11 @@ export default function RootLayout({
               <InitColorSchemeScript attribute="class" />
               <Box
                 component="main"
-                sx={{ paddingTop: "60px", backgroundColor: "#007f00" }}
+                sx={{
+                  paddingTop: "60px",
+                  backgroundColor: "#007f00",
+                  height: "100vh",
+                }}
               >
                 {children}
               </Box>
