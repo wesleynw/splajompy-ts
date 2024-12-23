@@ -11,7 +11,7 @@ export default function SubmitPostButton({
       sx={{
         borderRadius: "20px",
         padding: "10px 20px",
-        backgroundColor: "#4a90e2",
+        backgroundColor: "#800000",
         color: "#ffffff",
         fontWeight: "bold",
         textTransform: "none",

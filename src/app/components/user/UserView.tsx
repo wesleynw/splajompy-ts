@@ -32,11 +32,11 @@ export default function UserView({ session, user }: Readonly<Props>) {
             borderRadius: "8px",
             gap: 1,
             padding: 3,
-            background: "linear-gradient(135deg, #ffffff, #f9f9f9)",
+            background: "linear-gradient(135deg, #ff0000, #ffcccc)",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
             margin: "10px auto",
             ...theme.applyStyles("dark", {
-              background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
+              background: "linear-gradient(135deg, #800000, #660000)",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
             }),
           }}
@@ -61,7 +61,7 @@ export default function UserView({ session, user }: Readonly<Props>) {
                   backgroundColor: "#1DA1F2",
                   color: "#ffffff",
                   ...theme.applyStyles("dark", {
-                    backgroundColor: "#1DA1F2",
+                    backgroundColor: "#007f00",
                   }),
                   "&:hover": {
                     backgroundColor: "#0d8de6",

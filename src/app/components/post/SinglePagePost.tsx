@@ -86,11 +86,10 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         padding: 3,
         marginBottom: 10,
         borderRadius: "8px",
-        backgroundColor: "background.paper",
-        background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
+        background: "linear-gradient(135deg, #ff0000, #ffcccc)",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
         ...theme.applyStyles("dark", {
-          background: "linear-gradient(135deg, #1b1b1b, #222222)",
+          background: "linear-gradient(135deg, #800000, #660000)",
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
         }),
       }}
@@ -120,7 +119,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         <Typography
           variant="subtitle2"
           sx={{
-            color: theme.palette.text.secondary,
+            color: "#ffffff",
             alignSelf: "flex-end",
             "&:hover": {
               textDecoration: "underline",
@@ -134,7 +133,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
       <Typography
         variant="h6"
         sx={{
-          color: theme.palette.text.primary,
+          color: "#ffffff",
           fontWeight: "bold",
           marginBottom: 2,
           whiteSpace: "pre-line",

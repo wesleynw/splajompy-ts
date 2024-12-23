@@ -28,10 +28,8 @@ export default function NotificationView({
 
   // 2 seconds after loading this component, mark all notifications as read
   useEffect(() => {
-    // Only run this code in the client, 2 seconds after the component mounts
     const timer = setTimeout(async () => {
       try {
-        // Make a client-side request to an API endpoint that marks notifications as viewed
         await setNotificationAsViewedForUser(session.user.user_id);
       } catch (error) {
         console.error("Failed to mark notifications as viewed:", error);
@@ -86,26 +84,29 @@ export default function NotificationView({
               sx={{
                 padding: 2,
                 borderRadius: "6px",
-                background: "#fff",
-                boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)",
+                background: notification.viewed
+                  ? "linear-gradient(135deg, #ffcccc, #ffeeee)"
+                  : "linear-gradient(135deg, #ff0000, #ffcccc)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 transition: "background-color 0.3s",
                 "&:hover": {
-                  background: "#f7f7f7",
+                  background: notification.viewed ? "#ffe6e6" : "#ff6666",
                 },
                 ...theme.applyStyles("dark", {
-                  background: "#2a2a2a",
-                  boxShadow: "0 1px 4px rgba(0, 0, 0, 0.5)",
+                  background: notification.viewed
+                    ? "linear-gradient(135deg, #800000, #660000)"
+                    : "linear-gradient(135deg, #990000, #770000)",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
                   "&:hover": {
-                    background: "#333",
+                    background: notification.viewed ? "#880000" : "#aa0000",
                   },
                 }),
-                border: notification.viewed ? "none" : "2px solid #fff",
               }}
             >
               <Typography
                 variant="body1"
                 sx={{
-                  color: "#555",
+                  color: "#333",
                   ...theme.applyStyles("dark", { color: "#ddd" }),
                 }}
               >
