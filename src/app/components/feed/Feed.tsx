@@ -17,9 +17,11 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
   const observerRef = useRef<HTMLDivElement | null>(null);
   const {
     data,
+    // error,
     fetchNextPage,
     hasNextPage,
     isFetching,
+    // isFetchingNextPage,
     status,
     updateCachedPost,
     deletePost,
@@ -69,7 +71,6 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
         marginBottom: "60px",
         px: { xs: 2, md: 4 },
         width: "100%",
-        backgroundColor: "#007f00",
       }}
     >
       {data.pages.map((posts) =>

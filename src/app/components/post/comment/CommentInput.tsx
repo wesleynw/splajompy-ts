@@ -48,7 +48,7 @@ export default function CommentInput({
             color: "#9e9e9e",
           },
           ...theme.applyStyles("dark", {
-            backgroundColor: "#007f00",
+            backgroundColor: "#424242",
             "&:hover": {
               backgroundColor: "#ffffff",
               color: "#424242",
