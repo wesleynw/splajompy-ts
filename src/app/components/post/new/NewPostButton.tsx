@@ -1,5 +1,5 @@
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 type Props = {
   isOpen: boolean;
@@ -14,7 +14,7 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
       sx={{
         borderRadius: "30px",
         border: isOpen ? "1px solid #ffffff" : "1px solid #1DA1F2",
-        backgroundColor: isOpen ? "#111111" : "#007f00",
+        backgroundColor: isOpen ? "#111111" : "#1DA1F2",
         color: "white",
         padding: 0,
         zIndex: 9000,
@@ -29,7 +29,7 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
         }}
         disableRipple
       >
-        <AcUnitIcon
+        <AddCircleIcon
           sx={{
             transform: isOpen ? "rotate(-135deg)" : "rotate(0deg)",
             transition: "transform 0.3s ease-in-out",

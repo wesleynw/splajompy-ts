@@ -36,7 +36,7 @@ export function TextInput({
             borderColor: "#357abf",
           },
           ...theme.applyStyles("dark", {
-            backgroundColor: "#800000",
+            backgroundColor: "#2b2b2b",
             color: "#e0e0e0",
           }),
         },

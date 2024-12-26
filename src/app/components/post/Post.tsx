@@ -82,17 +82,17 @@ export default function Post({
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
-        background: "linear-gradient(135deg, #ff0000, #ffcccc)",
+        background: "linear-gradient(135deg, #ffffff, #f0f0f0)",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
         "&:hover": {
-          background: "linear-gradient(135deg, #ff3333, #ff9999)",
+          background: "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
           cursor: "pointer",
         },
         ...theme.applyStyles("dark", {
-          background: "linear-gradient(135deg, #800000, #660000)",
+          background: "linear-gradient(135deg, #1b1b1b, #222222)",
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
           "&:hover": {
-            background: "linear-gradient(135deg, #990000, #770000)",
+            background: "linear-gradient(135deg, #222222, #2a2a2a)",
           },
         }),
       }}
@@ -102,8 +102,8 @@ export default function Post({
         <Typography
           variant="subtitle2"
           sx={{
-            color: "#990000",
-            ...theme.applyStyles("dark", { color: "#ff9999" }),
+            color: "#777777",
+            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
             "&:hover": {
               textDecoration: "underline",
             },
@@ -125,10 +125,10 @@ export default function Post({
       {content && (
         <Box
           sx={{
-            color: "#990000",
+            color: "#333333",
             fontWeight: "bold",
             marginBottom: 3,
-            ...theme.applyStyles("dark", { color: "#ff9999" }),
+            ...theme.applyStyles("dark", { color: "#ffffff" }),
             whiteSpace: "pre-line",
             overflowWrap: "break-word",
             "& a": {
