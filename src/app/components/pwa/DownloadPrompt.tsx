@@ -44,6 +44,7 @@ export default function DownloadPrompt() {
           padding: 0,
           zIndex: 9000,
           transition: "background-color 0.3s ease-in-out",
+          marginLeft: "20px",
         }}
       >
         <IconButton

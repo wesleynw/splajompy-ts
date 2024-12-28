@@ -17,7 +17,7 @@ export default function BackButton() {
   const username = session?.user?.username ?? "";
 
   const needsBackButton = !new RegExp(
-    `^(/|/all|/notifications|/profile/${username})$`
+    `^(/|/all|/notifications|/user/${username})$`
   ).test(path);
 
   if (!needsBackButton) {

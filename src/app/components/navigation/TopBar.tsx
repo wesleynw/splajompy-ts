@@ -44,7 +44,7 @@ export default function TopBar() {
           <Box
             sx={{
               position: "fixed",
-              left: "20px",
+              left: "0px",
             }}
           >
             <BackButton />

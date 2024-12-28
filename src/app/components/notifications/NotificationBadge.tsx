@@ -26,7 +26,11 @@ export default function NotificationBadge({
 
   return (
     <Badge
-      badgeContent={data}
+      variant="dot"
+      badgeContent=""
+      color="info"
+      overlap="circular"
+      invisible={data == 0}
       sx={{
         "& .MuiBadge-badge": {
           position: "absolute",
