@@ -102,6 +102,7 @@ export default function Post({
         <Typography
           variant="subtitle2"
           sx={{
+            fontWeight: 800,
             color: "#777777",
             ...theme.applyStyles("dark", { color: "#b0b0b0" }),
             "&:hover": {
