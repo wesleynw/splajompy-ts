@@ -2,22 +2,21 @@
 
 import theme from "@/theme";
 import { Box, Typography, Stack } from "@mui/material";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import Link from "next/link";
+import Notification from "./Notification";
 import { useNotifications } from "@/app/data/notifications";
 import Spinner from "../loading/Spinner";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { useEffect } from "react";
 
 export default function NotificationView() {
-  const userTimezone = dayjs.tz.guess();
+  const { isPending, notifications, markRead } = useNotifications();
 
-  const { isPending, notifications } = useNotifications();
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      await markRead();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [markRead]);
 
   if (isPending) {
     return <Spinner />;
@@ -59,52 +58,10 @@ export default function NotificationView() {
     >
       <Stack spacing={2} sx={{ cursor: "pointer" }}>
         {notifications.map((notification) => (
-          <Link
+          <Notification
             key={notification.notification_id}
-            href={notification.link ?? ""}
-          >
-            <Box
-              key={notification.notification_id}
-              sx={{
-                padding: 2,
-                borderRadius: "6px",
-                background: "#fff",
-                boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)",
-                transition: "background-color 0.3s",
-                "&:hover": {
-                  background: "#f7f7f7",
-                },
-                ...theme.applyStyles("dark", {
-                  background: "#2a2a2a",
-                  boxShadow: "0 1px 4px rgba(0, 0, 0, 0.5)",
-                  "&:hover": {
-                    background: "#333",
-                  },
-                }),
-                border: notification.viewed ? "none" : "2px solid #fff",
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#555",
-                  ...theme.applyStyles("dark", { color: "#ddd" }),
-                }}
-              >
-                {notification.message}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  marginTop: 1,
-                  color: "#888",
-                  ...theme.applyStyles("dark", { color: "#bbb" }),
-                }}
-              >
-                {dayjs.utc(notification.created_at).tz(userTimezone).fromNow()}
-              </Typography>
-            </Box>
-          </Link>
+            notification={notification}
+          />
         ))}
       </Stack>
     </Box>

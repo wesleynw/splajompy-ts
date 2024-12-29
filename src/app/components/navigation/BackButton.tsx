@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, useMediaQuery, useTheme } from "@mui/material";
+import { Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSession } from "next-auth/react";
@@ -24,8 +24,6 @@ export default function BackButton() {
     return null;
   }
 
-  console.log("path: ", path, ", needsBackButton: ", needsBackButton);
-
   return (
     <Button
       disableRipple
@@ -42,7 +40,15 @@ export default function BackButton() {
       }}
     >
       <ArrowBackIcon />
-      {isDesktop && "Back"}
+      {isDesktop && (
+        <Typography
+          fontWeight={800}
+          fontSize="medium"
+          sx={{ marginLeft: "5px" }}
+        >
+          Back
+        </Typography>
+      )}
     </Button>
   );
 }
