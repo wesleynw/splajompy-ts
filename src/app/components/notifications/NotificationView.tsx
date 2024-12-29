@@ -12,12 +12,9 @@ export default function NotificationView() {
   const [recentlyViewed, setRecentlyViewed] = useState(new Set());
 
   const markReadRef = useRef(markRead);
-  const hasMarkedRead = useRef(false);
 
   useEffect(() => {
-    if (hasMarkedRead.current || isPending || !notifications) return;
-
-    hasMarkedRead.current = true;
+    if (isPending || !notifications) return;
 
     const markNotificationsAsRead = async () => {
       const newRecentlyViewed = new Set(
