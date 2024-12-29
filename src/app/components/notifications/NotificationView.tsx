@@ -14,6 +14,7 @@ export default function NotificationView() {
   const markReadRef = useRef(markRead);
 
   useEffect(() => {
+    console.log("use effecting");
     if (isPending || !notifications) return;
 
     const markNotificationsAsRead = async () => {
@@ -28,7 +29,7 @@ export default function NotificationView() {
     const timer = setTimeout(markNotificationsAsRead, 1000);
 
     return () => clearTimeout(timer);
-  }, [isPending, notifications]);
+  }, [isPending]);
 
   if (isPending) {
     return <Spinner />;
