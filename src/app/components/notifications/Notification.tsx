@@ -14,9 +14,13 @@ dayjs.extend(timezone);
 
 type Props = {
   notification: SelectNotification;
+  recentlyViewed: boolean;
 };
 
-export default function Notification({ notification }: Readonly<Props>) {
+export default function Notification({
+  notification,
+  recentlyViewed,
+}: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const theme = useTheme();
 
@@ -34,7 +38,9 @@ export default function Notification({ notification }: Readonly<Props>) {
           backgroundColor: "#2a2a2a",
           boxShadow: "0 2px 6px rgba(0, 0, 0, 0.5)",
           transition: "all 0.3s ease",
-          border: notification.viewed
+          border: recentlyViewed
+            ? `2px solid #7F7F7F`
+            : notification.viewed
             ? "2px solid transparent"
             : `2px solid ${theme.palette.primary.main}`,
           "&:hover": {

@@ -5,18 +5,33 @@ import { Box, Typography, Stack } from "@mui/material";
 import Notification from "./Notification";
 import { useNotifications } from "@/app/data/notifications";
 import Spinner from "../loading/Spinner";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function NotificationView() {
   const { isPending, notifications, markRead } = useNotifications();
+  const [recentlyViewed, setRecentlyViewed] = useState(new Set());
+
+  const markReadRef = useRef(markRead);
+  const hasMarkedRead = useRef(false);
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      await markRead();
-    }, 1000);
+    if (hasMarkedRead.current || isPending || !notifications) return;
+
+    hasMarkedRead.current = true;
+
+    const markNotificationsAsRead = async () => {
+      const newRecentlyViewed = new Set(
+        notifications?.filter((n) => !n.viewed).map((n) => n.notification_id)
+      );
+      console.log("new recently viewed: ", newRecentlyViewed);
+      setRecentlyViewed(newRecentlyViewed);
+      await markReadRef.current();
+    };
+
+    const timer = setTimeout(markNotificationsAsRead, 1000);
 
     return () => clearTimeout(timer);
-  }, [markRead]);
+  }, [isPending, notifications]);
 
   if (isPending) {
     return <Spinner />;
@@ -61,6 +76,7 @@ export default function NotificationView() {
           <Notification
             key={notification.notification_id}
             notification={notification}
+            recentlyViewed={recentlyViewed.has(notification.notification_id)}
           />
         ))}
       </Stack>
