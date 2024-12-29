@@ -65,9 +65,11 @@ export default function NotificationView() {
     <Box
       sx={{
         maxWidth: 600,
-        margin: "20px auto",
+        margin: "auto",
+        marginTop: "10px",
         marginBottom: "100px",
-        padding: 3,
+        px: { xs: 2, md: 4 },
+        boxSizing: "border-box",
         borderRadius: "8px",
       }}
     >

@@ -148,7 +148,7 @@ export default function Post({
       )}
 
       {imagePath && imageHeight && imageWidth && (
-        <>
+        <Box>
           <ResponsiveImage
             imagePath={imagePath}
             width={imageWidth}
@@ -162,7 +162,7 @@ export default function Post({
             open={open}
             handleClose={handleClose}
           />
-        </>
+        </Box>
       )}
 
       <Stack direction="row" alignItems="center">

@@ -2,13 +2,15 @@ import theme from "@/theme";
 import { Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
 
-interface CommentInputProps {
+interface Props {
   onAddComment: (text: string) => void;
+  poster: string;
 }
 
 export default function CommentInput({
   onAddComment,
-}: Readonly<CommentInputProps>) {
+  poster,
+}: Readonly<Props>) {
   const [comment, setComment] = useState("");
 
   const handleAddComment = () => {
@@ -23,7 +25,7 @@ export default function CommentInput({
       <TextField
         fullWidth
         variant="outlined"
-        placeholder="Add a comment..."
+        placeholder={`Was ${poster} cooking here?`}
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         sx={{ marginBottom: 2 }}

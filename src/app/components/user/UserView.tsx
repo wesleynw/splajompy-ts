@@ -44,7 +44,6 @@ export default function UserView({ session, user }: Readonly<Props>) {
             direction="row"
             alignItems="left"
             justifyContent="space-between"
-            marginTop={1}
           >
             <Typography
               variant="h6"

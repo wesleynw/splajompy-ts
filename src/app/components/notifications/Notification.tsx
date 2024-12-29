@@ -35,7 +35,7 @@ export default function Notification({
         sx={{
           padding: 2,
           borderRadius: "12px",
-          backgroundColor: "#2a2a2a",
+          background: "linear-gradient(135deg, #1b1b1b, #222222)",
           boxShadow: "0 2px 6px rgba(0, 0, 0, 0.5)",
           transition: "all 0.3s ease",
           border: recentlyViewed

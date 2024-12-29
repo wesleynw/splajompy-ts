@@ -37,6 +37,7 @@ export default function BackButton() {
       sx={{
         color: "#777777",
         ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+        marginLeft: `${isDesktop ? "20px" : "0px"}`,
       }}
     >
       <ArrowBackIcon />

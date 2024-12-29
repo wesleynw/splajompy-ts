@@ -29,12 +29,19 @@ export default function ResponsiveImage({
         e.preventDefault();
         setOpen(true);
       }}
+      sx={{
+        display: "inline-flex",
+        overflow: "hidden",
+        padding: 0,
+        margin: 0,
+        maxWidth: "100%",
+      }}
     >
       <img
         alt="Image"
         src={src}
         style={{
-          objectFit: isNonStandardSize! ? "cover" : "contain",
+          objectFit: isNonStandardSize ? "cover" : "contain",
           maxHeight: isTall ? "200px" : "510px",
           maxWidth: isTall ? "300px" : "100%",
           minWidth: "50%",
