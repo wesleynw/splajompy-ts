@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useFeed } from "@/app/data/posts";
 import Post from "../post/Post";
-import StandardWrapper from "../loading/StandardWrapper";
+import Spinner from "../loading/Spinner";
 
 type Props = {
   session: Session;
@@ -50,11 +50,7 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
   }, [hasNextPage, fetchNextPage]);
 
   if (status === "pending") {
-    return (
-      <StandardWrapper>
-        <CircularProgress sx={{ width: "100%", margin: "0px auto" }} />
-      </StandardWrapper>
-    );
+    return <Spinner />;
   }
 
   if (status === "error") {

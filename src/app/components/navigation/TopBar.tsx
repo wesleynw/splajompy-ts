@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import NewPostDialog from "../post/new/NewPostDialog";
 import NewPostButton from "../post/new/NewPostButton";
 import DownloadPrompt from "../pwa/DownloadPrompt";
+import BackButton from "./BackButton";
 
 export default function TopBar() {
   const [open, setOpen] = useState(false);
@@ -27,7 +28,8 @@ export default function TopBar() {
           height: "60px",
           zIndex: 1900,
           borderBottom: "0.5px solid rgba(160, 160, 160, 0.3)",
-          backdropFilter: "blur(15px)",
+          backdropFilter: "blur(20px)",
+          backgroundColor: "rgba(0, 0, 0, 0.33)",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
         }}
       >
@@ -42,9 +44,10 @@ export default function TopBar() {
           <Box
             sx={{
               position: "fixed",
-              left: "20px",
+              left: "0px",
             }}
           >
+            <BackButton />
             <Suspense>
               <DownloadPrompt />
             </Suspense>

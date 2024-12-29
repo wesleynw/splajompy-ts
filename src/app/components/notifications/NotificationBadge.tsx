@@ -1,32 +1,27 @@
-import { getUnreadNotificationCountForUser } from "@/app/lib/notifications";
+import { getCurrentUserHasUnreadNotifications } from "@/app/lib/notifications";
 import { Badge } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
 
 export default function NotificationBadge({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const { data: session, status } = useSession();
-  const user_id = session?.user?.user_id;
-
-  const { data } = useQuery({
-    queryKey: ["notifications", user_id],
-    queryFn: () => getUnreadNotificationCountForUser(user_id!),
-    enabled: !!user_id,
+  const { data, status } = useQuery({
+    queryKey: ["has-unread-notifications"],
+    queryFn: getCurrentUserHasUnreadNotifications,
   });
 
-  if (status === "loading") {
-    return <>{children}</>;
-  }
-
-  if (!user_id) {
+  if (status === "pending") {
     return <>{children}</>;
   }
 
   return (
     <Badge
-      badgeContent={data}
+      variant="dot"
+      badgeContent=""
+      color="info"
+      overlap="circular"
+      invisible={!data}
       sx={{
         "& .MuiBadge-badge": {
           position: "absolute",

@@ -3,7 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
-import { Button, useTheme } from "@mui/material";
+import { Button } from "@mui/material";
+import theme from "@/theme";
 
 type Props = {
   user_id: number;
@@ -19,8 +20,6 @@ export default function FollowButton({
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const theme = useTheme();
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
@@ -64,6 +63,8 @@ export default function FollowButton({
     return null;
   }
 
+  console.log(theme.palette.primary);
+
   return (
     <Button
       variant="contained"
@@ -78,11 +79,8 @@ export default function FollowButton({
         fontWeight: "bold",
         fontSize: "0.875rem",
         minWidth: "auto",
-        backgroundColor: "#1DA1F2",
         color: "#ffffff",
-        ...theme.applyStyles("dark", {
-          backgroundColor: "#1DA1F2",
-        }),
+        backgroundColor: theme.palette.secondary.main,
         "&:hover": {
           backgroundColor: "#0d8de6",
         },

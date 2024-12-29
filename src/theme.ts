@@ -8,6 +8,15 @@ const theme = createTheme({
       textTransform: "none",
     },
   },
+  palette: {
+    primary: {
+      main: "#1da1f2",
+      dark: "#0E5079",
+    },
+    secondary: {
+      main: "#4a90e2",
+    },
+  },
   colorSchemes: {
     dark: true,
   },

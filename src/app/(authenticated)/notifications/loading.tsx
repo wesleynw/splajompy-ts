@@ -1,10 +1,5 @@
-import NotificationsPageSkeleton from "@/app/components/loading/NotificationsPageSkeleton";
-import StandardWrapper from "@/app/components/loading/StandardWrapper";
+import Spinner from "@/app/components/loading/Spinner";
 
 export default function Loading() {
-  return (
-    <StandardWrapper>
-      <NotificationsPageSkeleton />
-    </StandardWrapper>
-  );
+  return <Spinner />;
 }

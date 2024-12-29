@@ -12,7 +12,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import BackButton from "../navigation/BackButton";
 import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
@@ -102,7 +101,21 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         width="100%"
         sx={{ marginBottom: 2 }}
       >
-        <BackButton />
+        <Link href={`/user/${post.poster}`}>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 800,
+              color: theme.palette.text.secondary,
+              alignSelf: "flex-end",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            }}
+          >
+            @{post.poster}
+          </Typography>
+        </Link>
         <Stack direction="row">
           <ShareButton />
           {session?.user.user_id === post.user_id ? (
@@ -115,21 +128,6 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
           )}
         </Stack>
       </Stack>
-
-      <Link href={`/user/${post.poster}`}>
-        <Typography
-          variant="subtitle2"
-          sx={{
-            color: theme.palette.text.secondary,
-            alignSelf: "flex-end",
-            "&:hover": {
-              textDecoration: "underline",
-            },
-          }}
-        >
-          @{post.poster}
-        </Typography>
-      </Link>
 
       <Typography
         variant="h6"
@@ -195,7 +193,8 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
 
       <Suspense fallback={<div>Loading...</div>}>
         <CommentList
-          poster={post.user_id}
+          poster={post.poster}
+          poster_id={post.user_id}
           post_id={post.post_id}
           commentCount={post.comment_count}
           setCommentCount={() => {

@@ -102,6 +102,7 @@ export default function Post({
         <Typography
           variant="subtitle2"
           sx={{
+            fontWeight: 800,
             color: "#777777",
             ...theme.applyStyles("dark", { color: "#b0b0b0" }),
             "&:hover": {
@@ -147,7 +148,7 @@ export default function Post({
       )}
 
       {imagePath && imageHeight && imageWidth && (
-        <>
+        <Box>
           <ResponsiveImage
             imagePath={imagePath}
             width={imageWidth}
@@ -161,7 +162,7 @@ export default function Post({
             open={open}
             handleClose={handleClose}
           />
-        </>
+        </Box>
       )}
 
       <Stack direction="row" alignItems="center">

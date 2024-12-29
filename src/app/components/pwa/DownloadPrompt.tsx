@@ -44,6 +44,7 @@ export default function DownloadPrompt() {
           padding: 0,
           zIndex: 9000,
           transition: "background-color 0.3s ease-in-out",
+          marginLeft: "20px",
         }}
       >
         <IconButton
@@ -96,20 +97,12 @@ export default function DownloadPrompt() {
             component="h2"
             gutterBottom
           >
-            Install This App
-          </Typography>
-
-          <Typography id="pwa-install-description" variant="body1" gutterBottom>
-            To install this application on your device:
+            Install Splajompy
           </Typography>
 
           <Typography variant="body2" gutterBottom>
-            <strong>Android</strong>: Open the browser menu and tap &quot;Add to
-            Home Screen&quot;.
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>iOS</strong>: Open the browser share menu and tap &quot;Add
-            to Home Screen&quot;.
+            On your phone, open browser share menu and tap &quot;Add to Home
+            Screen&quot;.
           </Typography>
 
           <Box sx={{ textAlign: "right", mt: 2 }}>
