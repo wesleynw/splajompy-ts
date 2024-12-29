@@ -1,33 +1,56 @@
 "use server";
 
 import { db } from "@/db";
-import { eq, and, desc, count } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { notifications } from "@/db/schema";
+import { auth } from "@/auth";
 
-export async function getUnreadNotificationCountForUser(user_id: number) {
-  const result = await db
-    .select({ count: count() })
-    .from(notifications)
-    .where(
-      and(eq(notifications.user_id, user_id), eq(notifications.viewed, false))
-    );
+export async function getCurrentUserHasUnreadNotifications() {
+  const session = await auth();
 
-  return result[0].count;
-}
+  if (!session?.user) {
+    return false;
+  }
 
-export async function getNotificationsForUser(user_id: number) {
   const result = await db
     .select()
     .from(notifications)
-    .where(eq(notifications.user_id, user_id))
+    .where(
+      and(
+        eq(notifications.user_id, session.user.user_id),
+        eq(notifications.viewed, false)
+      )
+    )
+    .limit(1);
+
+  return result.length > 0;
+}
+
+export async function getNotifications() {
+  const session = await auth();
+
+  if (!session?.user) {
+    return [];
+  }
+
+  const result = await db
+    .select()
+    .from(notifications)
+    .where(eq(notifications.user_id, session.user.user_id))
     .orderBy(desc(notifications.notification_id));
 
   return result;
 }
 
-export async function setNotificationAsViewedForUser(user_id: number) {
+export async function markAllNotificationAsRead() {
+  const session = await auth();
+
+  if (!session?.user) {
+    return;
+  }
+
   await db
     .update(notifications)
     .set({ viewed: true })
-    .where(eq(notifications.user_id, user_id));
+    .where(eq(notifications.user_id, session.user.user_id));
 }
