@@ -166,7 +166,7 @@ export default function Post({
         </Box>
       )}
 
-      {poster == "henry" && (
+      {poster == "hjohn" && (
         <Box
           display="flex"
           flexDirection="column"
