@@ -16,6 +16,7 @@ import { Session } from "next-auth";
 import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 import Linkify from "linkify-react";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -162,6 +163,30 @@ export default function Post({
             open={open}
             handleClose={handleClose}
           />
+        </Box>
+      )}
+
+      {poster == "henry" && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          gap={1}
+          padding={2}
+          border="1px solid white"
+          borderRadius="8px"
+          bgcolor="#f44336"
+        >
+          <Box display="flex">
+            <ErrorOutlineIcon sx={{ marginRight: "10px" }} />
+            <Typography variant="body1" color="white">
+              Independent Fact-Checkers Say This Is False.
+            </Typography>
+          </Box>
+          <Typography variant="subtitle1" textAlign="center">
+            The primary claims in this information are factually and/or
+            grammatically innacurate.
+          </Typography>
         </Box>
       )}
 
