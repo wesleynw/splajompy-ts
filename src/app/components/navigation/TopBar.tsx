@@ -7,8 +7,13 @@ import NewPostDialog from "../post/new/NewPostDialog";
 import NewPostButton from "../post/new/NewPostButton";
 import DownloadPrompt from "../pwa/DownloadPrompt";
 import BackButton from "./BackButton";
+import { User } from "@/db/schema";
 
-export default function TopBar() {
+type Props = {
+  user: User;
+};
+
+export default function TopBar({ user }: Readonly<Props>) {
   const [open, setOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -47,7 +52,7 @@ export default function TopBar() {
               left: "0px",
             }}
           >
-            <BackButton />
+            <BackButton user={user} />
             <Suspense>
               <DownloadPrompt />
             </Suspense>
@@ -62,7 +67,7 @@ export default function TopBar() {
           </Box>
         </Box>
       </Box>
-      <NewPostDialog open={open} toggleOpen={toggleOpen} />
+      <NewPostDialog user={user} open={open} toggleOpen={toggleOpen} />
     </>
   );
 }

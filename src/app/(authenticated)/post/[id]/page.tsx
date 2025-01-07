@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { auth } from "@/auth";
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -12,6 +11,7 @@ import SinglePagePost from "@/app/components/post/SinglePagePost";
 import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
+import { getCurrentSession } from "@/app/auth/session";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -50,8 +50,8 @@ export default async function Page({
 }: Readonly<{
   params: Promise<{ id: number }>;
 }>) {
-  const session = await auth();
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     redirect("/login");
   }
 
@@ -65,7 +65,7 @@ export default async function Page({
         </StandardWrapper>
       }
     >
-      <SinglePagePost post_id={post_id} />
+      <SinglePagePost post_id={post_id} user={user} />
     </Suspense>
   );
 }

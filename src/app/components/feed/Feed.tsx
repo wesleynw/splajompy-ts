@@ -1,27 +1,26 @@
 "use client";
 
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Session } from "next-auth";
 import { useEffect, useRef } from "react";
 import { useFeed } from "@/app/data/posts";
 import Post from "../post/Post";
 import Spinner from "../loading/Spinner";
+import { User } from "@/db/schema";
+import EmptyFeed from "./EmptyFeed";
 
 type Props = {
-  session: Session;
+  user: User;
   page: "home" | "all" | "profile";
   user_id?: number;
 };
 
-export default function Feed({ session, page, user_id }: Readonly<Props>) {
+export default function Feed({ user, page, user_id }: Readonly<Props>) {
   const observerRef = useRef<HTMLDivElement | null>(null);
   const {
     data,
-    // error,
     fetchNextPage,
     hasNextPage,
     isFetching,
-    // isFetchingNextPage,
     status,
     updateCachedPost,
     deletePost,
@@ -61,6 +60,10 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
     return <div>no data</div>;
   }
 
+  if (data.pages.length === 1 && data.pages[0].length === 0) {
+    return <EmptyFeed />;
+  }
+
   return (
     <Box
       sx={{
@@ -75,7 +78,7 @@ export default function Feed({ session, page, user_id }: Readonly<Props>) {
             updatePost={updateCachedPost}
             deletePost={deletePost}
             key={post.post_id}
-            session={session}
+            user={user}
             id={post.post_id}
             date={new Date(post.postdate + "Z")}
             user_id={post.user_id}

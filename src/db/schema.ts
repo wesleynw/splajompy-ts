@@ -20,6 +20,18 @@ export const users = pgTable("users", {
 export type SelectUser = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
+export type User = typeof users.$inferSelect;
+
+export const sessions = pgTable("sessions", {
+  id: text().primaryKey(),
+  user_id: integer()
+    .notNull()
+    .references(() => users.user_id),
+  expiresAt: timestamp({ withTimezone: true, mode: "date" }).notNull(),
+});
+
+export type Session = typeof sessions.$inferSelect;
+
 export const posts = pgTable("posts", {
   post_id: serial().primaryKey().notNull(),
   user_id: integer("user_id")

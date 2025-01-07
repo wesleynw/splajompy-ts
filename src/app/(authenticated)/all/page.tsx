@@ -3,13 +3,12 @@ import { Box } from "@mui/material";
 import { Suspense } from "react";
 import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getCurrentSession } from "@/app/auth/session";
 
 export default async function Home() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     redirect("/login");
   }
 
@@ -30,7 +29,7 @@ export default async function Home() {
           </StandardWrapper>
         }
       >
-        <Feed session={session} page="all" />
+        <Feed user={user} page="all" />
       </Suspense>
     </Box>
   );

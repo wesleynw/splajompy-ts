@@ -8,17 +8,19 @@ import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { getUsername, insertImage, insertPost } from "../../../lib/actions";
-import { useSession } from "next-auth/react";
 import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
+import { User } from "@/db/schema";
 
 type NewPostProps = {
+  user: User;
   onPost: () => void;
   insertPostToCache: (post: PostType) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export default function Page({
+  user,
   onPost,
   insertPostToCache,
   inputRef,
@@ -33,15 +35,8 @@ export default function Page({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { data: session } = useSession();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!session) {
-      setError("You must be logged in to post.");
-      return;
-    }
 
     if (error) {
       return;
@@ -52,6 +47,9 @@ export default function Page({
     const formData = new FormData(ref.current!);
 
     const post = await insertPost(formData, selectedFile !== null);
+    if (!post) {
+      return;
+    }
     let imagePath: string | null = null;
 
     const img = new Image();
@@ -70,7 +68,7 @@ export default function Page({
         });
 
         const presignedUrlData = await getPresignedUrl(
-          session.user.user_id,
+          user.user_id,
           selectedFile.type,
           selectedFile.name
         );
@@ -106,8 +104,7 @@ export default function Page({
 
     const mappedPost = {
       ...post,
-      poster:
-        session.user.username || (await getUsername(session.user.user_id)),
+      poster: user.username || (await getUsername(user.user_id)),
       comment_count: 0,
       imageBlobUrl: imagePath ?? null,
       imageWidth: selectedFile ? img.width : null,

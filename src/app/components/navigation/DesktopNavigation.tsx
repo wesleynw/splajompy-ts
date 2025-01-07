@@ -18,12 +18,12 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { usePathname, useRouter } from "next/navigation";
 import theme from "@/theme";
 import NotificationBadge from "../notifications/NotificationBadge";
-import { useSession } from "next-auth/react";
+import { useUser } from "@/app/providers/UserProvider";
 
 export default function DesktopNavigation() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const user = useUser();
 
   const navItems = [
     {
@@ -47,7 +47,7 @@ export default function DesktopNavigation() {
     },
     {
       label: "Profile",
-      href: `/user/${session?.user?.username}`,
+      href: `/user/${user.username}`,
       icon: <PersonIcon fontSize="large" />,
     },
   ];

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useActionState } from "react";
-import { authenticate } from "@/app/lib/actions";
 import {
   Box,
   Button,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import theme from "@/theme";
+import { authorize } from "@/app/auth/authentication";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -86,8 +86,13 @@ const StyledFormLabel = styled(FormLabel)(() => ({
   marginBottom: "4px",
 }));
 
+const initialState = {
+  errors: {},
+  payload: undefined,
+};
+
 export default function LoginPage() {
-  const [errorMessage, dispatch] = useActionState(authenticate, undefined);
+  const [state, dispatch] = useActionState(authorize, initialState);
 
   return (
     <Box
@@ -113,8 +118,12 @@ export default function LoginPage() {
               name="identifier"
               disableUnderline
               required
+              defaultValue={state.payload?.get("identifier") || ""}
             />
           </StyledFormControl>
+          {state.errors?.identifier && (
+            <p style={{ color: "red" }}>{state.errors.identifier}</p>
+          )}
           <StyledFormControl>
             <StyledFormLabel>Password</StyledFormLabel>
             <StyledInput
@@ -122,22 +131,14 @@ export default function LoginPage() {
               name="password"
               disableUnderline
               required
+              defaultValue={state.payload?.get("password") || ""}
             />
           </StyledFormControl>
-          {errorMessage && (
-            <Box
-              component="p"
-              sx={{
-                color: "#ff0000",
-                textAlign: "center",
-                marginTop: "8px",
-              }}
-            >
-              {errorMessage}
-            </Box>
+          {state.errors?.password && (
+            <p style={{ color: "red" }}>{state.errors.password}</p>
           )}
           <StyledButton variant="contained" type="submit">
-            {"Login"}
+            Login
           </StyledButton>
           <Stack direction="row" spacing={1} sx={{ marginTop: "20px" }}>
             <Typography>New here?</Typography>

@@ -4,8 +4,10 @@ import { Dialog, DialogContent, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, useRef } from "react";
 import NewPost from "./NewPost";
+import { User } from "@/db/schema";
 
 type Props = {
+  user: User;
   open: boolean;
   toggleOpen: () => void;
 };
@@ -17,7 +19,11 @@ const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
 ));
 Transition.displayName = "Transition";
 
-export default function NewPostDialog({ open, toggleOpen }: Readonly<Props>) {
+export default function NewPostDialog({
+  user,
+  open,
+  toggleOpen,
+}: Readonly<Props>) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -57,6 +63,7 @@ export default function NewPostDialog({ open, toggleOpen }: Readonly<Props>) {
         }}
       >
         <NewPost
+          user={user}
           onPost={toggleOpen}
           insertPostToCache={() => console.log("a")}
           inputRef={inputRef}

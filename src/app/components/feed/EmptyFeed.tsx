@@ -2,11 +2,7 @@ import theme from "@/theme";
 import { Box, Typography, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-type Props = {
-  loading: boolean;
-};
-
-export default function EmptyFeed({ loading }: Readonly<Props>) {
+export default function EmptyFeed() {
   const router = useRouter();
   return (
     <Box
@@ -30,7 +26,6 @@ export default function EmptyFeed({ loading }: Readonly<Props>) {
         onClick={() => router.push("/all")}
         variant="contained"
         size="medium"
-        disabled={loading}
         sx={{
           textTransform: "none",
           borderRadius: "20px",

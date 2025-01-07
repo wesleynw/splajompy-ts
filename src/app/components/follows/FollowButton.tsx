@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
 import { Button } from "@mui/material";
@@ -16,24 +15,20 @@ export default function FollowButton({
   show_unfollow,
 }: Readonly<Props>) {
   const [hasFollowed, setHasFollowed] = useState(false);
-  const { data: session } = useSession();
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
-      if (session) {
-        const result = await isFollowingUser(user_id);
-        setIsFollowing(result);
-        setIsLoaded(true);
-      }
+      const result = await isFollowingUser(user_id);
+      setIsFollowing(result);
+      setIsLoaded(true);
     };
     checkFollowingStatus();
-  }, [session, user_id]);
+  }, [user_id]);
 
   if (
-    !session ||
     (isLoaded && isFollowing === null) ||
     (!show_unfollow && isFollowing && !hasFollowed)
   ) {
@@ -62,8 +57,6 @@ export default function FollowButton({
   if (!isLoaded) {
     return null;
   }
-
-  console.log(theme.palette.primary);
 
   return (
     <Button

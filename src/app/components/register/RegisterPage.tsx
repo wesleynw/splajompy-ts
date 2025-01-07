@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useActionState } from "react";
-import { register } from "@/app/lib/actions";
 import {
   Box,
   Button,
@@ -16,6 +15,7 @@ import {
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import theme from "@/theme";
+import { register } from "@/app/auth/register";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -88,8 +88,17 @@ const StyledFormLabel = styled(FormLabel)(() => ({
   marginBottom: "4px",
 }));
 
+const initialState = {
+  errors: {
+    username: "",
+    email: "",
+    password: "",
+  },
+  payload: undefined,
+};
+
 export default function RegisterPage() {
-  const [errorMessage, dispatch] = useActionState(register, undefined);
+  const [state, dispatch] = useActionState(register, initialState);
 
   return (
     <Box
@@ -116,29 +125,10 @@ export default function RegisterPage() {
               placeholder="Username"
               disableUnderline
               required
+              defaultValue={state.payload?.get("username") || ""}
             />
           </StyledFormControl>
-          <StyledFormControl>
-            <StyledFormLabel>Email</StyledFormLabel>
-            <StyledInput
-              type="email"
-              name="email"
-              placeholder="Email"
-              disableUnderline
-              required
-            />
-          </StyledFormControl>
-          <StyledFormControl>
-            <StyledFormLabel>Password</StyledFormLabel>
-            <StyledInput
-              type="password"
-              name="password"
-              placeholder="Password"
-              disableUnderline
-              required
-            />
-          </StyledFormControl>
-          {errorMessage && (
+          {state.errors?.username && (
             <Box
               component="p"
               sx={{
@@ -147,7 +137,53 @@ export default function RegisterPage() {
                 marginTop: "8px",
               }}
             >
-              {errorMessage}
+              {state.errors.username}
+            </Box>
+          )}
+          <StyledFormControl>
+            <StyledFormLabel>Email</StyledFormLabel>
+            <StyledInput
+              type="email"
+              name="email"
+              placeholder="Email"
+              disableUnderline
+              required
+              defaultValue={state.payload?.get("email") || ""}
+            />
+          </StyledFormControl>
+          {state.errors?.email && (
+            <Box
+              component="p"
+              sx={{
+                color: "#ff0000",
+                textAlign: "center",
+                marginTop: "8px",
+              }}
+            >
+              {state.errors.email}
+            </Box>
+          )}
+          <StyledFormControl>
+            <StyledFormLabel>Password</StyledFormLabel>
+            <StyledInput
+              type="password"
+              name="password"
+              placeholder="Password"
+              disableUnderline
+              required
+              defaultValue={state.payload?.get("password") || ""}
+            />
+          </StyledFormControl>
+          {state.errors?.password && (
+            <Box
+              component="p"
+              sx={{
+                color: "#ff0000",
+                textAlign: "center",
+                marginTop: "8px",
+              }}
+            >
+              {state.errors.password}
             </Box>
           )}
           <RegisterButton />

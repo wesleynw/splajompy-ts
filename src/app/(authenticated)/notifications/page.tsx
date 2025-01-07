@@ -1,12 +1,11 @@
 import React from "react";
-import { auth } from "@/auth";
 import NotificationsView from "@/app/components/notifications/NotificationView";
 import { redirect } from "next/navigation";
+import { getCurrentSession } from "@/app/auth/session";
 
 export default async function Notifications() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     redirect("/login");
   }
 

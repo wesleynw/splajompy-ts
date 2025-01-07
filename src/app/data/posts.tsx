@@ -81,7 +81,6 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     queryClient.setQueryData(["post", updatedPost.post_id], updatedPost);
   };
 
-  // Insert a new post at the beginning of the first page
   const insertPost = (newPost: PostType) => {
     queryClient.setQueryData<{ pages: PostType[][] }>(
       ["feed", page, user_id],
