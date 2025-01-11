@@ -6,7 +6,6 @@ import {
   Button,
   CircularProgress,
   FormControl,
-  FormLabel,
   Input,
   Stack,
   Typography,
@@ -84,10 +83,6 @@ const StyledFormControl = styled(FormControl)(() => ({
   padding: "0px",
 }));
 
-const StyledFormLabel = styled(FormLabel)(() => ({
-  marginBottom: "4px",
-}));
-
 const initialState = {
   errors: {
     username: "",
@@ -106,7 +101,7 @@ export default function RegisterPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "calc(100vh - 60px)",
+        height: "100vh",
         width: "100vw",
         overflow: "hidden",
         position: "relative",
@@ -117,8 +112,10 @@ export default function RegisterPage() {
     >
       <form action={dispatch}>
         <FormContainer>
+          <Typography variant="h5" fontWeight={800} marginBottom="30px">
+            Register
+          </Typography>
           <StyledFormControl>
-            <StyledFormLabel>Username</StyledFormLabel>
             <StyledInput
               type="text"
               name="username"
@@ -141,7 +138,6 @@ export default function RegisterPage() {
             </Box>
           )}
           <StyledFormControl>
-            <StyledFormLabel>Email</StyledFormLabel>
             <StyledInput
               type="email"
               name="email"
@@ -164,7 +160,6 @@ export default function RegisterPage() {
             </Box>
           )}
           <StyledFormControl>
-            <StyledFormLabel>Password</StyledFormLabel>
             <StyledInput
               type="password"
               name="password"
