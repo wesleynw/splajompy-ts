@@ -35,6 +35,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Features
+
+- My own auth system, which includes OTP logins.
+
 ## Playright
 
 To run Playwright tests:
