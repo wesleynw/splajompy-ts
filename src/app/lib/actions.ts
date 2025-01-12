@@ -6,63 +6,6 @@ import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "../auth/session";
 
-// export async function authenticate(_currentState: unknown, formData: FormData) {
-//   try {
-//     await signIn("credentials", formData);
-//   } catch (err) {
-//     if (err instanceof CredentialsSignin) {
-//       if (err.type === "CredentialsSignin") {
-//         return "Invalid credentials";
-//       } else {
-//         return "Something went wrong.";
-//       }
-//     }
-//   }
-//   revalidatePath("/");
-//   redirect("/");
-// }
-
-// export async function register(_currentState: unknown, formData: FormData) {
-//   const username = formData.get("username")?.toString() ?? "";
-//   const email = formData.get("email")?.toString() ?? "";
-//   const password = formData.get("password")?.toString() ?? "";
-
-//   try {
-//     const parsedData = registerSchema.parse({ username, email, password });
-
-//     const existingUser = await db
-//       .select()
-//       .from(users)
-//       .where(or(eq(users.email, email), eq(users.username, username)))
-//       .limit(1);
-
-//     if (existingUser.length > 0) {
-//       return "A user with this email or username already exists. Please use a different email.";
-//     }
-//     const hashedPassword = await bcrypt.hash(parsedData.password, 10);
-
-//     await db.insert(users).values({
-//       email: parsedData.email,
-//       password: hashedPassword,
-//       username: parsedData.username,
-//     });
-
-// await signIn("credentials", {
-//   redirect: false,
-//   identifier: parsedData.email,
-//   password: parsedData.password,
-// });
-//   } catch (error) {
-//     if (error instanceof zod.ZodError) {
-//       return error.errors.map((e) => e.message).join(", ");
-//     }
-
-//     return "An error occurred while registering. Please try again.";
-//   }
-
-//   redirect("/");
-// }
-
 export async function insertImage(
   post_id: number,
   imageBlobUrl: string,

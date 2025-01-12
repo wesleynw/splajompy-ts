@@ -32,6 +32,16 @@ export const sessions = pgTable("sessions", {
 
 export type Session = typeof sessions.$inferSelect;
 
+export const verificationCodes = pgTable("verificationCodes", {
+  id: serial().primaryKey().notNull(),
+  code: integer().notNull(),
+  user_id: integer()
+    .unique()
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  expiresAt: timestamp({ mode: "date" }).notNull(),
+});
+
 export const posts = pgTable("posts", {
   post_id: serial().primaryKey().notNull(),
   user_id: integer("user_id")
