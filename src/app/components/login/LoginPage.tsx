@@ -200,7 +200,9 @@ export default function LoginPage() {
                 required
                 defaultValue={otpState?.payload?.get("code") || ""}
                 sx={{
-                  letterSpacing: "40px",
+                  margin: "auto",
+                  width: "50%",
+                  letterSpacing: "2ch",
                 }}
               />
             </StyledFormControl>
