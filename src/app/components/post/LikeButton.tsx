@@ -60,6 +60,7 @@ export default function LikeButton({
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
       <IconButton
+        disableRipple
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

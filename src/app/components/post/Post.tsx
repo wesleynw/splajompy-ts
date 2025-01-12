@@ -100,8 +100,8 @@ export default function Post({
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography
-          variant="subtitle2"
           sx={{
+            fontSize: "11pt",
             fontWeight: 800,
             color: "#777777",
             ...theme.applyStyles("dark", { color: "#b0b0b0" }),
