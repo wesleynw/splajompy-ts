@@ -3,25 +3,24 @@
 import React, { useActionState } from "react";
 import {
   Box,
-  Button,
   CircularProgress,
-  FormControl,
-  Input,
   Stack,
   Typography,
   styled,
 } from "@mui/material";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import theme from "@/theme";
 import { register } from "@/app/auth/register";
+import { StyledButton } from "../forms/button";
+import { StyledInput } from "../forms/input";
+import { StyledFormControl } from "../forms/formControl";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "100%",
-  maxWidth: 600,
+  maxWidth: "400px",
   padding: "20px",
   margin: "10px auto",
   borderRadius: "8px",
@@ -31,56 +30,6 @@ const FormContainer = styled(Box)(({ theme }) => ({
     background: "linear-gradient(135deg, #1b1b1b, #222222)",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
   }),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-  width: "320px",
-  fontSize: "0.875rem",
-  fontWeight: 400,
-  padding: "8px 12px",
-  margin: "8px 0px",
-  borderRadius: "8px",
-  color: theme.palette.grey[900],
-  background: "#fff",
-  border: `1px solid ${theme.palette.grey[200]}`,
-  boxShadow: `0 2px 2px ${theme.palette.grey[50]}`,
-  "&:hover": {
-    borderColor: theme.palette.primary.main,
-  },
-  "&:focus": {
-    outline: 0,
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 3px ${theme.palette.primary.light}`,
-  },
-  ...theme.applyStyles("dark", {
-    color: theme.palette.grey[300],
-    background: theme.palette.grey[900],
-    border: `1px solid ${theme.palette.grey[700]}`,
-    boxShadow: `0 2px 2px ${theme.palette.grey[900]}`,
-    "&:focus": {
-      boxShadow: `0 0 0 3px ${theme.palette.primary.dark}`,
-    },
-  }),
-}));
-
-const StyledButton = styled(Button)(() => ({
-  textTransform: "none",
-  borderRadius: "10px",
-  padding: "8px 16px",
-  fontWeight: "bold",
-  fontSize: "0.875rem",
-  backgroundColor: "#1DA1F2",
-  color: "#ffffff",
-  marginTop: "20px",
-  width: "90%",
-  "&:hover": {
-    backgroundColor: "#0d8de6",
-  },
-}));
-
-const StyledFormControl = styled(FormControl)(() => ({
-  margin: "0px",
-  padding: "0px",
 }));
 
 const initialState = {
@@ -106,11 +55,10 @@ export default function RegisterPage() {
         overflow: "hidden",
         position: "relative",
         paddingBottom: "90px",
-        backgroundColor: "#f5f5f5",
-        ...theme.applyStyles("dark", { backgroundColor: "#121212" }),
+        backgroundColor: "#121212",
       }}
     >
-      <form action={dispatch}>
+      <form action={dispatch} style={{ width: "100%" }}>
         <FormContainer>
           <Typography variant="h5" fontWeight={800} marginBottom="30px">
             Register

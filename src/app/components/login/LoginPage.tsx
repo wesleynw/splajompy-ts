@@ -3,16 +3,16 @@
 import React, { useActionState, useState } from "react";
 import {
   Box,
-  Button,
-  FormControl,
-  Input,
+  CircularProgress,
   Stack,
   styled,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import theme from "@/theme";
 import { authorize, verifyPasswordlessCode } from "@/app/auth/authentication";
+import { StyledButton } from "../forms/button";
+import { StyledInput } from "../forms/input";
+import { StyledFormControl } from "../forms/formControl";
 
 const FormContainer = styled(Box)(() => ({
   display: "flex",
@@ -27,65 +27,14 @@ const FormContainer = styled(Box)(() => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
-  width: "100%",
-  fontSize: "0.875rem",
-  fontWeight: 400,
-  padding: "8px 12px",
-  margin: "8px 0px",
-  borderRadius: "8px",
-  color: theme.palette.grey[900],
-  background: "#fff",
-  border: `1px solid ${theme.palette.grey[200]}`,
-  boxShadow: `0 2px 2px ${theme.palette.grey[50]}`,
-  "&:hover": {
-    borderColor: theme.palette.primary.main,
-  },
-  "&:focus": {
-    outline: 0,
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 3px ${theme.palette.primary.light}`,
-  },
-  ...theme.applyStyles("dark", {
-    color: theme.palette.grey[300],
-    background: theme.palette.grey[900],
-    border: `1px solid ${theme.palette.grey[700]}`,
-    boxShadow: `0 2px 2px ${theme.palette.grey[900]}`,
-    "&:focus": {
-      boxShadow: `0 0 0 3px ${theme.palette.primary.dark}`,
-    },
-  }),
-}));
-
-const StyledButton = styled(Button)(() => ({
-  textTransform: "none",
-  borderRadius: "10px",
-  padding: "8px 16px",
-  fontWeight: "bold",
-  fontSize: "0.875rem",
-  backgroundColor: "#1DA1F2",
-  color: "#ffffff",
-  marginTop: "20px",
-  width: "100%",
-  "&:hover": {
-    backgroundColor: "#0d8de6",
-  },
-}));
-
-const StyledFormControl = styled(FormControl)(() => ({
-  margin: "0px",
-  padding: "0px",
-  width: "100%",
-}));
-
 const initialState = {
   errors: {},
   payload: undefined,
 };
 
 export default function LoginPage() {
-  const [state, dispatch] = useActionState(authorize, initialState);
-  const [otpState, otpDispatch] = useActionState(
+  const [state, dispatch, isPending] = useActionState(authorize, initialState);
+  const [otpState, otpDispatch, isOtpPending] = useActionState(
     verifyPasswordlessCode,
     undefined
   );
@@ -103,8 +52,7 @@ export default function LoginPage() {
         overflow: "hidden",
         position: "relative",
         paddingBottom: "90px",
-        backgroundColor: "#f5f5f5",
-        ...theme.applyStyles("dark", { backgroundColor: "#121212" }),
+        backgroundColor: "#121212",
       }}
     >
       {!state.useOtp && (
@@ -159,8 +107,33 @@ export default function LoginPage() {
                 {isUsingPassword ? "username or email" : "password"}
               </Typography>
             </Box>
-            <StyledButton variant="contained" type="submit">
-              Continue
+            <StyledButton
+              variant="contained"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <CircularProgress size="1.5rem" sx={{ color: "inherit" }} />
+                </Box>
+              )}
+              <Typography
+                variant="subtitle2"
+                style={{ visibility: isPending ? "hidden" : "visible" }}
+              >
+                Continue
+              </Typography>
             </StyledButton>
             <Stack direction="row" spacing={1} sx={{ marginTop: "20px" }}>
               <Typography fontWeight={500}>New here?</Typography>
@@ -223,7 +196,28 @@ export default function LoginPage() {
             )}
 
             <StyledButton variant="contained" type="submit">
-              Continue
+              {isOtpPending && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <CircularProgress size="1.5rem" sx={{ color: "inherit" }} />
+                </Box>
+              )}
+              <Typography
+                variant="subtitle2"
+                style={{ visibility: isOtpPending ? "hidden" : "visible" }}
+              >
+                Continue
+              </Typography>
             </StyledButton>
             {/* <Box onClick={() => router.replace("/login")}>
               <Typography
