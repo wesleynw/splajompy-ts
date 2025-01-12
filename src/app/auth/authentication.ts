@@ -159,6 +159,10 @@ export async function verifyPasswordlessCode(
     };
   }
 
+  await db
+    .delete(verificationCodes)
+    .where(eq(verificationCodes.user_id, user.user_id));
+
   const token = await generateSessionToken();
   const session = await createSession(token, user.user_id);
   await setSessionTokenCookie(token, session.expiresAt);
