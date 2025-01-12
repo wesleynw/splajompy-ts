@@ -16,7 +16,6 @@ import ResponsiveImage from "./images/ResponsiveImage";
 import ImageModal from "./images/ImageModal";
 import PostDropdown from "./PostDropdown";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
@@ -25,6 +24,7 @@ import StandardWrapper from "../loading/StandardWrapper";
 import { useSinglePost } from "@/app/data/SinglePost";
 import ShareButton from "./ShareButton";
 import Linkify from "linkify-react";
+import { User } from "@/db/schema";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -32,13 +32,13 @@ dayjs.extend(timezone);
 
 type Props = {
   post_id: number;
+  user: User;
 };
 
-export default function SinglePagePost({ post_id }: Readonly<Props>) {
+export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
   const { isPending, post, updatePost, deletePost } = useSinglePost(post_id);
-  const { data: session } = useSession();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
@@ -118,7 +118,7 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
         </Link>
         <Stack direction="row">
           <ShareButton />
-          {session?.user.user_id === post.user_id ? (
+          {user.user_id === post.user_id ? (
             <PostDropdown
               post_id={post.post_id}
               deletePostFromCache={handleDelete}
@@ -179,12 +179,12 @@ export default function SinglePagePost({ post_id }: Readonly<Props>) {
           {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
         </Typography>
 
-        {session?.user.user_id && (
+        {!!user.user_id && (
           <LikeButton
             post_id={post.post_id}
             poster_id={post.user_id}
-            user_id={session?.user.user_id}
-            username={session?.user.username}
+            user_id={user.user_id}
+            username={user.username}
             liked={post.liked}
             updatePost={updatePost}
           />

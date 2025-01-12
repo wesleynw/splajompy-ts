@@ -47,9 +47,7 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <ReactQueryProvider>
               <InitColorSchemeScript attribute="class" />
-              <Box component="main" sx={{ paddingTop: "60px" }}>
-                {children}
-              </Box>
+              <Box component="main">{children}</Box>
             </ReactQueryProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

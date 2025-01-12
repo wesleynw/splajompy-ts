@@ -7,12 +7,12 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
-import { useSession } from "next-auth/react";
+import { useUser } from "@/app/providers/UserProvider";
 
 export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const user = useUser();
 
   const is_standalone =
     typeof window !== "undefined" &&
@@ -77,11 +77,9 @@ export default function MobileNavigation() {
           }}
         />
         <BottomNavigationAction
-          value={`/user/${session?.user?.username}`}
+          value={`/user/${user.username}`}
           icon={<PersonIcon />}
-          onClick={(event) =>
-            handleNavigation(event, `/user/${session?.user?.username}`)
-          }
+          onClick={(event) => handleNavigation(event, `/user/${user.username}`)}
           disableRipple
           sx={{
             paddingTop: "15px",

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Linkify from "linkify-react";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,6 +18,7 @@ type Props = {
 
 export default function Comment({ comments, users }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
+  const options = { defaultProtocol: "https", target: "_blank" };
 
   return (
     <Box
@@ -58,7 +60,27 @@ export default function Comment({ comments, users }: Readonly<Props>) {
           ...theme.applyStyles("dark", { color: "#ccc" }),
         }}
       >
-        {comments.text}
+        <Box
+          sx={{
+            color: "#333333",
+            fontWeight: "bold",
+            marginBottom: 3,
+            ...theme.applyStyles("dark", { color: "#ffffff" }),
+            whiteSpace: "pre-line",
+            overflowWrap: "break-word",
+            "& a": {
+              color: "lightblue",
+              textDecoration: "underline",
+            },
+            "& a:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
+          <Box>
+            <Linkify options={options}>{comments.text}</Linkify>
+          </Box>
+        </Box>
       </Typography>
       <Typography
         variant="caption"

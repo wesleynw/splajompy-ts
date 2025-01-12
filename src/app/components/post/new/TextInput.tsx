@@ -21,7 +21,7 @@ export function TextInput({
       onChange={onChange}
       name="text"
       variant="outlined"
-      placeholder="What would your grandmother say..."
+      placeholder="What do you wish you could tell the world?"
       fullWidth
       multiline
       sx={{

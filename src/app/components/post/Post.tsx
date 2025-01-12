@@ -12,11 +12,10 @@ import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
 import CommentCount from "./comment/CommentCount";
-import { Session } from "next-auth";
 import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 import Linkify from "linkify-react";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { User } from "@/db/schema";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -25,7 +24,7 @@ dayjs.extend(timezone);
 interface Props {
   updatePost: (updatedPost: Partial<PostType>) => void;
   deletePost: (post_id: number) => void;
-  session: Session;
+  user: User;
   id: number;
   date: Date;
   content: string | null;
@@ -41,7 +40,7 @@ interface Props {
 export default function Post({
   updatePost,
   deletePost,
-  session,
+  user,
   id,
   date,
   content,
@@ -101,8 +100,8 @@ export default function Post({
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography
-          variant="subtitle2"
           sx={{
+            fontSize: "11pt",
             fontWeight: 800,
             color: "#777777",
             ...theme.applyStyles("dark", { color: "#b0b0b0" }),
@@ -119,7 +118,7 @@ export default function Post({
           @{poster}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        {session.user.user_id == user_id && (
+        {user.user_id == user_id && (
           <PostDropdown post_id={id} deletePostFromCache={deletePost} />
         )}
       </Stack>
@@ -166,30 +165,6 @@ export default function Post({
         </Box>
       )}
 
-      {poster == "hjohn" && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          gap={1}
-          padding={2}
-          border="1px solid white"
-          borderRadius="8px"
-          bgcolor="#f44336"
-        >
-          <Box display="flex">
-            <ErrorOutlineIcon sx={{ marginRight: "10px" }} />
-            <Typography variant="body1" color="white">
-              Independent Fact-Checkers Say This Is False.
-            </Typography>
-          </Box>
-          <Typography variant="subtitle1" textAlign="center">
-            The primary claims in this information are factually and/or
-            grammatically innacurate.
-          </Typography>
-        </Box>
-      )}
-
       <Stack direction="row" alignItems="center">
         <CommentCount count={comment_count} />
 
@@ -207,8 +182,8 @@ export default function Post({
         <LikeButton
           post_id={id}
           poster_id={user_id}
-          user_id={session?.user?.user_id}
-          username={session?.user?.username}
+          user_id={user.user_id}
+          username={user.username}
           liked={likedByCurrentUser}
           updatePost={updatePost}
         />

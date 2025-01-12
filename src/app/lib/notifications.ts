@@ -3,12 +3,11 @@
 import { db } from "@/db";
 import { eq, and, desc } from "drizzle-orm";
 import { notifications } from "@/db/schema";
-import { auth } from "@/auth";
+import { getCurrentSession } from "../auth/session";
 
 export async function getCurrentUserHasUnreadNotifications() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return false;
   }
 
@@ -17,7 +16,7 @@ export async function getCurrentUserHasUnreadNotifications() {
     .from(notifications)
     .where(
       and(
-        eq(notifications.user_id, session.user.user_id),
+        eq(notifications.user_id, user.user_id),
         eq(notifications.viewed, false)
       )
     )
@@ -27,30 +26,28 @@ export async function getCurrentUserHasUnreadNotifications() {
 }
 
 export async function getNotifications() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return [];
   }
 
   const result = await db
     .select()
     .from(notifications)
-    .where(eq(notifications.user_id, session.user.user_id))
+    .where(eq(notifications.user_id, user.user_id))
     .orderBy(desc(notifications.notification_id));
 
   return result;
 }
 
 export async function markAllNotificationAsRead() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return;
   }
 
   await db
     .update(notifications)
     .set({ viewed: true })
-    .where(eq(notifications.user_id, session.user.user_id));
+    .where(eq(notifications.user_id, user.user_id));
 }

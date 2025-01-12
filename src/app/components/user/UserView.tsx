@@ -2,14 +2,15 @@
 
 import React from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
-import { signOut } from "next-auth/react";
 import FollowButton from "../follows/FollowButton";
 import Feed from "../feed/Feed";
 import theme from "@/theme";
-import { Session } from "next-auth";
+import { getCurrentSession, invalidateSession } from "@/app/auth/session";
+import { deleteSessionTokenCookie } from "@/app/auth/cookies";
+import { redirect } from "next/navigation";
 
 interface Props {
-  session: Session;
+  isOwnProfile: boolean;
   user: {
     user_id: number;
     email: string;
@@ -18,9 +19,7 @@ interface Props {
   };
 }
 
-export default function UserView({ session, user }: Readonly<Props>) {
-  const isOwnProfile = session.user.user_id === user.user_id;
-
+export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
   return (
     <Box>
       <Box sx={{ px: { xs: 2, md: 4 } }}>
@@ -62,8 +61,13 @@ export default function UserView({ session, user }: Readonly<Props>) {
               <Button
                 variant="contained"
                 size="medium"
-                onClick={() => {
-                  signOut({ redirectTo: "/login" });
+                onClick={async () => {
+                  const { session } = await getCurrentSession();
+                  if (session !== null) {
+                    invalidateSession(session.id);
+                    deleteSessionTokenCookie();
+                    redirect("/login");
+                  }
                 }}
                 sx={{
                   textTransform: "none",
@@ -91,7 +95,7 @@ export default function UserView({ session, user }: Readonly<Props>) {
         </Box>
       </Box>
       <Box>
-        <Feed session={session} page="profile" user_id={user.user_id} />
+        <Feed user={user} page="profile" user_id={user.user_id} />
       </Box>
     </Box>
   );

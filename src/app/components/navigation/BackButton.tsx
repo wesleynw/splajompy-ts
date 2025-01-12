@@ -3,18 +3,19 @@
 import { Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useSession } from "next-auth/react";
+import { User } from "@/db/schema";
 
-export default function BackButton() {
+type Props = {
+  user: User;
+};
+
+export default function BackButton({ user }: Readonly<Props>) {
   const router = useRouter();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"), { noSsr: true });
   const path = usePathname();
-  const { data: session, status } = useSession();
 
-  if (status === "loading") return null;
-
-  const username = session?.user?.username ?? "";
+  const username = user.username ?? "";
 
   const needsBackButton = !new RegExp(
     `^(/|/all|/notifications|/user/${username})$`

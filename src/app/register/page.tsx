@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { getCurrentSession } from "../auth/session";
 import RegisterPage from "../components/register/RegisterPage";
 
 export const metadata = {
@@ -6,5 +8,10 @@ export const metadata = {
 };
 
 export default async function Page() {
+  const { session } = await getCurrentSession();
+  if (session !== null) {
+    redirect("/");
+  }
+
   return <RegisterPage />;
 }

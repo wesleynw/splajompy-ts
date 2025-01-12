@@ -28,3 +28,20 @@ export const signInSchema = object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
 });
+
+export const identifierSchema = object({
+  identifier: string().min(1).max(32).toLowerCase().trim(),
+});
+
+export const otpSchema = object({
+  identifier: string()
+    .min(1, "Username or email is required")
+    .max(32, "Username or email must be less than 32 characters")
+    .toLowerCase()
+    .trim(),
+  code: string()
+    .regex(/^\d+$/, "Code must be a number")
+    .min(0)
+    .max(999999)
+    .transform((value) => Number(value)),
+});

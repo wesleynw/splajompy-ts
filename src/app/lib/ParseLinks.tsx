@@ -13,7 +13,7 @@ export function parseLinks(text: string) {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={(event) => event.stopPropagation()} // stop event bubbling
+          onClick={(event) => event.stopPropagation()}
           sx={{
             color: "lightblue",
             textDecoration: "underline",

@@ -1,72 +1,10 @@
 "use server";
 
-import { auth, signIn } from "@/auth";
-import bcrypt from "bcryptjs";
-import { registerSchema } from "./zod";
-import { CredentialsSignin } from "next-auth";
-import zod from "zod";
-import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { comments, images, notifications, posts, users } from "@/db/schema";
-import { eq, or, asc } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
-export async function authenticate(_currentState: unknown, formData: FormData) {
-  try {
-    await signIn("credentials", formData);
-  } catch (err) {
-    if (err instanceof CredentialsSignin) {
-      if (err.type === "CredentialsSignin") {
-        return "Invalid credentials";
-      } else {
-        return "Something went wrong.";
-      }
-    }
-  }
-  revalidatePath("/");
-  redirect("/");
-}
-
-export async function register(_currentState: unknown, formData: FormData) {
-  const username = formData.get("username")?.toString() ?? "";
-  const email = formData.get("email")?.toString() ?? "";
-  const password = formData.get("password")?.toString() ?? "";
-
-  try {
-    const parsedData = registerSchema.parse({ username, email, password });
-
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(or(eq(users.email, email), eq(users.username, username)))
-      .limit(1);
-
-    if (existingUser.length > 0) {
-      return "A user with this email or username already exists. Please use a different email.";
-    }
-    const hashedPassword = await bcrypt.hash(parsedData.password, 10);
-
-    await db.insert(users).values({
-      email: parsedData.email,
-      password: hashedPassword,
-      username: parsedData.username,
-    });
-
-    await signIn("credentials", {
-      redirect: false,
-      identifier: parsedData.email,
-      password: parsedData.password,
-    });
-  } catch (error) {
-    if (error instanceof zod.ZodError) {
-      return error.errors.map((e) => e.message).join(", ");
-    }
-
-    return "An error occurred while registering. Please try again.";
-  }
-
-  redirect("/");
-}
+import { getCurrentSession } from "../auth/session";
 
 export async function insertImage(
   post_id: number,
@@ -85,7 +23,10 @@ export async function insertImage(
 }
 
 export async function insertPost(formData: FormData, includesImage: boolean) {
-  const session = await auth();
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
 
   let postText: string | undefined;
   if (formData.get("text")) {
@@ -95,7 +36,7 @@ export async function insertPost(formData: FormData, includesImage: boolean) {
   const post = await db
     .insert(posts)
     .values({
-      user_id: Number(session?.user?.user_id),
+      user_id: Number(user.user_id),
       text: postText,
     })
     .returning();
@@ -113,8 +54,8 @@ export async function insertComment(
   post_id: number,
   poster: number
 ) {
-  const session = await auth();
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return;
   }
 
@@ -123,7 +64,7 @@ export async function insertComment(
       .insert(comments)
       .values({
         post_id: Number(post_id),
-        user_id: session?.user?.user_id,
+        user_id: user.user_id,
         text: text,
       })
       .returning();
@@ -135,10 +76,10 @@ export async function insertComment(
       .where(eq(comments.comment_id, comment[0].comment_id))
       .limit(1);
 
-    if (poster !== session.user.user_id) {
+    if (poster !== user.user_id) {
       await db.insert(notifications).values({
         user_id: poster,
-        message: `@${session.user.username} commented on your post`,
+        message: `@${user.username} commented on your post`,
         link: `/post/${post_id}`,
       });
     }

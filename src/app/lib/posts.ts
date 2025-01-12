@@ -1,10 +1,10 @@
 "use server";
 
-import { auth } from "@/auth";
 import { db } from "@/db";
 import { comments, follows, images, likes, posts, users } from "@/db/schema";
 import { and, or, count, desc, eq, exists, sql } from "drizzle-orm";
 import { deleteObject } from "./s3";
+import { getCurrentSession } from "../auth/session";
 
 export type PostData = {
   post_id: number;
@@ -21,8 +21,8 @@ export type PostData = {
 const FETCH_LIMIT = 10;
 
 export async function getAllPostsFromDb(offset: number) {
-  const session = await auth();
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return [];
   }
 
@@ -42,7 +42,7 @@ export async function getAllPostsFromDb(offset: number) {
           SELECT 1
           FROM ${likes}
           WHERE ${likes.post_id} = ${posts.post_id}
-            AND ${likes.user_id} = ${session.user.user_id}
+            AND ${likes.user_id} = ${user.user_id}
         )
       `,
     })
@@ -65,11 +65,12 @@ export async function getAllPostsFromDb(offset: number) {
 }
 
 export async function getAllPostsForFollowing(offset: number) {
-  const session = await auth();
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return [];
   }
-  const user_id = session.user.user_id;
+
+  const user_id = user.user_id;
 
   const results = await db
     .select({
@@ -127,9 +128,8 @@ export async function getAllPostsForFollowing(offset: number) {
 }
 
 export async function getPostsByUserId(offset: number, user_id: number) {
-  const session = await auth();
-
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return [];
   }
 
@@ -149,7 +149,7 @@ export async function getPostsByUserId(offset: number, user_id: number) {
         SELECT 1
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
-          AND ${likes.user_id} = ${session.user.user_id}
+          AND ${likes.user_id} = ${user.user_id}
       )
     `,
     })
@@ -173,8 +173,8 @@ export async function getPostsByUserId(offset: number, user_id: number) {
 }
 
 export async function getPost(post_id: number) {
-  const session = await auth();
-  if (!session) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return;
   }
 
@@ -194,7 +194,7 @@ export async function getPost(post_id: number) {
         SELECT 1
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
-          AND ${likes.user_id} = ${session.user.user_id}
+          AND ${likes.user_id} = ${user.user_id}
       )
     `,
     })
@@ -215,8 +215,8 @@ export async function getPost(post_id: number) {
 }
 
 export async function deletePost(post_id: number) {
-  const session = await auth();
-  if (!session || !session.user) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
     return;
   }
 
@@ -224,7 +224,5 @@ export async function deletePost(post_id: number) {
 
   await db
     .delete(posts)
-    .where(
-      and(eq(posts.user_id, session.user.user_id), eq(posts.post_id, post_id))
-    );
+    .where(and(eq(posts.user_id, user.user_id), eq(posts.post_id, post_id)));
 }

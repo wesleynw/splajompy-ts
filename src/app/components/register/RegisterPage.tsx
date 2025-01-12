@@ -1,28 +1,26 @@
 "use client";
 
 import React, { useActionState } from "react";
-import { register } from "@/app/lib/actions";
 import {
   Box,
-  Button,
   CircularProgress,
-  FormControl,
-  FormLabel,
-  Input,
   Stack,
   Typography,
   styled,
 } from "@mui/material";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import theme from "@/theme";
+import { register } from "@/app/auth/register";
+import { StyledButton } from "../forms/button";
+import { StyledInput } from "../forms/input";
+import { StyledFormControl } from "../forms/formControl";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "100%",
-  maxWidth: 600,
+  maxWidth: "400px",
   padding: "20px",
   margin: "10px auto",
   borderRadius: "8px",
@@ -34,62 +32,17 @@ const FormContainer = styled(Box)(({ theme }) => ({
   }),
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
-  width: "320px",
-  fontSize: "0.875rem",
-  fontWeight: 400,
-  padding: "8px 12px",
-  margin: "8px 0px",
-  borderRadius: "8px",
-  color: theme.palette.grey[900],
-  background: "#fff",
-  border: `1px solid ${theme.palette.grey[200]}`,
-  boxShadow: `0 2px 2px ${theme.palette.grey[50]}`,
-  "&:hover": {
-    borderColor: theme.palette.primary.main,
+const initialState = {
+  errors: {
+    username: "",
+    email: "",
+    password: "",
   },
-  "&:focus": {
-    outline: 0,
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 3px ${theme.palette.primary.light}`,
-  },
-  ...theme.applyStyles("dark", {
-    color: theme.palette.grey[300],
-    background: theme.palette.grey[900],
-    border: `1px solid ${theme.palette.grey[700]}`,
-    boxShadow: `0 2px 2px ${theme.palette.grey[900]}`,
-    "&:focus": {
-      boxShadow: `0 0 0 3px ${theme.palette.primary.dark}`,
-    },
-  }),
-}));
-
-const StyledButton = styled(Button)(() => ({
-  textTransform: "none",
-  borderRadius: "10px",
-  padding: "8px 16px",
-  fontWeight: "bold",
-  fontSize: "0.875rem",
-  backgroundColor: "#1DA1F2",
-  color: "#ffffff",
-  marginTop: "20px",
-  width: "90%",
-  "&:hover": {
-    backgroundColor: "#0d8de6",
-  },
-}));
-
-const StyledFormControl = styled(FormControl)(() => ({
-  margin: "0px",
-  padding: "0px",
-}));
-
-const StyledFormLabel = styled(FormLabel)(() => ({
-  marginBottom: "4px",
-}));
+  payload: undefined,
+};
 
 export default function RegisterPage() {
-  const [errorMessage, dispatch] = useActionState(register, undefined);
+  const [state, dispatch] = useActionState(register, initialState);
 
   return (
     <Box
@@ -97,48 +50,30 @@ export default function RegisterPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "calc(100vh - 60px)",
+        height: "100vh",
         width: "100vw",
         overflow: "hidden",
         position: "relative",
         paddingBottom: "90px",
-        backgroundColor: "#f5f5f5",
-        ...theme.applyStyles("dark", { backgroundColor: "#121212" }),
+        backgroundColor: "#121212",
       }}
     >
-      <form action={dispatch}>
+      <form action={dispatch} style={{ width: "100%" }}>
         <FormContainer>
+          <Typography variant="h5" fontWeight={800} marginBottom="30px">
+            Register
+          </Typography>
           <StyledFormControl>
-            <StyledFormLabel>Username</StyledFormLabel>
             <StyledInput
               type="text"
               name="username"
               placeholder="Username"
               disableUnderline
               required
+              defaultValue={state.payload?.get("username") || ""}
             />
           </StyledFormControl>
-          <StyledFormControl>
-            <StyledFormLabel>Email</StyledFormLabel>
-            <StyledInput
-              type="email"
-              name="email"
-              placeholder="Email"
-              disableUnderline
-              required
-            />
-          </StyledFormControl>
-          <StyledFormControl>
-            <StyledFormLabel>Password</StyledFormLabel>
-            <StyledInput
-              type="password"
-              name="password"
-              placeholder="Password"
-              disableUnderline
-              required
-            />
-          </StyledFormControl>
-          {errorMessage && (
+          {state.errors?.username && (
             <Box
               component="p"
               sx={{
@@ -147,7 +82,51 @@ export default function RegisterPage() {
                 marginTop: "8px",
               }}
             >
-              {errorMessage}
+              {state.errors.username}
+            </Box>
+          )}
+          <StyledFormControl>
+            <StyledInput
+              type="email"
+              name="email"
+              placeholder="Email"
+              disableUnderline
+              required
+              defaultValue={state.payload?.get("email") || ""}
+            />
+          </StyledFormControl>
+          {state.errors?.email && (
+            <Box
+              component="p"
+              sx={{
+                color: "#ff0000",
+                textAlign: "center",
+                marginTop: "8px",
+              }}
+            >
+              {state.errors.email}
+            </Box>
+          )}
+          <StyledFormControl>
+            <StyledInput
+              type="password"
+              name="password"
+              placeholder="Password"
+              disableUnderline
+              required
+              defaultValue={state.payload?.get("password") || ""}
+            />
+          </StyledFormControl>
+          {state.errors?.password && (
+            <Box
+              component="p"
+              sx={{
+                color: "#ff0000",
+                textAlign: "center",
+                marginTop: "8px",
+              }}
+            >
+              {state.errors.password}
             </Box>
           )}
           <RegisterButton />

@@ -1,11 +1,11 @@
 import UserView from "@/app/components/user/UserView";
 import { getUserByUsername } from "@/app/lib/users";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { Suspense } from "react";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
 import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
+import { getCurrentSession } from "@/app/auth/session";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -24,9 +24,9 @@ export default async function Page({
   const slug = (await params).slug;
   const username = String(slug);
 
-  const session = await auth();
+  const { session, user: session_user } = await getCurrentSession();
 
-  if (!session?.user) {
+  if (session === null) {
     redirect("/login");
   }
 
@@ -72,7 +72,10 @@ export default async function Page({
           </StandardWrapper>
         }
       >
-        <UserView session={session} user={user} />
+        <UserView
+          user={user}
+          isOwnProfile={user.user_id === session_user.user_id}
+        />
       </Suspense>
     </Box>
   );

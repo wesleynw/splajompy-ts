@@ -4,6 +4,8 @@ import { db } from "@/db";
 import { likes, notifications } from "@/db/schema";
 import { and, count, eq } from "drizzle-orm";
 
+// TODO: add auth checks
+
 export async function likePost(
   post_id: number,
   poster_id: number,
