@@ -45,9 +45,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.64.0
         version: 5.64.0(react@19.0.0)
-      '@vercel/postgres':
-        specifier: ^0.10.0
-        version: 0.10.0
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -4309,6 +4306,7 @@ snapshots:
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
+    optional: true
 
   '@next/env@15.1.4': {}
 
@@ -4772,6 +4770,7 @@ snapshots:
       '@types/node': 22.10.5
       pg-protocol: 1.7.0
       pg-types: 4.0.2
+    optional: true
 
   '@types/prop-types@15.7.14': {}
 
@@ -4871,6 +4870,7 @@ snapshots:
       ws: 8.18.0(bufferutil@4.0.8)
     transitivePeerDependencies:
       - utf-8-validate
+    optional: true
 
   abbrev@2.0.0: {}
 
@@ -5005,6 +5005,7 @@ snapshots:
   bufferutil@4.0.8:
     dependencies:
       node-gyp-build: 4.8.4
+    optional: true
 
   busboy@1.6.0:
     dependencies:
@@ -6053,7 +6054,8 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  node-gyp-build@4.8.4: {}
+  node-gyp-build@4.8.4:
+    optional: true
 
   nopt@7.2.1:
     dependencies:
@@ -6686,6 +6688,7 @@ snapshots:
   ws@8.18.0(bufferutil@4.0.8):
     optionalDependencies:
       bufferutil: 4.0.8
+    optional: true
 
   xtend@4.0.2: {}
 

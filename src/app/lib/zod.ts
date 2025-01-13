@@ -39,9 +39,5 @@ export const otpSchema = object({
     .max(32, "Username or email must be less than 32 characters")
     .toLowerCase()
     .trim(),
-  code: string()
-    .regex(/^\d+$/, "Code must be a number")
-    .min(0)
-    .max(999999)
-    .transform((value) => Number(value)),
+  code: string().regex(/^\d+$/, "Code must be a number").min(0).max(999999),
 });

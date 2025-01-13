@@ -90,7 +90,9 @@ async function setupPasswordlessSignIn(formData: FormData) {
     };
   }
 
-  const code = Math.floor(Math.random() * 1000000);
+  const code = Math.floor(Math.random() * 1000000)
+    .toString()
+    .padStart(6, "0");
 
   await db
     .insert(verificationCodes)
