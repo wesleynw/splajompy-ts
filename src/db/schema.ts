@@ -34,7 +34,7 @@ export type Session = typeof sessions.$inferSelect;
 
 export const verificationCodes = pgTable("verificationCodes", {
   id: serial().primaryKey().notNull(),
-  code: integer().notNull(),
+  code: text().notNull(),
   user_id: integer()
     .unique()
     .notNull()

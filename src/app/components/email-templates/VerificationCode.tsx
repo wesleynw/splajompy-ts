@@ -1,5 +1,5 @@
 type Props = {
-  code: number;
+  code: string;
 };
 
 export default function VerificationCodeTemplate({ code }: Readonly<Props>) {
