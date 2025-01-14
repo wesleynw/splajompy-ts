@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { Box, Stack, useTheme } from "@mui/material";
 import SubmitPostButton from "./SubmitPostButton";
-import { TextInput } from "./TextInput";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
@@ -11,6 +10,7 @@ import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/db/schema";
+import { TextInput2 } from "./TextInput2";
 
 type NewPostProps = {
   user: User;
@@ -160,10 +160,15 @@ export default function Page({
           spacing={2}
           sx={{ width: "100%" }}
         >
-          <TextInput
+          {/* <TextInput
             inputRef={inputRef}
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
+          /> */}
+          <TextInput2
+            inputRef={inputRef}
+            value={textValue}
+            setTextValue={setTextValue}
           />
         </Stack>
         <ImagePreview
