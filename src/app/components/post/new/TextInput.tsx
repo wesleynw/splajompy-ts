@@ -20,8 +20,6 @@ export function TextInput({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    console.log("old value of the text field: ", value);
-    console.log("new value of the text field: ", newValue);
 
     setTextValue((prev) => {
       return newValue.replace(/@\w+/g, (match) => {
@@ -40,8 +38,7 @@ export function TextInput({
 
   const toDisplayFormat = (text: string): React.ReactNode => {
     const tagRegex = /\{tag:(\d+):(.+?)\}/g;
-
-    return text.replace(tagRegex, (match, p1, p2) => "@" + p2);
+    return text.replace(tagRegex, (_match, _p1, p2) => "@" + p2);
   };
 
   return (

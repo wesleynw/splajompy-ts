@@ -3,13 +3,14 @@ import { Box, List, ListItemButton } from "@mui/material";
 
 type Props = {
   mentionedUser: string;
-  setMentionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
+  setMentionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function MentionDialog({
   mentionedUser,
   setTextValue,
+  setMentionDialogOpen,
 }: Readonly<Props>) {
   const { isPending, users } = useUsers();
 
@@ -42,9 +43,10 @@ export default function MentionDialog({
           .map((user) => (
             <ListItemButton
               key={user.user_id}
-              onClick={() =>
-                mentionToSpecialFormat(user.user_id, user.username)
-              }
+              onClick={() => {
+                mentionToSpecialFormat(user.user_id, user.username);
+                setMentionDialogOpen(false);
+              }}
             >
               {user.username}
             </ListItemButton>
