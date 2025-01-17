@@ -66,7 +66,6 @@ export default function NewPostDialog({
           user={user}
           onPost={toggleOpen}
           insertPostToCache={() => console.log("a")}
-          inputRef={inputRef}
         />
       </DialogContent>
     </Dialog>

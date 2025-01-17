@@ -16,14 +16,12 @@ type NewPostProps = {
   user: User;
   onPost: () => void;
   insertPostToCache: (post: PostType) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export default function Page({
   user,
   onPost,
   insertPostToCache,
-  inputRef,
 }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
@@ -36,7 +34,6 @@ export default function Page({
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("textValue: ", textValue);
     e.preventDefault();
 
     if (error) {
@@ -164,11 +161,7 @@ export default function Page({
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
           /> */}
-          <TextInput
-            inputRef={inputRef}
-            value={textValue}
-            setTextValue={setTextValue}
-          />
+          <TextInput value={textValue} setTextValue={setTextValue} />
         </Stack>
         <ImagePreview
           previewFile={previewFile}
