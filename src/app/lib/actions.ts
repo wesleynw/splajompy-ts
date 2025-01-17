@@ -22,15 +22,10 @@ export async function insertImage(
   revalidatePath("/");
 }
 
-export async function insertPost(formData: FormData, includesImage: boolean) {
+export async function insertPost(postText: string, includesImage: boolean) {
   const { user } = await getCurrentSession();
   if (user === null) {
     return;
-  }
-
-  let postText: string | undefined;
-  if (formData.get("text")) {
-    postText = formData.get("text")?.toString();
   }
 
   const post = await db
@@ -45,7 +40,6 @@ export async function insertPost(formData: FormData, includesImage: boolean) {
     revalidatePath("/");
   }
 
-  formData.set("text", "");
   return post[0];
 }
 

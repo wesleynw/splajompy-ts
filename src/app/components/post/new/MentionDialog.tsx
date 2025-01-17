@@ -17,19 +17,18 @@ export default function MentionDialog({
     return <h1>loading lol...</h1>;
   }
 
-  // hey! tag:wesley:12
-  // weley --> <strong>weley</strong>
   function mentionToSpecialFormat(id: number, username: string) {
+    console.log("mentioned user:", mentionedUser);
     const tag = `{tag:${id}:${username}}`;
     console.log("USERTAG: ", tag);
     setTextValue((prev: string) => {
-      const x = prev.replace(mentionedUser, tag);
-      console.log("SPECFIAL TEXT: ", x);
+      console.log("prev: ", prev);
+      const regex = new RegExp(`@${mentionedUser}(.*?)(?=@|$)`, "g");
+      const x = prev.replace(regex, tag);
+      console.log("SPECIAL TEXT: ", x);
       return x;
     });
   }
-
-  // setTextValue((prev) => )
 
   return (
     <Box sx={{ zIndex: "100" }}>

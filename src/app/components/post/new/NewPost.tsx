@@ -10,7 +10,7 @@ import { getUsername, insertImage, insertPost } from "../../../lib/actions";
 import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/db/schema";
-import { TextInput2 } from "./TextInput2";
+import { TextInput } from "./TextInput";
 
 type NewPostProps = {
   user: User;
@@ -36,6 +36,7 @@ export default function Page({
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("textValue: ", textValue);
     e.preventDefault();
 
     if (error) {
@@ -44,9 +45,7 @@ export default function Page({
 
     setIsLoading(true);
 
-    const formData = new FormData(ref.current!);
-
-    const post = await insertPost(formData, selectedFile !== null);
+    const post = await insertPost(textValue, selectedFile !== null);
     if (!post) {
       return;
     }
@@ -165,7 +164,7 @@ export default function Page({
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
           /> */}
-          <TextInput2
+          <TextInput
             inputRef={inputRef}
             value={textValue}
             setTextValue={setTextValue}
