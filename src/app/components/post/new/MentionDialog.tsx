@@ -14,20 +14,11 @@ export default function MentionDialog({
 }: Readonly<Props>) {
   const { isPending, users } = useUsers();
 
-  if (isPending) {
-    return <h1>loading lol...</h1>;
-  }
-
   function mentionToSpecialFormat(id: number, username: string) {
-    console.log("mentioned user:", mentionedUser);
     const tag = `{tag:${id}:${username}}`;
-    console.log("USERTAG: ", tag);
     setTextValue((prev: string) => {
-      console.log("prev: ", prev);
       const regex = new RegExp(`@${mentionedUser}(.*?)(?=@|$)`, "g");
-      const x = prev.replace(regex, tag);
-      console.log("SPECIAL TEXT: ", x);
-      return x;
+      return prev.replace(regex, tag);
     });
   }
 
@@ -35,22 +26,40 @@ export default function MentionDialog({
     <Box sx={{ zIndex: "100" }}>
       <List
         dense={true}
-        sx={{ position: "fixed", backgroundColor: "red", borderRadius: "10px" }}
+        sx={{
+          position: "fixed",
+          backgroundColor: "black",
+          borderRadius: "10px",
+          border: "1px solid white",
+        }}
       >
-        {users
-          ?.filter((user) => user.username.startsWith(mentionedUser))
-          .slice(0, 5)
-          .map((user) => (
-            <ListItemButton
-              key={user.user_id}
-              onClick={() => {
-                mentionToSpecialFormat(user.user_id, user.username);
-                setMentionDialogOpen(false);
-              }}
-            >
-              {user.username}
-            </ListItemButton>
-          ))}
+        {users && users.length > 0 && !isPending ? (
+          (() => {
+            const filteredUsers = users.filter((user) =>
+              user.username.startsWith(mentionedUser)
+            );
+            return filteredUsers.length > 0 ? (
+              filteredUsers.slice(0, 5).map((user) => (
+                <ListItemButton
+                  disableRipple
+                  key={user.user_id}
+                  onClick={() => {
+                    mentionToSpecialFormat(user.user_id, user.username);
+                    setMentionDialogOpen(false);
+                  }}
+                >
+                  {user.username}
+                </ListItemButton>
+              ))
+            ) : (
+              <ListItemButton>
+                <h3>No users found</h3>
+              </ListItemButton>
+            );
+          })()
+        ) : (
+          <ListItemButton>...</ListItemButton>
+        )}
       </List>
     </Box>
   );

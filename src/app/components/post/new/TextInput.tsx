@@ -1,26 +1,21 @@
 "use client";
 
-import { Stack, TextField } from "@mui/material";
+import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import MentionDialog from "./MentionDialog";
+import Editor from "react-simple-code-editor";
+import { highlightMentions, toDisplayFormat } from "@/app/utils/mentions";
 
 interface TextInputProps {
   value: string;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
-  inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
-export function TextInput({
-  value,
-  setTextValue,
-  inputRef,
-}: Readonly<TextInputProps>) {
+export function TextInput({ value, setTextValue }: Readonly<TextInputProps>) {
   const [mentionDialogOpen, setMentionDialogOpen] = useState(false);
   const [mentionedUser, setMentionedUser] = useState("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-
+  const handleChange = (newValue: string) => {
     setTextValue((prev) => {
       return newValue.replace(/@\w+/g, (match) => {
         const username = match.slice(1);
@@ -30,34 +25,51 @@ export function TextInput({
         return tagMatch ? tagMatch[0] : match;
       });
     });
-
     const mentionMatch = /@(\w+)\s*$/.exec(newValue);
     setMentionDialogOpen(!!mentionMatch);
     if (mentionMatch) setMentionedUser(mentionMatch[1]);
   };
 
-  const toDisplayFormat = (text: string): React.ReactNode => {
-    const tagRegex = /\{tag:(\d+):(.+?)\}/g;
-    return text.replace(tagRegex, (_match, _p1, p2) => "@" + p2);
-  };
-
   return (
     <Stack direction="column" sx={{ width: "100%", position: "relative" }}>
-      <TextField
-        inputRef={inputRef}
-        value={toDisplayFormat(value)}
-        onChange={handleChange}
-        name="text"
-        variant="outlined"
-        placeholder="What do you wish you could tell the world?"
-        fullWidth
-        multiline
-        sx={{
-          position: "relative",
-          zIndex: 2,
-          width: "100%",
-        }}
-      />
+      <div style={{ position: "relative", width: "100%" }}>
+        {value === "" && (
+          <div
+            style={{
+              position: "absolute",
+              top: "10px",
+              left: "10px",
+              color: "#aaa",
+              pointerEvents: "none",
+              fontSize: "16px",
+              lineHeight: "1.5",
+            }}
+          >
+            What do you wish you could tell the world?
+          </div>
+        )}
+
+        <Editor
+          value={toDisplayFormat(value)}
+          onValueChange={handleChange}
+          highlight={(code) => highlightMentions(code)}
+          padding={10}
+          style={{
+            fontSize: "16px",
+            border: "2px solid",
+            borderColor: "#4a90e2",
+            borderRadius: "8px",
+            lineHeight: "1.5",
+            color: "#fff",
+            width: "100%",
+            minHeight: "60px",
+            outline: "none",
+            overflow: "auto",
+            resize: "none",
+          }}
+        />
+      </div>
+
       {mentionDialogOpen && (
         <MentionDialog
           mentionedUser={mentionedUser}

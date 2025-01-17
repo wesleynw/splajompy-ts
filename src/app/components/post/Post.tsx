@@ -16,6 +16,7 @@ import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 import Linkify from "linkify-react";
 import { User } from "@/db/schema";
+import { highlightMentions, toDisplayFormat } from "@/app/utils/mentions";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -142,7 +143,9 @@ export default function Post({
           }}
         >
           <Box onClick={handleLinkClick}>
-            <Linkify options={options}>{content}</Linkify>
+            <Linkify options={options}>
+              {highlightMentions(toDisplayFormat(content))}
+            </Linkify>
           </Box>
         </Box>
       )}
