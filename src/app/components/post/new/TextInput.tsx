@@ -44,6 +44,8 @@ export function TextInput({
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
           handleChange(e.target.value)
         }
+        rows={1}
+        autoHeight
         style={{
           width: "100%",
         }}
