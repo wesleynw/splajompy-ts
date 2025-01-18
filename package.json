@@ -34,8 +34,8 @@
     "pg": "^8.13.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-simple-code-editor": "^0.14.1",
     "resend": "^4.0.1",
+    "rich-textarea": "^0.26.4",
     "sharp": "^0.33.5",
     "uuid": "^11.0.4",
     "zod": "^3.24.1"

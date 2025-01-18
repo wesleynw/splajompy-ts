@@ -40,3 +40,22 @@ a {
     color-scheme: dark;
   }
 }
+
+
+.rich-textarea {
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  padding: 10px;
+  resize: none;
+  font: inherit;
+  line-height: 1.5;
+}
+
+.rich-textarea::selection {
+  background: #4a90e2; 
+  color: white;      
+}
+
+.rich-textarea:focus {
+  outline: none;
+}

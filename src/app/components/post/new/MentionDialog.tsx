@@ -1,16 +1,19 @@
 import { useUsers } from "@/app/data/users";
 import { Box, List, ListItemButton } from "@mui/material";
+import { RichTextareaHandle } from "rich-textarea";
 
 type Props = {
   mentionedUser: string;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
   setMentionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  inputRef: React.RefObject<RichTextareaHandle | null>;
 };
 
 export default function MentionDialog({
   mentionedUser,
   setTextValue,
   setMentionDialogOpen,
+  inputRef,
 }: Readonly<Props>) {
   const { isPending, users } = useUsers();
 
@@ -46,6 +49,7 @@ export default function MentionDialog({
                   onClick={() => {
                     mentionToSpecialFormat(user.user_id, user.username);
                     setMentionDialogOpen(false);
+                    inputRef.current?.focus();
                   }}
                 >
                   {user.username}

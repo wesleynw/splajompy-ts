@@ -11,17 +11,20 @@ import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/db/schema";
 import { TextInput } from "./TextInput";
+import { RichTextareaHandle } from "rich-textarea";
 
 type NewPostProps = {
   user: User;
   onPost: () => void;
   insertPostToCache: (post: PostType) => void;
+  inputRef: React.RefObject<RichTextareaHandle | null>;
 };
 
 export default function Page({
   user,
   onPost,
   insertPostToCache,
+  inputRef,
 }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
   const theme = useTheme();
@@ -161,7 +164,11 @@ export default function Page({
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
           /> */}
-          <TextInput value={textValue} setTextValue={setTextValue} />
+          <TextInput
+            value={textValue}
+            setTextValue={setTextValue}
+            inputRef={inputRef}
+          />
         </Stack>
         <ImagePreview
           previewFile={previewFile}
