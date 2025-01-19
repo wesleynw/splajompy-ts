@@ -22,7 +22,7 @@ export function TextInput({
 
   const handleChange = (newValue: string) => {
     setTextValue((prev) => {
-      return newValue.replace(/@\w+/g, (match) => {
+      return newValue.replace(/@\S+/g, (match) => {
         const username = match.slice(1);
         const tagMatch = RegExp(new RegExp(`\\{tag:\\d+:${username}\\}`)).exec(
           prev
@@ -54,7 +54,7 @@ export function TextInput({
           if (v.length === 0) {
             return (
               <span style={{ color: "#AAA" }}>
-                What do you want to say to the world...
+                Tell us something we&apos;ve never heard before...
               </span>
             );
           }

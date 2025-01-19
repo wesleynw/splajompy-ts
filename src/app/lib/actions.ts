@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { comments, images, notifications, posts, users } from "@/db/schema";
+import { comments, images, notifications, users } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "../auth/session";
@@ -20,27 +20,6 @@ export async function insertImage(
   });
 
   revalidatePath("/");
-}
-
-export async function insertPost(postText: string, includesImage: boolean) {
-  const { user } = await getCurrentSession();
-  if (user === null) {
-    return;
-  }
-
-  const post = await db
-    .insert(posts)
-    .values({
-      user_id: Number(user.user_id),
-      text: postText,
-    })
-    .returning();
-
-  if (!includesImage) {
-    revalidatePath("/");
-  }
-
-  return post[0];
 }
 
 export async function insertComment(

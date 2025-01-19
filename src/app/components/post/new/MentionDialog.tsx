@@ -1,5 +1,5 @@
 import { useUsers } from "@/app/data/users";
-import { Box, List, ListItemButton } from "@mui/material";
+import { Box, Divider, List, ListItemButton } from "@mui/material";
 import { RichTextareaHandle } from "rich-textarea";
 
 type Props = {
@@ -42,18 +42,22 @@ export default function MentionDialog({
               user.username.startsWith(mentionedUser)
             );
             return filteredUsers.length > 0 ? (
-              filteredUsers.slice(0, 5).map((user) => (
-                <ListItemButton
-                  disableRipple
-                  key={user.user_id}
-                  onClick={() => {
-                    mentionToSpecialFormat(user.user_id, user.username);
-                    setMentionDialogOpen(false);
-                    inputRef.current?.focus();
-                  }}
-                >
-                  {user.username}
-                </ListItemButton>
+              filteredUsers.slice(0, 5).map((user, index) => (
+                <div key={user.user_id}>
+                  <ListItemButton
+                    disableRipple
+                    onClick={() => {
+                      mentionToSpecialFormat(user.user_id, user.username);
+                      setMentionDialogOpen(false);
+                      inputRef.current?.focus();
+                    }}
+                  >
+                    {user.username}
+                  </ListItemButton>
+                  {index < 5 && (
+                    <Divider sx={{ color: "gray", border: "1px solid" }} />
+                  )}
+                </div>
               ))
             ) : (
               <ListItemButton>

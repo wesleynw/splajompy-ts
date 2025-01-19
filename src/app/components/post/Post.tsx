@@ -16,7 +16,7 @@ import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 import Linkify from "linkify-react";
 import { User } from "@/db/schema";
-import { toPreviewFormat, toDisplayFormat } from "@/app/utils/mentions";
+import { renderMentions } from "@/app/utils/mentions";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -70,6 +70,8 @@ export default function Post({
       e.stopPropagation();
     }
   };
+
+  console.log("content: ", content);
 
   return (
     <Box
@@ -143,9 +145,7 @@ export default function Post({
           }}
         >
           <Box onClick={handleLinkClick}>
-            <Linkify options={options}>
-              {toPreviewFormat(toDisplayFormat(content))}
-            </Linkify>
+            <Linkify options={options}>{renderMentions(content)}</Linkify>
           </Box>
         </Box>
       )}

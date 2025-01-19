@@ -6,7 +6,8 @@ import SubmitPostButton from "./SubmitPostButton";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
-import { getUsername, insertImage, insertPost } from "../../../lib/actions";
+import { getUsername, insertImage } from "../../../lib/actions";
+import { insertPost } from "@/app/lib/posts";
 import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/db/schema";
@@ -45,7 +46,7 @@ export default function Page({
 
     setIsLoading(true);
 
-    const post = await insertPost(textValue, selectedFile !== null);
+    const post = await insertPost(textValue);
     if (!post) {
       return;
     }
