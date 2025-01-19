@@ -3,7 +3,7 @@
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import MentionDialog from "./MentionDialog";
-import { highlightMentions, toDisplayFormat } from "@/app/utils/mentions";
+import { toPreviewFormat, toDisplayFormat } from "@/app/utils/mentions";
 import { RichTextarea, RichTextareaHandle } from "rich-textarea";
 
 interface TextInputProps {
@@ -58,7 +58,7 @@ export function TextInput({
               </span>
             );
           }
-          return highlightMentions(v);
+          return toPreviewFormat(v);
         }}
       </RichTextarea>
 
