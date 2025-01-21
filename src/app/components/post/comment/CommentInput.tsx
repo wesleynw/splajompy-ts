@@ -1,6 +1,6 @@
-import theme from "@/theme";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import { TextInput } from "../new/TextInput";
 
 interface Props {
   onAddComment: (text: string) => void;
@@ -18,14 +18,13 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
 
   return (
     <Box sx={{ marginTop: 3 }}>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder={`Add a comment...`}
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        sx={{ marginBottom: 2 }}
-      />
+      <Box sx={{ marginBottom: 2 }}>
+        <TextInput
+          placeholder="Add a comment..."
+          value={comment}
+          setTextValue={setComment}
+        />
+      </Box>
       <Button
         variant="contained"
         onClick={handleAddComment}
@@ -34,28 +33,17 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
           borderRadius: "24px",
           padding: "8px 24px",
           textTransform: "none",
-          backgroundColor: "#1976d2",
+          backgroundColor: "#424242",
           color: "white",
           boxShadow: "none",
           "&:hover": {
             backgroundColor: "#ffffff",
-            color: "#1976d2",
+            color: "#424242",
           },
           "&:disabled": {
-            backgroundColor: "#e0e0e0",
-            color: "#9e9e9e",
+            backgroundColor: "#555555",
+            color: "#888888",
           },
-          ...theme.applyStyles("dark", {
-            backgroundColor: "#424242",
-            "&:hover": {
-              backgroundColor: "#ffffff",
-              color: "#424242",
-            },
-            "&:disabled": {
-              backgroundColor: "#555555",
-              color: "#888888",
-            },
-          }),
         }}
       >
         Post Comment

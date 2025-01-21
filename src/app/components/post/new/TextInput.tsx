@@ -7,12 +7,14 @@ import { toPreviewFormat, toDisplayFormat } from "@/app/utils/mentions";
 import { RichTextarea, RichTextareaHandle } from "rich-textarea";
 
 interface TextInputProps {
+  placeholder: string;
   value: string;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
-  inputRef: React.RefObject<RichTextareaHandle | null>;
+  inputRef?: React.RefObject<RichTextareaHandle | null>;
 }
 
 export function TextInput({
+  placeholder,
   value,
   setTextValue,
   inputRef,
@@ -52,11 +54,7 @@ export function TextInput({
       >
         {(v: string) => {
           if (v.length === 0) {
-            return (
-              <span style={{ color: "#AAA" }}>
-                Tell us something we&apos;ve never heard before...
-              </span>
-            );
+            return <span style={{ color: "#AAA" }}>{placeholder}</span>;
           }
           return toPreviewFormat(v);
         }}

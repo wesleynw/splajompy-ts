@@ -6,7 +6,7 @@ type Props = {
   mentionedUser: string;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
   setMentionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  inputRef: React.RefObject<RichTextareaHandle | null>;
+  inputRef?: React.RefObject<RichTextareaHandle | null>;
 };
 
 export default function MentionDialog({
@@ -49,7 +49,7 @@ export default function MentionDialog({
                     onClick={() => {
                       mentionToSpecialFormat(user.user_id, user.username);
                       setMentionDialogOpen(false);
-                      inputRef.current?.focus();
+                      inputRef?.current?.focus();
                     }}
                   >
                     {user.username}

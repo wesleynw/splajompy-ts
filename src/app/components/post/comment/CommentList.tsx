@@ -48,28 +48,6 @@ export default function CommentList({
     };
 
     setComments((prevComments) => [...prevComments, formattedComment]);
-    // queryClient.setQueriesData(
-    //   { queryKey: ["feed"] },
-    //   (oldData: { pages: PostType[][] }) => {
-    //     if (!oldData) return oldData;
-
-    //     return {
-    //       ...oldData,
-    //       pages: oldData.pages.map((page) =>
-    //         page.map((post) =>
-    //           post.post_id === post_id
-    //             ? { ...post, comment_count: post.comment_count + 1 }
-    //             : post
-    //         )
-    //       ),
-    //     };
-    //   }
-    // );
-
-    // console.log(
-    //   "Comment added: ",
-    //   queryClient.getQueriesData({ queryKey: ["feed"] })
-    // );
   };
 
   const renderComments = () => {

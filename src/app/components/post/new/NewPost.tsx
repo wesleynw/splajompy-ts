@@ -160,12 +160,8 @@ export default function Page({
           spacing={2}
           sx={{ width: "100%" }}
         >
-          {/* <TextInput
-            inputRef={inputRef}
-            value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
-          /> */}
           <TextInput
+            placeholder="Tell us something we've never heard before..."
             value={textValue}
             setTextValue={setTextValue}
             inputRef={inputRef}

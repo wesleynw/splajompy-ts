@@ -6,6 +6,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Linkify from "linkify-react";
+import { renderMentions } from "@/app/utils/mentions";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -78,7 +79,7 @@ export default function Comment({ comments, users }: Readonly<Props>) {
           }}
         >
           <Box>
-            <Linkify options={options}>{comments.text}</Linkify>
+            <Linkify options={options}>{renderMentions(comments.text)}</Linkify>
           </Box>
         </Box>
       </Typography>
