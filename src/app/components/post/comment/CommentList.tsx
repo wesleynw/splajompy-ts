@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { SelectComment, SelectUser } from "@/db/schema";
 import { Box, Typography, Skeleton, useTheme } from "@mui/material";
-import { getComments, insertComment } from "@/app/lib/actions";
+import { getComments } from "@/app/lib/actions";
+
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
+import { insertComment } from "@/app/lib/comments";
 
 interface CommentListProps {
   poster_id: number;

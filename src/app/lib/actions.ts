@@ -1,10 +1,9 @@
 "use server";
 
 import { db } from "@/db";
-import { comments, images, notifications, users } from "@/db/schema";
+import { comments, images, users } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { getCurrentSession } from "../auth/session";
 
 export async function insertImage(
   post_id: number,
@@ -20,45 +19,6 @@ export async function insertImage(
   });
 
   revalidatePath("/");
-}
-
-export async function insertComment(
-  text: string,
-  post_id: number,
-  poster: number
-) {
-  const { user } = await getCurrentSession();
-  if (user === null) {
-    return;
-  }
-
-  if (text) {
-    const comment = await db
-      .insert(comments)
-      .values({
-        post_id: Number(post_id),
-        user_id: user.user_id,
-        text: text,
-      })
-      .returning();
-
-    const result = await db
-      .select()
-      .from(comments)
-      .innerJoin(users, eq(comments.user_id, users.user_id))
-      .where(eq(comments.comment_id, comment[0].comment_id))
-      .limit(1);
-
-    if (poster !== user.user_id) {
-      await db.insert(notifications).values({
-        user_id: poster,
-        message: `@${user.username} commented on your post`,
-        link: `/post/${post_id}`,
-      });
-    }
-
-    return result;
-  }
 }
 
 export async function getComments(post_id: number) {
