@@ -35,10 +35,10 @@ export async function insertComment(
 
     for (const tag of text.matchAll(internalTagRegex)) {
       const user_id = Number(tag[1]);
-      if (user.user_id !== user_id && user.user_id !== poster) {
+      if (user.user_id !== user_id && user_id !== poster) {
         await db.insert(notifications).values({
           user_id: user_id,
-          message: `@${user.username} mentioned you in a comment.`,
+          message: `@${user.username} mentioned you in a comment`,
           link: `/post/${post_id}`,
         });
       }
