@@ -1,6 +1,9 @@
 "use client";
 
 import HomeIcon from "@mui/icons-material/Home";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -60,15 +63,20 @@ export default function MobileNavigation() {
       >
         <StyledBottomNavigationAction
           value="/"
-          icon={<HomeIcon />}
+          icon={pathname === "/" ? <HomeIcon /> : <HomeOutlinedIcon />}
           onClick={(event) => handleNavigation(event, "/")}
           disableRipple
         />
+
         <StyledBottomNavigationAction
           value="/notifications"
           icon={
             <NotificationBadge>
-              <NotificationsIcon />
+              {pathname === "/notifications" ? (
+                <NotificationsIcon />
+              ) : (
+                <NotificationsNoneOutlinedIcon />
+              )}
             </NotificationBadge>
           }
           onClick={(event) => handleNavigation(event, "/notifications")}
@@ -82,7 +90,13 @@ export default function MobileNavigation() {
         />
         <StyledBottomNavigationAction
           value={`/user/${user.username}`}
-          icon={<PersonIcon />}
+          icon={
+            pathname === `/user/${user.username}` ? (
+              <PersonIcon />
+            ) : (
+              <PersonOutlineOutlinedIcon />
+            )
+          }
           onClick={(event) => handleNavigation(event, `/user/${user.username}`)}
           disableRipple
         />
