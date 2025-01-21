@@ -34,6 +34,7 @@ export default function MentionDialog({
           backgroundColor: "black",
           borderRadius: "10px",
           border: "1px solid white",
+          paddingY: "2px",
         }}
       >
         {users && users.length > 0 && !isPending ? (
@@ -54,7 +55,7 @@ export default function MentionDialog({
                   >
                     {user.username}
                   </ListItemButton>
-                  {index < 5 && (
+                  {index < filteredUsers.length - 1 && (
                     <Divider sx={{ color: "gray", border: "1px solid" }} />
                   )}
                 </div>
