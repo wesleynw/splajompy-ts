@@ -161,7 +161,7 @@ export default function Page({
           sx={{ width: "100%" }}
         >
           <TextInput
-            placeholder="Tell us something we've never heard before..."
+            placeholder="What's your favorite color?"
             value={textValue}
             setTextValue={setTextValue}
             inputRef={inputRef}
