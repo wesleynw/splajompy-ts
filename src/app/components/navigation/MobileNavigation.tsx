@@ -3,9 +3,10 @@
 import HomeIcon from "@mui/icons-material/Home";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import PublicIcon from "@mui/icons-material/Public";
 import PersonIcon from "@mui/icons-material/Person";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import ExploreIcon from "@mui/icons-material/Explore";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import {
   BottomNavigation,
@@ -84,7 +85,7 @@ export default function MobileNavigation() {
         />
         <StyledBottomNavigationAction
           value="/all"
-          icon={<PublicIcon />}
+          icon={pathname === "/all" ? <ExploreIcon /> : <ExploreOutlinedIcon />}
           onClick={(event) => handleNavigation(event, "/all")}
           disableRipple
         />
