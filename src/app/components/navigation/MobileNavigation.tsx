@@ -1,13 +1,30 @@
 "use client";
 
 import HomeIcon from "@mui/icons-material/Home";
-import PublicIcon from "@mui/icons-material/Public";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import ExploreIcon from "@mui/icons-material/Explore";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Box,
+  styled,
+} from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
 import { useUser } from "@/app/providers/UserProvider";
+
+const StyledBottomNavigationAction = styled(BottomNavigationAction)({
+  paddingTop: "15px",
+  "&.Mui-selected": {
+    color: "white",
+    filter: "drop-shadow(0 0 5px rgba(255, 255, 255, 0.45))",
+  },
+});
 
 export default function MobileNavigation() {
   const pathname = usePathname();
@@ -41,49 +58,48 @@ export default function MobileNavigation() {
       <BottomNavigation
         value={pathname}
         sx={{
-          height: is_standalone ? "80px" : "56px", // Custom height for standalone mode
-          alignItems: "flex-start", // Align items closer to the top
+          height: is_standalone ? "80px" : "56px",
+          alignItems: "flex-start",
         }}
       >
-        <BottomNavigationAction
+        <StyledBottomNavigationAction
           value="/"
-          icon={<HomeIcon />}
+          icon={pathname === "/" ? <HomeIcon /> : <HomeOutlinedIcon />}
           onClick={(event) => handleNavigation(event, "/")}
           disableRipple
-          sx={{
-            paddingTop: "15px",
-          }}
         />
-        <BottomNavigationAction
+
+        <StyledBottomNavigationAction
           value="/notifications"
           icon={
             <NotificationBadge>
-              <NotificationsIcon />
+              {pathname === "/notifications" ? (
+                <NotificationsIcon />
+              ) : (
+                <NotificationsNoneOutlinedIcon />
+              )}
             </NotificationBadge>
           }
           onClick={(event) => handleNavigation(event, "/notifications")}
           disableRipple
-          sx={{
-            paddingTop: "15px",
-          }}
         />
-        <BottomNavigationAction
+        <StyledBottomNavigationAction
           value="/all"
-          icon={<PublicIcon />}
+          icon={pathname === "/all" ? <ExploreIcon /> : <ExploreOutlinedIcon />}
           onClick={(event) => handleNavigation(event, "/all")}
           disableRipple
-          sx={{
-            paddingTop: "15px",
-          }}
         />
-        <BottomNavigationAction
+        <StyledBottomNavigationAction
           value={`/user/${user.username}`}
-          icon={<PersonIcon />}
+          icon={
+            pathname === `/user/${user.username}` ? (
+              <PersonIcon />
+            ) : (
+              <PersonOutlineOutlinedIcon />
+            )
+          }
           onClick={(event) => handleNavigation(event, `/user/${user.username}`)}
           disableRipple
-          sx={{
-            paddingTop: "15px",
-          }}
         />
       </BottomNavigation>
     </Box>

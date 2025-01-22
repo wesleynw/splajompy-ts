@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { SelectComment, SelectUser } from "@/db/schema";
 import { Box, Typography, Skeleton, useTheme } from "@mui/material";
-import { getComments, insertComment } from "@/app/lib/actions";
+import { getComments } from "@/app/lib/actions";
+
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
+import { insertComment } from "@/app/lib/comments";
 
 interface CommentListProps {
-  poster: string;
   poster_id: number;
   post_id: number;
   commentCount: number;
@@ -14,7 +15,6 @@ interface CommentListProps {
 }
 
 export default function CommentList({
-  poster,
   poster_id,
   post_id,
   commentCount,
@@ -50,28 +50,6 @@ export default function CommentList({
     };
 
     setComments((prevComments) => [...prevComments, formattedComment]);
-    // queryClient.setQueriesData(
-    //   { queryKey: ["feed"] },
-    //   (oldData: { pages: PostType[][] }) => {
-    //     if (!oldData) return oldData;
-
-    //     return {
-    //       ...oldData,
-    //       pages: oldData.pages.map((page) =>
-    //         page.map((post) =>
-    //           post.post_id === post_id
-    //             ? { ...post, comment_count: post.comment_count + 1 }
-    //             : post
-    //         )
-    //       ),
-    //     };
-    //   }
-    // );
-
-    // console.log(
-    //   "Comment added: ",
-    //   queryClient.getQueriesData({ queryKey: ["feed"] })
-    // );
   };
 
   const renderComments = () => {
@@ -107,7 +85,7 @@ export default function CommentList({
 
   return (
     <Box>
-      <CommentInput onAddComment={addComment} poster={poster} />
+      <CommentInput onAddComment={addComment} />
       <Box sx={{ marginTop: 3 }}>{renderComments()}</Box>
     </Box>
   );

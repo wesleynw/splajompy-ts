@@ -3,20 +3,22 @@
 import { useRef, useState } from "react";
 import { Box, Stack, useTheme } from "@mui/material";
 import SubmitPostButton from "./SubmitPostButton";
-import { TextInput } from "./TextInput";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import { getPresignedUrl } from "@/app/lib/s3";
-import { getUsername, insertImage, insertPost } from "../../../lib/actions";
+import { getUsername, insertImage } from "../../../lib/actions";
+import { insertPost } from "@/app/lib/posts";
 import { PostType } from "@/app/data/posts";
 import { useQueryClient } from "@tanstack/react-query";
 import { User } from "@/db/schema";
+import { TextInput } from "./TextInput";
+import { RichTextareaHandle } from "rich-textarea";
 
 type NewPostProps = {
   user: User;
   onPost: () => void;
   insertPostToCache: (post: PostType) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
+  inputRef: React.RefObject<RichTextareaHandle | null>;
 };
 
 export default function Page({
@@ -44,9 +46,7 @@ export default function Page({
 
     setIsLoading(true);
 
-    const formData = new FormData(ref.current!);
-
-    const post = await insertPost(formData, selectedFile !== null);
+    const post = await insertPost(textValue);
     if (!post) {
       return;
     }
@@ -161,9 +161,10 @@ export default function Page({
           sx={{ width: "100%" }}
         >
           <TextInput
-            inputRef={inputRef}
+            placeholder="What's your favorite color?"
             value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
+            setTextValue={setTextValue}
+            inputRef={inputRef}
           />
         </Stack>
         <ImagePreview

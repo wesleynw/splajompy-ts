@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
 import { getCurrentSession } from "@/app/auth/session";
+import { toDisplayFormat } from "@/app/utils/mentions";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -40,8 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post[0].username}: ${post[0].text ?? "Image"}`,
-    description: post[0].text ?? "",
+    title: `${post[0].username}: ${
+      toDisplayFormat(post[0].text ?? "") || "Image"
+    }`,
+    description: toDisplayFormat(post[0].text ?? "") ?? "",
   };
 }
 
