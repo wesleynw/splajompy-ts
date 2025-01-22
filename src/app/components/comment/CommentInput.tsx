@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
-import { TextInput } from "../new/TextInput";
+import { TextInput } from "../post/new/TextInput";
 
 interface Props {
   onAddComment: (text: string) => void;

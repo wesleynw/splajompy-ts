@@ -11,7 +11,7 @@ import ImageModal from "./images/ImageModal";
 import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import LikeButton from "./LikeButton";
-import CommentCount from "./comment/CommentCount";
+import CommentCount from "../comment/CommentCount";
 import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
 import Linkify from "linkify-react";

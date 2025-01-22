@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
-import CommentList from "./comment/CommentList";
+import CommentList from "../comment/CommentList";
 import StandardWrapper from "../loading/StandardWrapper";
 import { useSinglePost } from "@/app/data/SinglePost";
 import ShareButton from "./ShareButton";
