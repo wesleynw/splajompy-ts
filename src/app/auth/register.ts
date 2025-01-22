@@ -36,7 +36,6 @@ export async function register(
   const password = result.data.password;
 
   const existingUsername = await getUserByUsername(username);
-  console.log("a: ", existingUsername);
   if (existingUsername != null) {
     return {
       errors: { username: "This username is taken." },

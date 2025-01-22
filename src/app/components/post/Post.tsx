@@ -71,8 +71,6 @@ export default function Post({
     }
   };
 
-  console.log("content: ", content);
-
   return (
     <Box
       sx={{

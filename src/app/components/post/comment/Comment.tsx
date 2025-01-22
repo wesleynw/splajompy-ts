@@ -54,35 +54,35 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         @{users.username}
       </Typography>
 
-      <Typography
-        variant="body2"
+      <Box
         sx={{
-          lineHeight: 1.6,
-          ...theme.applyStyles("dark", { color: "#ccc" }),
+          color: "#333333",
+          fontWeight: "bold",
+          marginBottom: 3,
+          ...theme.applyStyles("dark", { color: "#ffffff" }),
+          whiteSpace: "pre-line",
+          overflowWrap: "break-word",
+          "& a": {
+            color: "lightblue",
+            textDecoration: "underline",
+          },
+          "& a:hover": {
+            cursor: "pointer",
+          },
         }}
       >
-        <Box
-          sx={{
-            color: "#333333",
-            fontWeight: "bold",
-            marginBottom: 3,
-            ...theme.applyStyles("dark", { color: "#ffffff" }),
-            whiteSpace: "pre-line",
-            overflowWrap: "break-word",
-            "& a": {
-              color: "lightblue",
-              textDecoration: "underline",
-            },
-            "& a:hover": {
-              cursor: "pointer",
-            },
-          }}
-        >
-          <Box>
+        <Box>
+          <Typography
+            variant="body2"
+            sx={{
+              lineHeight: 1.6,
+              ...theme.applyStyles("dark", { color: "#ccc" }),
+            }}
+          >
             <Linkify options={options}>{renderMentions(comments.text)}</Linkify>
-          </Box>
+          </Typography>
         </Box>
-      </Typography>
+      </Box>
       <Typography
         variant="caption"
         sx={{
