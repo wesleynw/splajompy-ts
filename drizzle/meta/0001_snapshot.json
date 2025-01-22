@@ -1,5 +1,5 @@
 {
-  "id": "cdac27d7-8a9b-401b-95fd-c8a1c6bbb88f",
+  "id": "3bb93623-412e-446f-b572-74cec1470e86",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -210,6 +210,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "comment_id": {
+          "name": "comment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "integer",
@@ -235,6 +241,19 @@
           ],
           "columnsTo": [
             "post_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "likes_comment_id_comments_comment_id_fk": {
+          "name": "likes_comment_id_comments_comment_id_fk",
+          "tableFrom": "likes",
+          "tableTo": "comments",
+          "columnsFrom": [
+            "comment_id"
+          ],
+          "columnsTo": [
+            "comment_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"

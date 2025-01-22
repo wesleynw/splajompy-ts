@@ -111,6 +111,9 @@ export const likes = pgTable(
     post_id: integer("post_id")
       .notNull()
       .references(() => posts.post_id, { onDelete: "cascade" }),
+    comment_id: integer("comment_id").references(() => comments.comment_id, {
+      onDelete: "cascade",
+    }),
     user_id: integer("user_id")
       .notNull()
       .references(() => users.user_id, { onDelete: "cascade" }),

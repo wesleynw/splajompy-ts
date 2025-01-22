@@ -504,7 +504,7 @@
         },
         "code": {
           "name": "code",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
