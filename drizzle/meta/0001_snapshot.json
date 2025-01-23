@@ -1,5 +1,5 @@
 {
-  "id": "3bb93623-412e-446f-b572-74cec1470e86",
+  "id": "e2655f50-00b9-4914-aae3-ef5686c085a1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -274,12 +274,13 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "likes_post_id_user_id_unique": {
-          "name": "likes_post_id_user_id_unique",
+        "likes_user_id_post_id_comment_id_unique": {
+          "name": "likes_user_id_post_id_comment_id_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "user_id",
             "post_id",
-            "user_id"
+            "comment_id"
           ]
         }
       },
