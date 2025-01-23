@@ -53,6 +53,7 @@ export default function CommentList({
           key={comment.comment.comment_id}
           comment={comment.comment}
           user={comment.user}
+          refreshComments={refreshComments}
         />
       ));
     }

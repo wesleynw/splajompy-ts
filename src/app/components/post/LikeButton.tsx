@@ -12,12 +12,14 @@ type Props = {
   liked: boolean;
   post_id: number;
   comment_id?: number;
+  refreshComments?: () => Promise<void>;
 };
 
 export default function LikeButton({
   post_id,
   comment_id,
   liked,
+  refreshComments,
 }: Readonly<Props>) {
   const queryClient = useQueryClient();
 
@@ -28,6 +30,7 @@ export default function LikeButton({
   const handleLike = useMutation({
     mutationFn: mutationFn,
     onMutate: async () => {
+      // TODO: needs to work with comments
       // Optimistically update to the new value
       queryClient.setQueryData(["post", String(post_id)], (old: PostType) => ({
         ...old,
@@ -49,6 +52,10 @@ export default function LikeButton({
           };
         }
       );
+
+      if (refreshComments) {
+        await refreshComments();
+      }
     },
   });
 

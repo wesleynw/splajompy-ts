@@ -231,6 +231,7 @@ export async function getPostById(post_id: number) {
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
           AND ${likes.user_id} = ${user.user_id}
+          AND ${likes.comment_id} IS NULL
       )
     `,
     })

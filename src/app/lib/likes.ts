@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { likes, notifications } from "@/db/schema";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { getPostById } from "./posts";
 
@@ -56,7 +56,7 @@ export async function removeLike(
       and(
         eq(likes.post_id, post_id),
         eq(likes.user_id, user.user_id),
-        comment_id ? eq(likes.comment_id, comment_id) : sql`1 = 1`
+        comment_id ? eq(likes.comment_id, comment_id) : isNull(likes.comment_id)
       )
     );
 }
@@ -74,7 +74,9 @@ export async function isLiked(post_id: number, comment_id?: number) {
       and(
         eq(likes.user_id, user.user_id),
         eq(likes.post_id, post_id),
-        comment_id ? eq(likes.comment_id, comment_id) : sql`1 = 1`
+        comment_id !== null && comment_id !== undefined
+          ? eq(likes.comment_id, comment_id)
+          : isNull(likes.comment_id)
       )
     )
     .limit(1);
