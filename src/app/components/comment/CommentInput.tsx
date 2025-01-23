@@ -31,7 +31,7 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
         disabled={!comment.trim()}
         sx={{
           borderRadius: "24px",
-          padding: "8px 24px",
+          padding: "8px 20px",
           textTransform: "none",
           backgroundColor: "#424242",
           color: "white",
@@ -46,7 +46,7 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
           },
         }}
       >
-        Post Comment
+        Comment
       </Button>
     </Box>
   );

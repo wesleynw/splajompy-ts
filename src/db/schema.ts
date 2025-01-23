@@ -74,7 +74,7 @@ export const comments = pgTable("comments", {
   comment_date: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
 });
 
-export type SelectComment = typeof comments.$inferSelect;
+export type Comment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
 
 export const images = pgTable("images", {
@@ -119,7 +119,7 @@ export const likes = pgTable(
       .references(() => users.user_id, { onDelete: "cascade" }),
     created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (table) => [unique().on(table.post_id, table.user_id)]
+  (table) => [unique().on(table.user_id, table.post_id, table.comment_id)]
 );
 
 export const notifications = pgTable("notifications", {

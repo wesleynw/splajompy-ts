@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   CircularProgress,
@@ -194,16 +194,14 @@ export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
         )}
       </Box>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <CommentList
-          poster_id={post.user_id}
-          post_id={post.post_id}
-          commentCount={post.comment_count}
-          setCommentCount={() => {
-            updatePost({ comment_count: post.comment_count + 1 });
-          }}
-        />
-      </Suspense>
+      <CommentList
+        poster_id={post.user_id}
+        post_id={post.post_id}
+        commentCount={post.comment_count}
+        setCommentCount={() => {
+          updatePost({ comment_count: post.comment_count + 1 });
+        }}
+      />
     </Box>
   );
 }

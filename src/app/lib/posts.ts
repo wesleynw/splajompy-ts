@@ -208,7 +208,7 @@ export async function getPostsByUserId(offset: number, user_id: number) {
   return results;
 }
 
-export async function getPost(post_id: number) {
+export async function getPostById(post_id: number) {
   const { user } = await getCurrentSession();
   if (user === null) {
     return;

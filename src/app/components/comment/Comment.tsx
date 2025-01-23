@@ -1,22 +1,24 @@
-import { SelectComment, SelectUser } from "@/db/schema";
-import { Box, Typography } from "@mui/material";
+import { SelectUser } from "@/db/schema";
+import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Linkify from "linkify-react";
 import { renderMentions } from "@/app/utils/mentions";
+import LikeButton from "../post/LikeButton";
+import { CommentWithLike } from "@/app/lib/comments";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 
 type Props = {
-  comments: SelectComment;
-  users: SelectUser;
+  comment: CommentWithLike;
+  user: SelectUser;
 };
 
-export default function Comment({ comments, users }: Readonly<Props>) {
+export default function Comment({ comment, user }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const options = { defaultProtocol: "https", target: "_blank" };
 
@@ -31,54 +33,76 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         backgroundColor: "#222",
       }}
     >
-      <Typography
-        variant="subtitle2"
-        sx={{
-          fontWeight: "bold",
-          marginBottom: 0.5,
-          color: "#e0e0e0",
-        }}
-      >
-        @{users.username}
-      </Typography>
-
-      <Box
-        sx={{
-          color: "#ffffff",
-          fontWeight: "bold",
-          marginBottom: 3,
-          whiteSpace: "pre-line",
-          overflowWrap: "break-word",
-          "& a": {
-            color: "lightblue",
-            textDecoration: "underline",
-          },
-          "& a:hover": {
-            cursor: "pointer",
-          },
-        }}
+      <Stack
+        direction="row"
+        sx={{ justifyContent: "space-between", height: "100%" }}
       >
         <Box>
           <Typography
-            variant="body2"
+            variant="subtitle2"
             sx={{
-              lineHeight: 1.6,
-              color: "#ccc",
+              fontWeight: "bold",
+              marginBottom: 0.5,
+              color: "#e0e0e0",
             }}
           >
-            <Linkify options={options}>{renderMentions(comments.text)}</Linkify>
+            @{user.username}
+          </Typography>
+
+          <Box
+            sx={{
+              color: "#ffffff",
+              fontWeight: "bold",
+              marginBottom: 3,
+              whiteSpace: "pre-line",
+              overflowWrap: "break-word",
+              "& a": {
+                color: "lightblue",
+                textDecoration: "underline",
+              },
+              "& a:hover": {
+                cursor: "pointer",
+              },
+            }}
+          >
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  lineHeight: 1.6,
+                  color: "#ccc",
+                }}
+              >
+                <Linkify options={options}>
+                  {renderMentions(comment.text)}
+                </Linkify>
+              </Typography>
+            </Box>
+          </Box>
+          <Typography
+            variant="caption"
+            sx={{
+              marginTop: 1,
+              display: "block",
+            }}
+          >
+            {dayjs.utc(comment.comment_date).tz(userTimezone).fromNow()}
           </Typography>
         </Box>
-      </Box>
-      <Typography
-        variant="caption"
-        sx={{
-          marginTop: 1,
-          display: "block",
-        }}
-      >
-        {dayjs.utc(comments.comment_date).tz(userTimezone).fromNow()}
-      </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <LikeButton
+            post_id={comment.post_id}
+            comment_id={comment.comment_id}
+            liked={comment.isLiked}
+          />
+        </Box>
+      </Stack>
     </Box>
   );
 }

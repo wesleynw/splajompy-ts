@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPost } from "../lib/posts";
+import { getPostById } from "../lib/posts";
 import { PostType } from "./posts";
 
 export function useSinglePost(post_id: number) {
@@ -9,7 +9,7 @@ export function useSinglePost(post_id: number) {
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["post", post_id],
-    queryFn: () => getPost(post_id),
+    queryFn: () => getPostById(post_id),
   });
 
   const updatePost = (updatedPost: Partial<PostType>) => {

@@ -1,38 +1,24 @@
-import { useEffect, useState } from "react";
-import { SelectComment, SelectUser } from "@/db/schema";
-import { Box, Typography, Skeleton, useTheme } from "@mui/material";
-import { getComments } from "@/app/lib/actions";
+import { Box, Typography, Skeleton } from "@mui/material";
 
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
 import { insertComment } from "@/app/lib/comments";
+import { useComments } from "@/app/data/comments";
 
 interface CommentListProps {
-  poster_id: number;
   post_id: number;
+  poster_id: number;
   commentCount: number;
   setCommentCount: (count: number) => void;
 }
 
 export default function CommentList({
-  poster_id,
   post_id,
+  poster_id,
   commentCount,
   setCommentCount,
 }: Readonly<CommentListProps>) {
-  const theme = useTheme();
-  const [comments, setComments] = useState<
-    { users: SelectUser; comments: SelectComment }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-    getComments(post_id).then((comments) => {
-      setComments(comments);
-      setIsLoading(false);
-    });
-  }, [post_id]);
+  const { isPending, comments, refreshComments } = useComments(post_id);
 
   const addComment = async (text: string) => {
     const result = await insertComment(text, post_id, poster_id);
@@ -42,18 +28,12 @@ export default function CommentList({
       return;
     }
 
+    await refreshComments();
     setCommentCount(commentCount + 1);
-
-    const formattedComment = {
-      users: newComment.users,
-      comments: newComment.comments,
-    };
-
-    setComments((prevComments) => [...prevComments, formattedComment]);
   };
 
   const renderComments = () => {
-    if (isLoading) {
+    if (isPending) {
       return (
         <>
           <Skeleton variant="rounded" height={80} sx={{ marginBottom: 2 }} />
@@ -63,21 +43,22 @@ export default function CommentList({
       );
     }
 
+    if (!comments) {
+      return;
+    }
+
     if (comments.length > 0) {
       return comments.map((comment) => (
         <Comment
-          key={comment.comments.comment_id}
-          comments={comment.comments}
-          users={comment.users}
+          key={comment.comment.comment_id}
+          comment={comment.comment}
+          user={comment.user}
         />
       ));
     }
 
     return (
-      <Typography
-        variant="body2"
-        sx={{ ...theme.applyStyles("dark", { color: "textSecondary" }) }}
-      >
+      <Typography variant="body2" sx={{ color: "textSecondary" }}>
         No comments yet.
       </Typography>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { likePost, unlikePost } from "@/app/lib/likes";
+import { addLike, removeLike } from "@/app/lib/likes";
 import { IconButton, Stack } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -9,26 +9,21 @@ import { PostType } from "@/app/data/posts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
-  post_id: number;
   liked: boolean;
-  updatePost: (updatedPost: Partial<PostType>) => void;
-  poster_id: number;
-  user_id: number;
-  username: string;
+  post_id: number;
+  comment_id?: number;
 };
 
 export default function LikeButton({
   post_id,
+  comment_id,
   liked,
-  poster_id,
-  user_id,
-  username,
 }: Readonly<Props>) {
   const queryClient = useQueryClient();
 
   const mutationFn = liked
-    ? () => unlikePost(post_id, user_id)
-    : () => likePost(post_id, poster_id, user_id, username); // this is stupid
+    ? () => removeLike(post_id, comment_id)
+    : () => addLike(post_id, comment_id);
 
   const handleLike = useMutation({
     mutationFn: mutationFn,
