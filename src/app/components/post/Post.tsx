@@ -39,7 +39,6 @@ interface Props {
 }
 
 export default function Post({
-  updatePost,
   deletePost,
   user,
   id,
@@ -180,14 +179,7 @@ export default function Post({
         >
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
-        <LikeButton
-          post_id={id}
-          poster_id={user_id}
-          user_id={user.user_id}
-          username={user.username}
-          liked={likedByCurrentUser}
-          updatePost={updatePost}
-        />
+        <LikeButton post_id={id} liked={likedByCurrentUser} />
       </Stack>
     </Box>
   );

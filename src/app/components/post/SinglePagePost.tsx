@@ -183,14 +183,7 @@ export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
         </Typography>
 
         {!!user.user_id && (
-          <LikeButton
-            post_id={post.post_id}
-            poster_id={post.user_id}
-            user_id={user.user_id}
-            username={user.username}
-            liked={post.liked}
-            updatePost={updatePost}
-          />
+          <LikeButton post_id={post.post_id} liked={post.liked} />
         )}
       </Box>
 
