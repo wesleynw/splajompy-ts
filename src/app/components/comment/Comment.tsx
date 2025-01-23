@@ -1,5 +1,4 @@
 import { SelectComment, SelectUser } from "@/db/schema";
-import theme from "@/theme";
 import { Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -28,14 +27,8 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         border: "1px solid",
         borderRadius: "12px",
         marginBottom: 2,
-        ...theme.applyStyles("dark", {
-          borderColor: "#444",
-          backgroundColor: "#222",
-        }),
-        ...theme.applyStyles("light", {
-          borderColor: "#ddd",
-          backgroundColor: "#fff",
-        }),
+        borderColor: "#444",
+        backgroundColor: "#222",
       }}
     >
       <Typography
@@ -43,12 +36,7 @@ export default function Comment({ comments, users }: Readonly<Props>) {
         sx={{
           fontWeight: "bold",
           marginBottom: 0.5,
-          ...theme.applyStyles("dark", {
-            color: "#e0e0e0",
-          }),
-          ...theme.applyStyles("light", {
-            color: "#333",
-          }),
+          color: "#e0e0e0",
         }}
       >
         @{users.username}
@@ -56,10 +44,9 @@ export default function Comment({ comments, users }: Readonly<Props>) {
 
       <Box
         sx={{
-          color: "#333333",
+          color: "#ffffff",
           fontWeight: "bold",
           marginBottom: 3,
-          ...theme.applyStyles("dark", { color: "#ffffff" }),
           whiteSpace: "pre-line",
           overflowWrap: "break-word",
           "& a": {
@@ -76,7 +63,7 @@ export default function Comment({ comments, users }: Readonly<Props>) {
             variant="body2"
             sx={{
               lineHeight: 1.6,
-              ...theme.applyStyles("dark", { color: "#ccc" }),
+              color: "#ccc",
             }}
           >
             <Linkify options={options}>{renderMentions(comments.text)}</Linkify>
@@ -86,7 +73,6 @@ export default function Comment({ comments, users }: Readonly<Props>) {
       <Typography
         variant="caption"
         sx={{
-          ...theme.applyStyles("light", { color: "#888" }),
           marginTop: 1,
           display: "block",
         }}
