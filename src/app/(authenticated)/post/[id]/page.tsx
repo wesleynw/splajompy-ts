@@ -1,13 +1,11 @@
 import { getCurrentSession } from "@/app/auth/session";
 import SinglePost from "@/app/components/post/SinglePost";
+import { getPostById } from "@/app/lib/posts";
 import { toDisplayFormat } from "@/app/utils/mentions";
-import { db } from "@/db";
-import { posts, users } from "@/db/schema";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { eq } from "drizzle-orm";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -23,14 +21,9 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = Number((await params).id);
 
-  const post = await db
-    .select({ username: users.username, text: posts.text })
-    .from(posts)
-    .where(eq(posts.post_id, id))
-    .innerJoin(users, eq(posts.user_id, users.user_id))
-    .limit(1);
+  const post = await getPostById(id);
 
-  if (post.length === 0) {
+  if (!post) {
     return {
       title: "Post not found",
       description: "This post cannot be found.",
@@ -38,10 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post[0].username}: ${
-      toDisplayFormat(post[0].text ?? "") || "Image"
-    }`,
-    description: toDisplayFormat(post[0].text ?? "") ?? "",
+    title: `${post.poster}: ${toDisplayFormat(post.text ?? "") || "Image"}`,
+    description: toDisplayFormat(post.text ?? "") ?? "",
   };
 }
 

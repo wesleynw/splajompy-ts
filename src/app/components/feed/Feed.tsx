@@ -1,11 +1,11 @@
 "use client";
 
+import { useFeed } from "@/app/data/posts";
+import { User } from "@/db/schema";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useEffect, useRef } from "react";
-import { useFeed } from "@/app/data/posts";
-import Post from "../post/Post";
 import Spinner from "../loading/Spinner";
-import { User } from "@/db/schema";
+import Post from "../post/Post";
 import EmptyFeed from "./EmptyFeed";
 
 type Props = {
