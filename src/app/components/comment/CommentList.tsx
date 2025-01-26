@@ -8,15 +8,11 @@ import { useComments } from "@/app/data/comments";
 interface CommentListProps {
   post_id: number;
   poster_id: number;
-  commentCount: number;
-  setCommentCount: (count: number) => void;
 }
 
 export default function CommentList({
   post_id,
   poster_id,
-  commentCount,
-  setCommentCount,
 }: Readonly<CommentListProps>) {
   const { isPending, comments, toggleLiked } = useComments(post_id);
 
@@ -27,8 +23,6 @@ export default function CommentList({
     if (!newComment) {
       return;
     }
-
-    setCommentCount(commentCount + 1);
   };
 
   const renderComments = () => {

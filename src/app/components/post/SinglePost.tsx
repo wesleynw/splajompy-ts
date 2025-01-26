@@ -39,8 +39,7 @@ type Props = {
 export default function SinglePost({ post_id, user }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
-  const { isPending, post, updatePost, deletePost, toggleLiked } =
-    useSinglePost(post_id);
+  const { isPending, post, deletePost, toggleLiked } = useSinglePost(post_id);
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
@@ -192,14 +191,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         )}
       </Box>
 
-      <CommentList
-        poster_id={post.user_id}
-        post_id={post.post_id}
-        commentCount={post.comment_count}
-        setCommentCount={() => {
-          updatePost({ comment_count: post.comment_count + 1 });
-        }}
-      />
+      <CommentList poster_id={post.user_id} post_id={post.post_id} />
     </Box>
   );
 }
