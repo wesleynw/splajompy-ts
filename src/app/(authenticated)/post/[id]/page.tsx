@@ -1,18 +1,15 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import { getCurrentSession } from "@/app/auth/session";
+import SinglePost from "@/app/components/post/SinglePost";
+import { toDisplayFormat } from "@/app/utils/mentions";
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import SinglePost from "@/app/components/post/SinglePost";
-import { Suspense } from "react";
-import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
-import StandardWrapper from "@/app/components/loading/StandardWrapper";
-import { getCurrentSession } from "@/app/auth/session";
-import { toDisplayFormat } from "@/app/utils/mentions";
+import { redirect } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -60,15 +57,5 @@ export default async function Page({
 
   const post_id = (await params).id;
 
-  return (
-    <Suspense
-      fallback={
-        <StandardWrapper>
-          <SinglePostSkeleton />
-        </StandardWrapper>
-      }
-    >
-      <SinglePost post_id={post_id} user={user} />
-    </Suspense>
-  );
+  return <SinglePost post_id={post_id} user={user} />;
 }

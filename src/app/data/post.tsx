@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toggleLiked } from "../lib/likes";
 import { getPostById } from "../lib/posts";
 import { PostType } from "./posts";
-import { toggleLiked } from "../lib/likes";
 
 export function useSinglePost(post_id: number) {
   const queryClient = useQueryClient();
@@ -21,10 +21,6 @@ export function useSinglePost(post_id: number) {
         return { ...currentData, ...updatedPost };
       }
     );
-  };
-
-  const deletePost = () => {
-    queryClient.setQueryData(["post", post_id], undefined);
   };
 
   const likedMutation = useMutation({
@@ -62,7 +58,6 @@ export function useSinglePost(post_id: number) {
     post: data,
     error,
     updatePost,
-    deletePost,
     toggleLiked: likedMutation.mutate,
   };
 }

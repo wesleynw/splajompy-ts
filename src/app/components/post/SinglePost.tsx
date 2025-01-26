@@ -1,31 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { useSinglePost } from "@/app/data/post";
+import { renderMentions } from "@/app/utils/mentions";
+import { User } from "@/db/schema";
+import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import ResponsiveImage from "./images/ResponsiveImage";
-import ImageModal from "./images/ImageModal";
-import PostDropdown from "./PostDropdown";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import FollowButton from "../follows/FollowButton";
-import LikeButton from "./LikeButton";
-import CommentList from "../comment/CommentList";
-import StandardWrapper from "../loading/StandardWrapper";
-import { useSinglePost } from "@/app/data/post";
-import ShareButton from "./ShareButton";
+import utc from "dayjs/plugin/utc";
 import Linkify from "linkify-react";
-import { User } from "@/db/schema";
-import { renderMentions } from "@/app/utils/mentions";
+import Link from "next/link";
+import React, { useState } from "react";
+import CommentList from "../comment/CommentList";
+import FollowButton from "../follows/FollowButton";
+import Spinner from "../loading/Spinner";
+import ImageModal from "./images/ImageModal";
+import ResponsiveImage from "./images/ResponsiveImage";
+import LikeButton from "./LikeButton";
+import PostDropdown from "./PostDropdown";
+import ShareButton from "./ShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -37,20 +30,16 @@ type Props = {
 };
 
 export default function SinglePost({ post_id, user }: Readonly<Props>) {
-  const theme = useTheme();
-  const router = useRouter();
-  const { isPending, post, deletePost, toggleLiked } = useSinglePost(post_id);
+  const { isPending, post, toggleLiked } = useSinglePost(post_id);
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
+  const options = { defaultProtocol: "https", target: "_blank" };
+
   if (isPending) {
-    return (
-      <StandardWrapper>
-        <CircularProgress sx={{ width: "100%", margin: "0px auto" }} />
-      </StandardWrapper>
-    );
+    return <Spinner />;
   }
 
   if (!post) {
@@ -67,17 +56,6 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
     );
   }
 
-  const handleDelete = async () => {
-    try {
-      deletePost();
-      router.push("/");
-    } catch (error) {
-      console.error("Failed to delete post:", error);
-    }
-  };
-
-  const options = { defaultProtocol: "https", target: "_blank" };
-
   return (
     <Box
       sx={{
@@ -87,12 +65,8 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         marginBottom: 10,
         borderRadius: "8px",
         backgroundColor: "background.paper",
-        background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-        ...theme.applyStyles("dark", {
-          background: "linear-gradient(135deg, #1b1b1b, #222222)",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
-        }),
+        background: "linear-gradient(135deg, #1b1b1b, #222222)",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
       }}
     >
       <Stack
@@ -107,7 +81,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
             variant="subtitle2"
             sx={{
               fontWeight: 800,
-              color: theme.palette.text.secondary,
+              color: "white",
               alignSelf: "flex-end",
               "&:hover": {
                 textDecoration: "underline",
@@ -120,10 +94,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         <Stack direction="row">
           <ShareButton />
           {user.user_id === post.user_id ? (
-            <PostDropdown
-              post_id={post.post_id}
-              deletePostFromCache={handleDelete}
-            />
+            <PostDropdown post_id={post.post_id} />
           ) : (
             <FollowButton user_id={post.user_id} show_unfollow={false} />
           )}
@@ -133,7 +104,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
       <Typography
         variant="h6"
         sx={{
-          color: theme.palette.text.primary,
+          color: "white",
           fontWeight: "bold",
           marginBottom: 2,
           whiteSpace: "pre-line",
@@ -175,20 +146,18 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         <Typography
           variant="body2"
           sx={{
-            color: theme.palette.text.secondary,
+            color: "white",
             marginBottom: 1,
           }}
         >
           {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
         </Typography>
 
-        {!!user.user_id && (
-          <LikeButton
-            post_id={post.post_id}
-            liked={post.liked}
-            toggleLike={() => toggleLiked()}
-          />
-        )}
+        <LikeButton
+          post_id={post.post_id}
+          liked={post.liked}
+          toggleLike={() => toggleLiked()}
+        />
       </Box>
 
       <CommentList poster_id={post.user_id} post_id={post.post_id} />
