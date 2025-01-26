@@ -1,13 +1,13 @@
+import { CommentWithLike } from "@/app/lib/comments";
+import { renderMentions } from "@/app/utils/mentions";
 import { SelectUser } from "@/db/schema";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import relativeTime from "dayjs/plugin/relativeTime";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import Linkify from "linkify-react";
-import { renderMentions } from "@/app/utils/mentions";
 import LikeButton from "../post/LikeButton";
-import { CommentWithLike } from "@/app/lib/comments";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -102,10 +102,9 @@ export default function Comment({
           }}
         >
           <LikeButton
-            post_id={comment.post_id}
-            comment_id={comment.comment_id}
             liked={comment.isLiked}
             toggleLike={toggleLike}
+            isComment={true}
           />
         </Box>
       </Stack>
