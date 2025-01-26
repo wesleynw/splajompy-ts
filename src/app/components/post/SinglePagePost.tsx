@@ -21,7 +21,7 @@ import FollowButton from "../follows/FollowButton";
 import LikeButton from "./LikeButton";
 import CommentList from "../comment/CommentList";
 import StandardWrapper from "../loading/StandardWrapper";
-import { useSinglePost } from "@/app/data/SinglePost";
+import { useSinglePost } from "@/app/data/post";
 import ShareButton from "./ShareButton";
 import Linkify from "linkify-react";
 import { User } from "@/db/schema";
