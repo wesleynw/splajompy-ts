@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import { PostType } from "@/app/data/posts";
+import { renderMentions } from "@/app/utils/mentions";
+import { User } from "@/db/schema";
+import theme from "@/theme";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import ResponsiveImage from "./images/ResponsiveImage";
-import ImageModal from "./images/ImageModal";
-import theme from "@/theme";
-import { useRouter } from "next/navigation";
-import LikeButton from "./LikeButton";
-import CommentCount from "../comment/CommentCount";
-import { PostType } from "@/app/data/posts";
-import PostDropdown from "./PostDropdown";
+import utc from "dayjs/plugin/utc";
 import Linkify from "linkify-react";
-import { User } from "@/db/schema";
-import { renderMentions } from "@/app/utils/mentions";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import CommentCount from "../comment/CommentCount";
+import ImageModal from "./images/ImageModal";
+import ResponsiveImage from "./images/ResponsiveImage";
+import LikeButton from "./LikeButton";
+import PostDropdown from "./PostDropdown";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -40,7 +40,6 @@ interface Props {
 }
 
 export default function Post({
-  deletePost,
   user,
   id,
   date,
@@ -120,9 +119,7 @@ export default function Post({
           @{poster}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        {user.user_id == user_id && (
-          <PostDropdown post_id={id} deletePostFromCache={deletePost} />
-        )}
+        {user.user_id == user_id && <PostDropdown post_id={id} />}
       </Stack>
 
       {content && (
