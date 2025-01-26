@@ -1,39 +1,28 @@
-import { Box, Typography, Skeleton } from "@mui/material";
-
-import CommentInput from "./CommentInput";
-import Comment from "./Comment";
-import { insertComment } from "@/app/lib/comments";
 import { useComments } from "@/app/data/comments";
+import { User } from "@/db/schema";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Spinner from "../loading/Spinner";
+import Comment from "./Comment";
+import CommentInput from "./CommentInput";
 
 interface CommentListProps {
+  user: User;
   post_id: number;
-  poster_id: number;
 }
 
 export default function CommentList({
+  user,
   post_id,
-  poster_id,
 }: Readonly<CommentListProps>) {
-  const { isPending, comments, toggleLiked } = useComments(post_id);
-
-  const addComment = async (text: string) => {
-    const result = await insertComment(text, post_id, poster_id);
-    const newComment = result?.[0];
-
-    if (!newComment) {
-      return;
-    }
-  };
+  const { isPending, comments, toggleLiked, addComment } = useComments(
+    user,
+    post_id
+  );
 
   const renderComments = () => {
     if (isPending) {
-      return (
-        <>
-          <Skeleton variant="rounded" height={80} sx={{ marginBottom: 2 }} />
-          <Skeleton variant="rounded" height={60} sx={{ marginBottom: 2 }} />
-          <Skeleton variant="rounded" height={50} />
-        </>
-      );
+      return <Spinner />;
     }
 
     if (!comments) {

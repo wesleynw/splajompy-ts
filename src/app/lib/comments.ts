@@ -6,6 +6,7 @@ import { desc, eq } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { internalTagRegex } from "../utils/mentions";
 import { isLiked } from "./likes";
+import { getPostById } from "./posts";
 
 export type CommentWithLike = Comment & { isLiked: boolean };
 
@@ -42,52 +43,51 @@ export async function getCommentsByPost(
   return commentsWithUsers;
 }
 
-export async function insertComment(
-  text: string,
-  post_id: number,
-  poster: number
-) {
+export async function insertComment(post_id: number, text: string) {
   const { user } = await getCurrentSession();
   if (user === null) {
     return;
   }
 
-  if (text) {
-    const comment = await db
-      .insert(comments)
-      .values({
-        post_id: Number(post_id),
-        user_id: user.user_id,
-        text: text,
-      })
-      .returning();
+  const post = await getPostById(post_id);
+  if (!post) {
+    return;
+  }
 
-    const result = await db
-      .select()
-      .from(comments)
-      .innerJoin(users, eq(comments.user_id, users.user_id))
-      .where(eq(comments.comment_id, comment[0].comment_id))
-      .limit(1);
+  const comment = await db
+    .insert(comments)
+    .values({
+      post_id: Number(post_id),
+      user_id: user.user_id,
+      text: text,
+    })
+    .returning();
 
-    for (const tag of text.matchAll(internalTagRegex)) {
-      const user_id = Number(tag[1]);
-      if (user.user_id !== user_id && user_id !== poster) {
-        await db.insert(notifications).values({
-          user_id: user_id,
-          message: `@${user.username} mentioned you in a comment`,
-          link: `/post/${post_id}`,
-        });
-      }
-    }
+  const result = await db
+    .select()
+    .from(comments)
+    .innerJoin(users, eq(comments.user_id, users.user_id))
+    .where(eq(comments.comment_id, comment[0].comment_id))
+    .limit(1);
 
-    if (poster !== user.user_id) {
+  for (const tag of text.matchAll(internalTagRegex)) {
+    const user_id = Number(tag[1]);
+    if (user.user_id !== user_id && user_id !== post.user_id) {
       await db.insert(notifications).values({
-        user_id: poster,
-        message: `@${user.username} commented on your post`,
+        user_id: user_id,
+        message: `@${user.username} mentioned you in a comment`,
         link: `/post/${post_id}`,
       });
     }
-
-    return result;
   }
+
+  if (post.user_id !== user.user_id) {
+    await db.insert(notifications).values({
+      user_id: post.user_id,
+      message: `@${user.username} commented on your post`,
+      link: `/post/${post_id}`,
+    });
+  }
+
+  return result;
 }

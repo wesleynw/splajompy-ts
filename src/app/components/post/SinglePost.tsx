@@ -160,7 +160,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         />
       </Box>
 
-      <CommentList poster_id={post.user_id} post_id={post.post_id} />
+      <CommentList post_id={post.post_id} user={user} />
     </Box>
   );
 }
