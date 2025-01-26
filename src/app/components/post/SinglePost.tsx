@@ -36,7 +36,7 @@ type Props = {
   user: User;
 };
 
-export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
+export default function SinglePost({ post_id, user }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
   const { isPending, post, updatePost, deletePost, toggleLiked } =

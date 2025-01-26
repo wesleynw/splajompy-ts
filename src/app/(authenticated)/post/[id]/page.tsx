@@ -7,7 +7,7 @@ import { posts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import SinglePagePost from "@/app/components/post/SinglePost";
+import SinglePost from "@/app/components/post/SinglePost";
 import { Suspense } from "react";
 import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
 import StandardWrapper from "@/app/components/loading/StandardWrapper";
@@ -68,7 +68,7 @@ export default async function Page({
         </StandardWrapper>
       }
     >
-      <SinglePagePost post_id={post_id} user={user} />
+      <SinglePost post_id={post_id} user={user} />
     </Suspense>
   );
 }
