@@ -50,13 +50,19 @@ export async function removeLike(
     return;
   }
 
+  console.warn(
+    `user: ${user.username} is removing like from post: ${post_id}, comment: ${comment_id}`
+  );
+
   await db
     .delete(likes)
     .where(
       and(
         eq(likes.post_id, post_id),
         eq(likes.user_id, user.user_id),
-        comment_id ? eq(likes.comment_id, comment_id) : isNull(likes.comment_id)
+        comment_id !== undefined
+          ? eq(likes.comment_id, comment_id)
+          : isNull(likes.comment_id)
       )
     );
 }
@@ -82,4 +88,21 @@ export async function isLiked(post_id: number, comment_id?: number) {
     .limit(1);
 
   return result.length > 0;
+}
+
+export async function toggleLiked(
+  post_id: number,
+  comment_id?: number
+): Promise<void> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  const liked = await isLiked(post_id, comment_id);
+  if (liked) {
+    await removeLike(post_id, comment_id);
+  } else {
+    await addLike(post_id, comment_id);
+  }
 }

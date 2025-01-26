@@ -16,13 +16,13 @@ dayjs.extend(relativeTime);
 type Props = {
   comment: CommentWithLike;
   user: SelectUser;
-  refreshComments: () => Promise<void>;
+  toggleLike: () => void;
 };
 
 export default function Comment({
   comment,
   user,
-  refreshComments,
+  toggleLike,
 }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
   const options = { defaultProtocol: "https", target: "_blank" };
@@ -105,7 +105,7 @@ export default function Comment({
             post_id={comment.post_id}
             comment_id={comment.comment_id}
             liked={comment.isLiked}
-            refreshComments={refreshComments}
+            toggleLike={toggleLike}
           />
         </Box>
       </Stack>

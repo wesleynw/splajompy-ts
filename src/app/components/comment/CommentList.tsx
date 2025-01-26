@@ -18,7 +18,7 @@ export default function CommentList({
   commentCount,
   setCommentCount,
 }: Readonly<CommentListProps>) {
-  const { isPending, comments, refreshComments } = useComments(post_id);
+  const { isPending, comments, toggleLiked } = useComments(post_id);
 
   const addComment = async (text: string) => {
     const result = await insertComment(text, post_id, poster_id);
@@ -28,7 +28,6 @@ export default function CommentList({
       return;
     }
 
-    await refreshComments();
     setCommentCount(commentCount + 1);
   };
 
@@ -53,7 +52,7 @@ export default function CommentList({
           key={comment.comment.comment_id}
           comment={comment.comment}
           user={comment.user}
-          refreshComments={refreshComments}
+          toggleLike={() => toggleLiked(comment.comment.comment_id)}
         />
       ));
     }

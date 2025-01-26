@@ -1,8 +1,9 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPostById } from "../lib/posts";
 import { PostType } from "./posts";
+import { toggleLiked } from "../lib/likes";
 
 export function useSinglePost(post_id: number) {
   const queryClient = useQueryClient();
@@ -41,6 +42,37 @@ export function useSinglePost(post_id: number) {
     // queryClient.invalidateQueries(["feed"]);
   };
 
+  // NEW AREA: now we're trying out optimistic mutations, rather than just cache changes
+
+  const likedMutation = useMutation({
+    mutationFn: () => toggleLiked(post_id),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["post", post_id] });
+
+      const previousPost = queryClient.getQueryData<PostType>([
+        "post",
+        post_id,
+      ]);
+
+      if (previousPost) {
+        queryClient.setQueryData(["post", post_id], {
+          ...previousPost,
+          liked: !previousPost.liked,
+        });
+      }
+
+      return { previousPost };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousPost) {
+        queryClient.setQueryData(["post", post_id], context.previousPost);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["post", post_id] });
+    },
+  });
+
   return {
     isPending,
     isError,
@@ -48,5 +80,6 @@ export function useSinglePost(post_id: number) {
     error,
     updatePost,
     deletePost,
+    toggleLiked: likedMutation.mutate,
   };
 }

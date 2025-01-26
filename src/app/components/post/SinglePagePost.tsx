@@ -39,7 +39,8 @@ type Props = {
 export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
   const theme = useTheme();
   const router = useRouter();
-  const { isPending, post, updatePost, deletePost } = useSinglePost(post_id);
+  const { isPending, post, updatePost, deletePost, toggleLiked } =
+    useSinglePost(post_id);
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
@@ -183,7 +184,11 @@ export default function SinglePagePost({ post_id, user }: Readonly<Props>) {
         </Typography>
 
         {!!user.user_id && (
-          <LikeButton post_id={post.post_id} liked={post.liked} />
+          <LikeButton
+            post_id={post.post_id}
+            liked={post.liked}
+            toggleLike={() => toggleLiked()}
+          />
         )}
       </Box>
 

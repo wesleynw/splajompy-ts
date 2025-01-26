@@ -24,6 +24,7 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
     status,
     updateCachedPost,
     deletePost,
+    toggleLiked,
   } = useFeed(page, user_id);
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
             imagePath={post.imageBlobUrl}
             comment_count={post.comment_count}
             likedByCurrentUser={post.liked}
+            toggleLiked={() => toggleLiked(post.post_id)}
           />
         ))
       )}

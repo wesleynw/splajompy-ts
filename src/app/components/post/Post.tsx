@@ -36,6 +36,7 @@ interface Props {
   imageWidth: number | null;
   imageHeight: number | null;
   likedByCurrentUser: boolean;
+  toggleLiked: () => void;
 }
 
 export default function Post({
@@ -51,6 +52,7 @@ export default function Post({
   imageWidth,
   imageHeight,
   likedByCurrentUser,
+  toggleLiked,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -179,7 +181,11 @@ export default function Post({
         >
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
-        <LikeButton post_id={id} liked={likedByCurrentUser} />
+        <LikeButton
+          post_id={id}
+          liked={likedByCurrentUser}
+          toggleLike={toggleLiked}
+        />
       </Stack>
     </Box>
   );
