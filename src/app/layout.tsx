@@ -1,12 +1,11 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { Roboto } from "next/font/google";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "../theme";
 import { Box } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import PlausibleProvider from "next-plausible";
+import { ThemeProvider } from "@mui/material/styles";
+import type { Metadata, Viewport } from "next";
+import { Roboto } from "next/font/google";
+import theme from "../theme";
+import "./globals.css";
 import { ReactQueryProvider } from "./providers/ReacyQueryProvider";
 
 const roboto = Roboto({
@@ -35,13 +34,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <PlausibleProvider
-          domain="splajompy.com"
-          customDomain="https://analytics.splajompy.com"
-          selfHosted
-        />
-      </head>
       <body className={roboto.variable}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
