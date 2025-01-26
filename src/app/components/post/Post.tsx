@@ -1,4 +1,3 @@
-import { PostType } from "@/app/data/posts";
 import { renderMentions } from "@/app/utils/mentions";
 import { PublicUser } from "@/db/schema";
 import theme from "@/theme";
@@ -23,30 +22,29 @@ dayjs.extend(timezone);
 type Props = {
   id: number;
   user: PublicUser;
-  updatePost: (updatedPost: Partial<PostType>) => void;
-  date: Date;
-  content: string | null;
   user_id: number;
   author: string;
-  commentCount: number;
-  imagePath: string | null;
+  date: Date;
+  text: string | null;
+  imageUrl: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
+  commentCount: number;
   liked: boolean;
   toggleLiked: () => void;
 };
 
 export default function Post({
-  user,
   id,
-  date,
-  content,
+  user,
   user_id,
   author,
-  commentCount,
-  imagePath,
+  date,
+  text,
+  imageUrl,
   imageWidth,
   imageHeight,
+  commentCount,
   liked,
   toggleLiked,
 }: Readonly<Props>) {
@@ -119,7 +117,7 @@ export default function Post({
         {user.user_id == user_id && <PostDropdown post_id={id} />}
       </Stack>
 
-      {content && (
+      {text && (
         <Box
           sx={{
             color: "#333333",
@@ -138,21 +136,21 @@ export default function Post({
           }}
         >
           <Box onClick={handleLinkClick}>
-            <Linkify options={options}>{renderMentions(content)}</Linkify>
+            <Linkify options={options}>{renderMentions(text)}</Linkify>
           </Box>
         </Box>
       )}
 
-      {imagePath && imageHeight && imageWidth && (
+      {imageUrl && imageHeight && imageWidth && (
         <Box>
           <ResponsiveImage
-            imagePath={imagePath}
+            imagePath={imageUrl}
             width={imageWidth}
             height={imageHeight}
             setOpen={setOpen}
           />
           <ImageModal
-            imagePath={imagePath}
+            imagePath={imageUrl}
             imageWidth={imageWidth}
             imageHeight={imageHeight}
             open={open}

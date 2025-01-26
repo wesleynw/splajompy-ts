@@ -16,15 +16,8 @@ type Props = {
 };
 
 export default function Feed({ user, page, user_id }: Readonly<Props>) {
-  const {
-    posts,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    status,
-    updateCachedPost,
-    toggleLiked,
-  } = useFeed(page, user_id);
+  const { posts, fetchNextPage, hasNextPage, isFetching, status, toggleLiked } =
+    useFeed(page, user_id);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -63,7 +56,11 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
   }
 
   if (posts.pages.length === 1 && posts.pages[0].length === 0) {
-    return <EmptyFeed />;
+    return page == "home" || page == "all" ? (
+      <EmptyFeed />
+    ) : (
+      <div>no posts</div>
+    );
   }
 
   return (
@@ -80,14 +77,13 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
             key={post.post_id}
             id={post.post_id}
             user={user}
-            updatePost={updateCachedPost}
             date={new Date(post.postdate + "Z")}
             user_id={post.user_id}
             author={post.poster}
+            imageUrl={post.imageBlobUrl}
             imageHeight={post.imageHeight}
             imageWidth={post.imageWidth}
-            content={post.text}
-            imagePath={post.imageBlobUrl}
+            text={post.text}
             commentCount={post.comment_count}
             liked={post.liked}
             toggleLiked={() => toggleLiked(post.post_id)}
