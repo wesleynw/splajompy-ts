@@ -64,7 +64,7 @@ CREATE TABLE "comments" (
 --> statement-breakpoint
 CREATE TABLE "verificationCodes" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"code" integer NOT NULL,
+	"code" text NOT NULL,
 	"user_id" integer NOT NULL,
 	"expiresAt" timestamp NOT NULL,
 	CONSTRAINT "verificationCodes_user_id_unique" UNIQUE("user_id")

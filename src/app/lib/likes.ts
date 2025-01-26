@@ -2,49 +2,107 @@
 
 import { db } from "@/db";
 import { likes, notifications } from "@/db/schema";
-import { and, count, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
+import { getCurrentSession } from "../auth/session";
+import { getPostById } from "./posts";
 
-// TODO: add auth checks
-
-export async function likePost(
+export async function addLike(
   post_id: number,
-  poster_id: number,
-  user_id: number,
-  username: string
-) {
+  comment_id?: number
+): Promise<void> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  console.warn(
+    `user: ${user.username} is liking post: ${post_id}, comment: ${comment_id}`
+  );
+
+  const post = await getPostById(post_id);
+  if (post == null) {
+    return;
+  }
+
   await db.insert(likes).values({
-    post_id,
-    user_id,
+    post_id: post_id,
+    comment_id: comment_id,
+    user_id: user.user_id,
   });
 
-  if (poster_id !== user_id) {
+  if (user.user_id !== post.user_id) {
     await db.insert(notifications).values({
-      user_id: poster_id,
-      message: `@${username} liked your post`,
+      user_id: post.user_id,
+      message: `@${user.username} liked your ${
+        comment_id ? "comment" : "post"
+      }`,
       link: `/post/${post_id}`,
     });
   }
 }
 
-export async function unlikePost(post_id: number, user_id: number) {
+export async function removeLike(
+  post_id: number,
+  comment_id?: number
+): Promise<void> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  console.warn(
+    `user: ${user.username} is removing like from post: ${post_id}, comment: ${comment_id}`
+  );
+
   await db
     .delete(likes)
-    .where(and(eq(likes.post_id, post_id), eq(likes.user_id, user_id)));
+    .where(
+      and(
+        eq(likes.post_id, post_id),
+        eq(likes.user_id, user.user_id),
+        comment_id !== undefined
+          ? eq(likes.comment_id, comment_id)
+          : isNull(likes.comment_id)
+      )
+    );
 }
 
-export async function getLikeData(post_id: number, user_id: number) {
-  const like = await db
+export async function isLiked(post_id: number, comment_id?: number) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  const result = await db
     .select()
     .from(likes)
-    .where(and(eq(likes.post_id, post_id), eq(likes.user_id, user_id)));
+    .where(
+      and(
+        eq(likes.user_id, user.user_id),
+        eq(likes.post_id, post_id),
+        comment_id !== null && comment_id !== undefined
+          ? eq(likes.comment_id, comment_id)
+          : isNull(likes.comment_id)
+      )
+    )
+    .limit(1);
 
-  const likeCount = await db
-    .select({ count: count() })
-    .from(likes)
-    .where(eq(likes.post_id, post_id));
+  return result.length > 0;
+}
 
-  return {
-    isLiked: like.length > 0,
-    likeCount: likeCount[0].count ?? 0,
-  };
+export async function toggleLiked(
+  post_id: number,
+  comment_id?: number
+): Promise<void> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  const liked = await isLiked(post_id, comment_id);
+  if (liked) {
+    await removeLike(post_id, comment_id);
+  } else {
+    await addLike(post_id, comment_id);
+  }
 }

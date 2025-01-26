@@ -1,6 +1,11 @@
 "use client";
 
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { toggleLiked } from "../lib/likes";
 import {
   getAllPostsForFollowing,
   getAllPostsFromDb,
@@ -114,8 +119,41 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     );
   };
 
+  const likedMutation = useMutation({
+    mutationFn: (post_id: number) => toggleLiked(post_id),
+    onMutate: async (post_id) => {
+      await queryClient.cancelQueries({ queryKey: ["feed", page] });
+
+      const previousPosts = queryClient.getQueryData<{ pages: PostType[][] }>([
+        "feed",
+        page,
+      ]);
+
+      if (previousPosts) {
+        queryClient.setQueryData(["feed", page], {
+          ...previousPosts,
+          pages: previousPosts.pages.map((posts) =>
+            posts.map((post) =>
+              post.post_id === post_id ? { ...post, liked: !post.liked } : post
+            )
+          ),
+        });
+      }
+
+      return { previousPosts };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["feed", page], context.previousPosts);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["feed", page] });
+    },
+  });
+
   return {
-    data,
+    posts: data,
     error,
     fetchNextPage,
     hasNextPage,
@@ -125,5 +163,6 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     updateCachedPost,
     insertPost,
     deletePost,
+    toggleLiked: likedMutation.mutate,
   };
 }

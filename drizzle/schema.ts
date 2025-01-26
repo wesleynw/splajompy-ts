@@ -124,7 +124,7 @@ export const comments = pgTable("comments", {
 
 export const verificationCodes = pgTable("verificationCodes", {
 	id: serial().primaryKey().notNull(),
-	code: integer().notNull(),
+	code: text().notNull(),
 	userId: integer("user_id").notNull(),
 	expiresAt: timestamp({ mode: 'string' }).notNull(),
 }, (table) => [

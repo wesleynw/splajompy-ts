@@ -1,14 +1,14 @@
+import { sql } from "drizzle-orm";
 import {
+  boolean,
+  integer,
   pgTable,
   serial,
-  varchar,
-  integer,
-  timestamp,
   text,
+  timestamp,
   unique,
-  boolean,
+  varchar,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   user_id: serial().primaryKey().notNull().unique(),
@@ -21,6 +21,7 @@ export type SelectUser = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 export type User = typeof users.$inferSelect;
+export type PublicUser = Omit<User, "password">;
 
 export const sessions = pgTable("sessions", {
   id: text().primaryKey(),
@@ -74,7 +75,7 @@ export const comments = pgTable("comments", {
   comment_date: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
 });
 
-export type SelectComment = typeof comments.$inferSelect;
+export type Comment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
 
 export const images = pgTable("images", {
@@ -111,12 +112,15 @@ export const likes = pgTable(
     post_id: integer("post_id")
       .notNull()
       .references(() => posts.post_id, { onDelete: "cascade" }),
+    comment_id: integer("comment_id").references(() => comments.comment_id, {
+      onDelete: "cascade",
+    }),
     user_id: integer("user_id")
       .notNull()
       .references(() => users.user_id, { onDelete: "cascade" }),
     created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (table) => [unique().on(table.post_id, table.user_id)]
+  (table) => [unique().on(table.user_id, table.post_id, table.comment_id)]
 );
 
 export const notifications = pgTable("notifications", {

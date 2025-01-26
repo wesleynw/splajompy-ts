@@ -30,6 +30,7 @@ export default function MentionDialog({
       <List
         dense={true}
         sx={{
+          position: "absolute",
           backgroundColor: "black",
           borderRadius: "10px",
           border: "1px solid white",

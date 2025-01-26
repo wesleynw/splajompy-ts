@@ -79,6 +79,7 @@ export async function getAllPostsFromDb(offset: number) {
           FROM ${likes}
           WHERE ${likes.post_id} = ${posts.post_id}
             AND ${likes.user_id} = ${user.user_id}
+            AND ${likes.comment_id} IS NULL
         )
       `,
     })
@@ -125,6 +126,7 @@ export async function getAllPostsForFollowing(offset: number) {
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
           AND ${likes.user_id} = ${user_id}
+          AND ${likes.comment_id} IS NULL
       )
     `,
     })
@@ -186,6 +188,7 @@ export async function getPostsByUserId(offset: number, user_id: number) {
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
           AND ${likes.user_id} = ${user.user_id}
+          AND ${likes.comment_id} IS NULL
       )
     `,
     })
@@ -208,7 +211,7 @@ export async function getPostsByUserId(offset: number, user_id: number) {
   return results;
 }
 
-export async function getPost(post_id: number) {
+export async function getPostById(post_id: number) {
   const { user } = await getCurrentSession();
   if (user === null) {
     return;
@@ -231,6 +234,7 @@ export async function getPost(post_id: number) {
         FROM ${likes}
         WHERE ${likes.post_id} = ${posts.post_id}
           AND ${likes.user_id} = ${user.user_id}
+          AND ${likes.comment_id} IS NULL
       )
     `,
     })

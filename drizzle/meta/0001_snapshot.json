@@ -1,5 +1,5 @@
 {
-  "id": "cdac27d7-8a9b-401b-95fd-c8a1c6bbb88f",
+  "id": "e2655f50-00b9-4914-aae3-ef5686c085a1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -210,6 +210,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "comment_id": {
+          "name": "comment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "integer",
@@ -239,6 +245,19 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "likes_comment_id_comments_comment_id_fk": {
+          "name": "likes_comment_id_comments_comment_id_fk",
+          "tableFrom": "likes",
+          "tableTo": "comments",
+          "columnsFrom": [
+            "comment_id"
+          ],
+          "columnsTo": [
+            "comment_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "likes_user_id_users_user_id_fk": {
           "name": "likes_user_id_users_user_id_fk",
           "tableFrom": "likes",
@@ -255,12 +274,13 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "likes_post_id_user_id_unique": {
-          "name": "likes_post_id_user_id_unique",
+        "likes_user_id_post_id_comment_id_unique": {
+          "name": "likes_user_id_post_id_comment_id_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "user_id",
             "post_id",
-            "user_id"
+            "comment_id"
           ]
         }
       },

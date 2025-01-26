@@ -1,20 +1,19 @@
 "use client";
 
-import { Box, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
 import { deletePost } from "@/app/lib/posts";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Box, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface PostDropdownProps {
   post_id: number;
-  deletePostFromCache: (post_id: number) => void;
 }
 
-export default function PostDropdown({
-  post_id,
-  deletePostFromCache,
-}: Readonly<PostDropdownProps>) {
+export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
@@ -38,8 +37,8 @@ export default function PostDropdown({
     setAnchorEl(null);
 
     try {
-      deletePostFromCache(post_id);
       deletePost(post_id);
+      router.push("/");
     } catch (error) {
       console.error("Error deleting post:", error);
     }

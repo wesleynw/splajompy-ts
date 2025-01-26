@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { comments, images, users } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { images, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function insertImage(
@@ -19,17 +19,6 @@ export async function insertImage(
   });
 
   revalidatePath("/");
-}
-
-export async function getComments(post_id: number) {
-  const results = await db
-    .select()
-    .from(comments)
-    .innerJoin(users, eq(comments.user_id, users.user_id))
-    .where(eq(comments.post_id, post_id))
-    .orderBy(asc(comments.comment_date));
-
-  return results;
 }
 
 export async function getUsername(user_id: number) {

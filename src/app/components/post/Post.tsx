@@ -1,75 +1,56 @@
-"use client";
-
-import React, { useState } from "react";
+import { PublicUser } from "@/db/schema";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import ResponsiveImage from "./images/ResponsiveImage";
-import ImageModal from "./images/ImageModal";
-import theme from "@/theme";
+import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import CommentCount from "../comment/CommentCount";
+import ImageModal from "./images/ImageModal";
+import ResponsiveImage from "./images/ResponsiveImage";
 import LikeButton from "./LikeButton";
-import CommentCount from "./comment/CommentCount";
-import { PostType } from "@/app/data/posts";
 import PostDropdown from "./PostDropdown";
-import Linkify from "linkify-react";
-import { User } from "@/db/schema";
-import { renderMentions } from "@/app/utils/mentions";
+import PostTextContent from "./PostTextContent";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface Props {
-  updatePost: (updatedPost: Partial<PostType>) => void;
-  deletePost: (post_id: number) => void;
-  user: User;
+type Props = {
   id: number;
-  date: Date;
-  content: string | null;
+  user: PublicUser;
   user_id: number;
-  poster: string;
-  comment_count: number;
-  imagePath: string | null;
+  author: string;
+  date: Date;
+  text: string | null;
+  imageUrl: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
-  likedByCurrentUser: boolean;
-}
+  commentCount: number;
+  liked: boolean;
+  toggleLiked: () => void;
+};
 
 export default function Post({
-  updatePost,
-  deletePost,
-  user,
   id,
-  date,
-  content,
+  user,
   user_id,
-  poster,
-  comment_count,
-  imagePath,
+  author,
+  date,
+  text,
+  imageUrl,
   imageWidth,
   imageHeight,
-  likedByCurrentUser,
+  commentCount,
+  liked,
+  toggleLiked,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-
-  const options = { defaultProtocol: "https", target: "_blank" };
-
-  interface LinkClickEvent extends React.MouseEvent<HTMLDivElement> {
-    target: HTMLAnchorElement;
-  }
-
-  const handleLinkClick = (e: LinkClickEvent) => {
-    if (e.target.tagName === "A") {
-      e.stopPropagation();
-    }
-  };
 
   return (
     <Box
@@ -83,29 +64,20 @@ export default function Post({
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
-        background: "linear-gradient(135deg, #ffffff, #f0f0f0)",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+        background: "linear-gradient(135deg, #1b1b1b, #222222)",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
         "&:hover": {
-          background: "linear-gradient(135deg, #f0f0f0, #e0e0e0)",
-          cursor: "pointer",
+          background: "linear-gradient(135deg, #222222, #2a2a2a)",
         },
-        ...theme.applyStyles("dark", {
-          background: "linear-gradient(135deg, #1b1b1b, #222222)",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
-          "&:hover": {
-            background: "linear-gradient(135deg, #222222, #2a2a2a)",
-          },
-        }),
       }}
       onClick={() => router.push(`/post/${id}`)}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography
           sx={{
-            fontSize: "11pt",
+            fontSize: "12pt",
             fontWeight: 800,
-            color: "#777777",
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
+            color: "#b0b0b0",
             "&:hover": {
               textDecoration: "underline",
             },
@@ -113,51 +85,27 @@ export default function Post({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            router.push(`/user/${poster}`);
+            router.push(`/user/${author}`);
           }}
         >
-          @{poster}
+          @{author}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        {user.user_id == user_id && (
-          <PostDropdown post_id={id} deletePostFromCache={deletePost} />
-        )}
+        {user.user_id == user_id && <PostDropdown post_id={id} />}
       </Stack>
 
-      {content && (
-        <Box
-          sx={{
-            color: "#333333",
-            fontWeight: "bold",
-            marginBottom: 3,
-            ...theme.applyStyles("dark", { color: "#ffffff" }),
-            whiteSpace: "pre-line",
-            overflowWrap: "break-word",
-            "& a": {
-              color: "lightblue",
-              textDecoration: "underline",
-            },
-            "& a:hover": {
-              cursor: "pointer",
-            },
-          }}
-        >
-          <Box onClick={handleLinkClick}>
-            <Linkify options={options}>{renderMentions(content)}</Linkify>
-          </Box>
-        </Box>
-      )}
+      <PostTextContent text={text} />
 
-      {imagePath && imageHeight && imageWidth && (
+      {imageUrl && imageHeight && imageWidth && (
         <Box>
           <ResponsiveImage
-            imagePath={imagePath}
+            imagePath={imageUrl}
             width={imageWidth}
             height={imageHeight}
             setOpen={setOpen}
           />
           <ImageModal
-            imagePath={imagePath}
+            imagePath={imageUrl}
             imageWidth={imageWidth}
             imageHeight={imageHeight}
             open={open}
@@ -166,28 +114,22 @@ export default function Post({
         </Box>
       )}
 
+      <Typography
+        variant="body2"
+        sx={{
+          color: "#e0e0e0",
+          fontWeight: 700,
+        }}
+      >
+        {dayjs.utc(date).tz(userTimezone).fromNow()}
+      </Typography>
+
       <Stack direction="row" alignItems="center">
-        <CommentCount count={comment_count} />
+        <CommentCount count={commentCount} />
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Typography
-          variant="body2"
-          sx={{
-            color: "#555555",
-            ...theme.applyStyles("dark", { color: "#e0e0e0" }),
-          }}
-        >
-          {dayjs.utc(date).tz(userTimezone).fromNow()}
-        </Typography>
-        <LikeButton
-          post_id={id}
-          poster_id={user_id}
-          user_id={user.user_id}
-          username={user.username}
-          liked={likedByCurrentUser}
-          updatePost={updatePost}
-        />
+        <LikeButton liked={liked} toggleLike={toggleLiked} />
       </Stack>
     </Box>
   );

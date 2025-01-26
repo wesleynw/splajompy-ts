@@ -1,18 +1,13 @@
+import { getCurrentSession } from "@/app/auth/session";
+import SinglePost from "@/app/components/post/SinglePost";
+import { getPostById } from "@/app/lib/posts";
+import { toDisplayFormat } from "@/app/utils/mentions";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { db } from "@/db";
-import { posts, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import utc from "dayjs/plugin/utc";
 import { Metadata } from "next";
-import SinglePagePost from "@/app/components/post/SinglePagePost";
-import { Suspense } from "react";
-import SinglePostSkeleton from "@/app/components/loading/SinglePostSkeleton";
-import StandardWrapper from "@/app/components/loading/StandardWrapper";
-import { getCurrentSession } from "@/app/auth/session";
-import { toDisplayFormat } from "@/app/utils/mentions";
+import { redirect } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -26,14 +21,9 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = Number((await params).id);
 
-  const post = await db
-    .select({ username: users.username, text: posts.text })
-    .from(posts)
-    .where(eq(posts.post_id, id))
-    .innerJoin(users, eq(posts.user_id, users.user_id))
-    .limit(1);
+  const post = await getPostById(id);
 
-  if (post.length === 0) {
+  if (!post) {
     return {
       title: "Post not found",
       description: "This post cannot be found.",
@@ -41,10 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post[0].username}: ${
-      toDisplayFormat(post[0].text ?? "") || "Image"
-    }`,
-    description: toDisplayFormat(post[0].text ?? "") ?? "",
+    title: `${post.poster}: ${toDisplayFormat(post.text ?? "") || "Image"}`,
+    description: toDisplayFormat(post.text ?? "") ?? "",
   };
 }
 
@@ -60,15 +48,5 @@ export default async function Page({
 
   const post_id = (await params).id;
 
-  return (
-    <Suspense
-      fallback={
-        <StandardWrapper>
-          <SinglePostSkeleton />
-        </StandardWrapper>
-      }
-    >
-      <SinglePagePost post_id={post_id} user={user} />
-    </Suspense>
-  );
+  return <SinglePost post_id={post_id} user={user} />;
 }

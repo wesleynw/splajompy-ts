@@ -1,12 +1,13 @@
 "use client";
 
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
 import { useFeed } from "@/app/data/posts";
-import Post from "../post/Post";
-import Spinner from "../loading/Spinner";
 import { User } from "@/db/schema";
+import Box from "@mui/material/Box";
+import { useEffect, useRef } from "react";
+import Spinner from "../loading/Spinner";
+import Post from "../post/Post";
 import EmptyFeed from "./EmptyFeed";
+import FeedBottom from "./FeedBottom";
 
 type Props = {
   user: User;
@@ -15,16 +16,10 @@ type Props = {
 };
 
 export default function Feed({ user, page, user_id }: Readonly<Props>) {
+  const { posts, fetchNextPage, hasNextPage, isFetching, status, toggleLiked } =
+    useFeed(page, user_id);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    status,
-    updateCachedPost,
-    deletePost,
-  } = useFeed(page, user_id);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,12 +51,16 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
     return <div>error</div>;
   }
 
-  if (!data) {
+  if (!posts) {
     return <div>no data</div>;
   }
 
-  if (data.pages.length === 1 && data.pages[0].length === 0) {
-    return <EmptyFeed />;
+  if (posts.pages.length === 1 && posts.pages[0].length === 0) {
+    return page == "home" || page == "all" ? (
+      <EmptyFeed />
+    ) : (
+      <div>no posts</div>
+    );
   }
 
   return (
@@ -72,69 +71,28 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
         width: "100%",
       }}
     >
-      {data.pages.map((posts) =>
+      {posts.pages.map((posts) =>
         posts.map((post) => (
           <Post
-            updatePost={updateCachedPost}
-            deletePost={deletePost}
             key={post.post_id}
-            user={user}
             id={post.post_id}
+            user={user}
             date={new Date(post.postdate + "Z")}
             user_id={post.user_id}
-            poster={post.poster}
+            author={post.poster}
+            imageUrl={post.imageBlobUrl}
             imageHeight={post.imageHeight}
             imageWidth={post.imageWidth}
-            content={post.text}
-            imagePath={post.imageBlobUrl}
-            comment_count={post.comment_count}
-            likedByCurrentUser={post.liked}
+            text={post.text}
+            commentCount={post.comment_count}
+            liked={post.liked}
+            toggleLiked={() => toggleLiked(post.post_id)}
           />
         ))
       )}
-      {isFetching && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          margin="0 auto"
-          width="100%"
-          maxWidth="600px"
-          height="30vh"
-        >
-          <CircularProgress />
-        </Box>
-      )}
+      {isFetching && <Spinner />}
       <div ref={observerRef} style={{ height: "1px" }} />
-      {!hasNextPage && page === "all" && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          margin="0 auto"
-          width="100%"
-          maxWidth="600px"
-          height="30vh"
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              textAlign: "center",
-              color: "#777777",
-              paddingBottom: 2,
-            }}
-          >
-            Is that the very first post? <br />
-            What came before that? <br />
-            Nothing at all? <br />
-            It always just{" "}
-            <Box fontWeight="800" display="inline">
-              Splajompy
-            </Box>
-            .
-          </Typography>
-        </Box>
-      )}
+      {!hasNextPage && page === "all" && <FeedBottom />}
     </Box>
   );
 }
