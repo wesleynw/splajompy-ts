@@ -1,8 +1,6 @@
-"use client";
-
 import { PostType } from "@/app/data/posts";
 import { renderMentions } from "@/app/utils/mentions";
-import { User } from "@/db/schema";
+import { PublicUser } from "@/db/schema";
 import theme from "@/theme";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -22,22 +20,21 @@ dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface Props {
-  updatePost: (updatedPost: Partial<PostType>) => void;
-  deletePost: (post_id: number) => void;
-  user: User;
+type Props = {
   id: number;
+  user: PublicUser;
+  updatePost: (updatedPost: Partial<PostType>) => void;
   date: Date;
   content: string | null;
   user_id: number;
-  poster: string;
-  comment_count: number;
+  author: string;
+  commentCount: number;
   imagePath: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
-  likedByCurrentUser: boolean;
+  liked: boolean;
   toggleLiked: () => void;
-}
+};
 
 export default function Post({
   user,
@@ -45,12 +42,12 @@ export default function Post({
   date,
   content,
   user_id,
-  poster,
-  comment_count,
+  author,
+  commentCount,
   imagePath,
   imageWidth,
   imageHeight,
-  likedByCurrentUser,
+  liked,
   toggleLiked,
 }: Readonly<Props>) {
   const router = useRouter();
@@ -113,10 +110,10 @@ export default function Post({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            router.push(`/user/${poster}`);
+            router.push(`/user/${author}`);
           }}
         >
-          @{poster}
+          @{author}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         {user.user_id == user_id && <PostDropdown post_id={id} />}
@@ -165,7 +162,7 @@ export default function Post({
       )}
 
       <Stack direction="row" alignItems="center">
-        <CommentCount count={comment_count} />
+        <CommentCount count={commentCount} />
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -178,11 +175,7 @@ export default function Post({
         >
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
-        <LikeButton
-          post_id={id}
-          liked={likedByCurrentUser}
-          toggleLike={toggleLiked}
-        />
+        <LikeButton post_id={id} liked={liked} toggleLike={toggleLiked} />
       </Stack>
     </Box>
   );

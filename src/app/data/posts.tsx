@@ -5,12 +5,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toggleLiked } from "../lib/likes";
 import {
   getAllPostsForFollowing,
   getAllPostsFromDb,
   getPostsByUserId,
 } from "../lib/posts";
-import { toggleLiked } from "../lib/likes";
 
 export type FeedType = "home" | "all" | "profile";
 
@@ -153,7 +153,7 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
   });
 
   return {
-    data,
+    posts: data,
     error,
     fetchNextPage,
     hasNextPage,

@@ -1,14 +1,14 @@
+import { sql } from "drizzle-orm";
 import {
+  boolean,
+  integer,
   pgTable,
   serial,
-  varchar,
-  integer,
-  timestamp,
   text,
+  timestamp,
   unique,
-  boolean,
+  varchar,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   user_id: serial().primaryKey().notNull().unique(),
@@ -21,6 +21,7 @@ export type SelectUser = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 export type User = typeof users.$inferSelect;
+export type PublicUser = Omit<User, "password">;
 
 export const sessions = pgTable("sessions", {
   id: text().primaryKey(),
