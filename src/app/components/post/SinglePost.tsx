@@ -153,11 +153,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
           {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
         </Typography>
 
-        <LikeButton
-          post_id={post.post_id}
-          liked={post.liked}
-          toggleLike={() => toggleLiked()}
-        />
+        <LikeButton liked={post.liked} toggleLike={() => toggleLiked()} />
       </Box>
 
       <CommentList post_id={post.post_id} user={user} />

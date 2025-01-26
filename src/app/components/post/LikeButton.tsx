@@ -4,7 +4,7 @@ import { IconButton, Stack } from "@mui/material";
 import React from "react";
 
 type Props = {
-  isComment: boolean;
+  isComment?: boolean;
   liked: boolean;
   toggleLike: () => void;
 };

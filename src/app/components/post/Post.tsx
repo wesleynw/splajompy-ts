@@ -129,7 +129,7 @@ export default function Post({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <LikeButton post_id={id} liked={liked} toggleLike={toggleLiked} />
+        <LikeButton liked={liked} toggleLike={toggleLiked} />
       </Stack>
     </Box>
   );
