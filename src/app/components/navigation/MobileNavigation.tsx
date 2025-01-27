@@ -1,24 +1,27 @@
 "use client";
 
+import { useUser } from "@/app/providers/UserProvider";
+import theme from "@/theme";
+import ExploreIcon from "@mui/icons-material/Explore";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import HomeIcon from "@mui/icons-material/Home";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import ExploreIcon from "@mui/icons-material/Explore";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
   styled,
+  useTheme,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
-import { useUser } from "@/app/providers/UserProvider";
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)({
+  color: theme.palette.secondary.dark,
   paddingTop: "15px",
   "&.Mui-selected": {
     color: "white",
@@ -30,6 +33,7 @@ export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
+  const theme = useTheme();
 
   const is_standalone =
     typeof window !== "undefined" &&
@@ -51,13 +55,13 @@ export default function MobileNavigation() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "background.paper",
         zIndex: 10,
       }}
     >
       <BottomNavigation
         value={pathname}
         sx={{
+          backgroundColor: theme.palette.secondary.main,
           height: is_standalone ? "80px" : "56px",
           alignItems: "flex-start",
         }}

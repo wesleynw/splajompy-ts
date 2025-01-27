@@ -1,10 +1,5 @@
-import StandardWrapper from "@/app/components/loading/StandardWrapper";
-import UserViewSkeleton from "@/app/components/loading/UserProfileSkeleton";
+import Spinner from "@/app/components/loading/Spinner";
 
 export default function Loading() {
-  return (
-    <StandardWrapper>
-      <UserViewSkeleton />
-    </StandardWrapper>
-  );
+  return <Spinner />;
 }

@@ -1,5 +1,5 @@
 "use client";
-import { createTheme } from "@mui/material/styles";
+import { alpha, createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   typography: {
@@ -10,18 +10,14 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#1da1f2",
-      dark: "#0E5079",
+      main: "#FFFFFF",
+      light: alpha("#FFFFFF", 0.7),
+      dark: alpha("#FFFFFF", 0.9),
     },
     secondary: {
-      main: "#4a90e2",
+      main: "#121212",
+      dark: "rgba(255, 255, 255, 0.7)",
     },
-  },
-  colorSchemes: {
-    dark: true,
-  },
-  cssVariables: {
-    colorSchemeSelector: "class",
   },
 });
 

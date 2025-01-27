@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import { Box, Typography, Stack, Button } from "@mui/material";
-import FollowButton from "../follows/FollowButton";
-import Feed from "../feed/Feed";
-import theme from "@/theme";
-import { getCurrentSession, invalidateSession } from "@/app/auth/session";
 import { deleteSessionTokenCookie } from "@/app/auth/cookies";
+import { getCurrentSession, invalidateSession } from "@/app/auth/session";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
+import React from "react";
+import Feed from "../feed/Feed";
+import FollowButton from "../follows/FollowButton";
 
 interface Props {
   isOwnProfile: boolean;
@@ -30,13 +29,9 @@ export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
             borderRadius: "8px",
             gap: 1,
             padding: 3,
-            background: "linear-gradient(135deg, #ffffff, #f9f9f9)",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
             margin: "10px auto",
-            ...theme.applyStyles("dark", {
-              background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
-            }),
+            background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
           }}
         >
           <Stack
@@ -48,11 +43,10 @@ export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
               variant="h6"
               sx={{
                 fontWeight: "bold",
-                color: "#333333",
                 wordBreak: "break-all",
                 textAlign: "center",
                 marginLeft: 1,
-                ...theme.applyStyles("dark", { color: "#ffffff" }),
+                color: "#ffffff",
               }}
             >
               @{user.username}
@@ -77,11 +71,8 @@ export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
                   fontWeight: "bold",
                   fontSize: "0.875rem",
                   minWidth: "auto",
-                  backgroundColor: "#1DA1F2",
                   color: "#ffffff",
-                  ...theme.applyStyles("dark", {
-                    backgroundColor: "#1DA1F2",
-                  }),
+                  backgroundColor: "#1DA1F2",
                   "&:hover": {
                     backgroundColor: "#0d8de6",
                   },

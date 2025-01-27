@@ -64,7 +64,7 @@ export default function Post({
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
-        background: "linear-gradient(135deg, #1b1b1b, #222222)",
+        background: "linear-gradient(200deg, #1b1b1b, #222222)",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
         "&:hover": {
           background: "linear-gradient(135deg, #222222, #2a2a2a)",

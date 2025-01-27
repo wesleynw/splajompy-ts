@@ -1,11 +1,11 @@
 "use client";
 
+import { User } from "@/db/schema";
 import { Dialog, DialogContent, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, useRef } from "react";
 import { RichTextareaHandle } from "rich-textarea";
 import NewPost from "./NewPost";
-import { User } from "@/db/schema";
 
 type Props = {
   user: User;
