@@ -42,7 +42,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.17.0",
-    "@playwright/test": "^1.49.1",
     "@tanstack/eslint-plugin-query": "^5.64.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.5",

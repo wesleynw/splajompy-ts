@@ -33,21 +33,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - My own auth system, which includes OTP logins.
 
-## Playright
-
-To run Playwright tests:
-
-```
-pnpm exec playwright test
-```
-
-For visual mode, append `--ui`.
-
 ## Database Migrations
 
 Drizzle-Kit provides a helpful command to apply migrations to databases [here](https://orm.drizzle.team/docs/migrations).
 
-Since there's no development branch, and our preview environments share a development branch (to work nicely with Playwright), there's no easy way to automatically apply migrations. Should a database change need to be made, it should first be tested:
+Since there's no development branch, and our preview environments share a development branch, there's no easy way to automatically apply migrations. Should a database change need to be made, it should first be tested:
 
 1. Use Neon to create a database branch.
 2. Update local `.env` to match connection strings
@@ -58,5 +48,5 @@ Since there's no development branch, and our preview environments share a develo
    > `npx drizzle-kit migrate`
 
 4. Test
-5. Playwright will fail during PR checks because schema changes have not been made to the development database. If no other PRs are open, migrate the development DB.
+5. If no other PRs are open, migrate the development DB.
 6. Migrate the main database when the PR is merged
