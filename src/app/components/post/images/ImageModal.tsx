@@ -194,6 +194,10 @@ function ImageModalContent({
           width: "100%",
           height: "100%",
         }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
       >
         {!loaded && <CircularProgress />}
         <AnimatedImage
@@ -207,7 +211,7 @@ function ImageModalContent({
           onLoad={() => setLoaded(true)}
           style={{
             objectFit: "contain",
-            width: "auto",
+            width: "96%",
             height: "auto",
             maxWidth: "100%",
             maxHeight: "100%",
