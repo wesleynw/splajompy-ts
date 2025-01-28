@@ -30,15 +30,11 @@ export async function addLike(
     user_id: user.user_id,
   });
 
-  if (user.user_id !== post.user_id) {
-    await db.insert(notifications).values({
-      user_id: post.user_id,
-      message: `@${user.username} liked your ${
-        comment_id ? "comment" : "post"
-      }`,
-      link: `/post/${post_id}`,
-    });
-  }
+  await db.insert(notifications).values({
+    user_id: post.user_id,
+    message: `@${user.username} liked your ${comment_id ? "comment" : "post"}`,
+    link: `/post/${post_id}`,
+  });
 }
 
 export async function removeLike(
