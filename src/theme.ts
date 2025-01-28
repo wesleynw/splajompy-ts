@@ -18,6 +18,7 @@ const theme = createTheme({
       main: "#121212",
       dark: "rgba(255, 255, 255, 0.7)",
     },
+    mode: "dark",
   },
 });
 
