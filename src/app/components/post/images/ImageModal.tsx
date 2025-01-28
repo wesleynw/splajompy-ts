@@ -32,15 +32,18 @@ export default function ImageModal({
   const [loaded, setLoaded] = useState(false);
 
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
-
   const ref = useRef<HTMLImageElement>(null);
 
   const [style, api] = useSpring(() => ({
     x: 0,
     y: 0,
-    scale: 1,
+    scale: 0.9,
     rotateZ: 0,
   }));
+
+  const resetTransformations = () => {
+    api.start({ x: 0, y: 0, scale: 0.9, rotateZ: 0 });
+  };
 
   useGesture(
     {
@@ -67,18 +70,7 @@ export default function ImageModal({
         api.start({ scale: s, x, y });
         return memo;
       },
-      onClick: ({ event }) => {
-        // Pans the image slightly on click
-        const { clientX, clientY } = event;
-        api.start({
-          x: style.x.get() + clientX / 10,
-          y: style.y.get() + clientY / 10,
-        });
-      },
-      onDoubleClick: () => {
-        // Reset transformations on double-click
-        api.start({ x: 0, y: 0, scale: 1, rotateZ: 0 });
-      },
+      onDoubleClick: () => resetTransformations(),
     },
     {
       target: ref,
@@ -86,6 +78,13 @@ export default function ImageModal({
       pinch: { scaleBounds: { min: 0.9, max: 5 }, rubberband: true },
     }
   );
+
+  useEffect(() => {
+    if (open) {
+      resetTransformations();
+      setLoaded(false); // Reset the loaded state
+    }
+  }, [open, resetTransformations]);
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -98,27 +97,6 @@ export default function ImageModal({
     link.click();
     document.body.removeChild(link);
   };
-
-  useEffect(() => {
-    const handler = (e: Event) => e.preventDefault();
-    document.addEventListener("gesturestart", handler);
-    document.addEventListener("gesturechange", handler);
-    document.addEventListener("gestureend", handler);
-    document.addEventListener("ondragstart", handler);
-    return () => {
-      document.removeEventListener("gesturestart", handler);
-      document.removeEventListener("gesturechange", handler);
-      document.removeEventListener("gestureend", handler);
-      document.removeEventListener("ondragstart", handler);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      // Reset animation state when modal is opened
-      api.start({ x: 0, y: 0, scale: 0.9, rotateZ: 0 });
-    }
-  }, [open, api]);
 
   return (
     <Modal open={open} onClose={handleClose} style={{ zIndex: 10000 }}>
@@ -162,11 +140,6 @@ export default function ImageModal({
 
         <Backdrop
           open={open}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleClose();
-          }}
           sx={{
             backgroundColor: "black",
             zIndex: 2000,
@@ -189,13 +162,9 @@ export default function ImageModal({
               ...style,
               touchAction: "none",
               position: "absolute",
-              // top: "50%",
-              // left: "50%",
-              // transform: "translate(-50%, -50%)",
               willChange: "transform",
             }}
           />
-          {/* </animated.div> */}
         </Backdrop>
       </Box>
     </Modal>
