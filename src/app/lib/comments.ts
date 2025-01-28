@@ -43,6 +43,23 @@ export async function getCommentsByPost(
   return commentsWithUsers;
 }
 
+export async function getCommentById(
+  comment_id: number
+): Promise<Comment | undefined> {
+  const { user } = await getCurrentSession();
+  if (!user) {
+    return;
+  }
+
+  const results = await db
+    .select()
+    .from(comments)
+    .where(eq(comments.comment_id, comment_id))
+    .limit(1);
+
+  return results.length > 0 ? results[0] : undefined;
+}
+
 export async function insertComment(post_id: number, text: string) {
   const { user } = await getCurrentSession();
   if (user === null) {

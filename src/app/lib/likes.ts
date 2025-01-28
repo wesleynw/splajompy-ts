@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { likes, notifications } from "@/db/schema";
 import { and, eq, isNull } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
+import { getCommentById } from "./comments";
 import { getPostById } from "./posts";
 
 export async function addLike(
@@ -30,8 +31,14 @@ export async function addLike(
     user_id: user.user_id,
   });
 
+  let recipient_id = post.user_id;
+  if (comment_id) {
+    const comment = await getCommentById(comment_id);
+    recipient_id = comment?.user_id ?? recipient_id; // TODO: this is dumb
+  }
+
   await db.insert(notifications).values({
-    user_id: post.user_id,
+    user_id: recipient_id,
     message: `@${user.username} liked your ${comment_id ? "comment" : "post"}`,
     link: `/post/${post_id}`,
   });

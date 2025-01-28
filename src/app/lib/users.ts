@@ -53,3 +53,17 @@ export async function getUserByIdentifier(
 
   return null;
 }
+
+export async function getUserById(user_id: number): Promise<User | undefined> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+  const results = await db
+    .select()
+    .from(users)
+    .where(eq(users.user_id, user_id))
+    .limit(1);
+
+  return results.length > 0 ? results[0] : undefined;
+}
