@@ -1,20 +1,7 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-html,
-body {
-  /* max-width: 100vw;
-  overflow-x: hidden; */
-}
 
 body {
   color: var(--foreground);
@@ -35,13 +22,6 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
-
-
 .rich-textarea {
   border: 2px solid gray;
   border-radius: 8px;
@@ -50,6 +30,11 @@ a {
   overflow: hidden;
   font: inherit;
   line-height: 1.5;
+  color: white;
+}
+
+.rich-textarea textarea {
+  color: "white";
 }
 
 .rich-textarea::selection {

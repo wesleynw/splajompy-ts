@@ -1,18 +1,18 @@
 "use client";
 
+import { PostType } from "@/app/data/posts";
+import { insertPost } from "@/app/lib/posts";
+import { getPresignedUrl } from "@/app/lib/s3";
+import { User } from "@/db/schema";
+import { Box, Stack } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
-import { Box, Stack, useTheme } from "@mui/material";
-import SubmitPostButton from "./SubmitPostButton";
+import { RichTextareaHandle } from "rich-textarea";
+import { getUsername, insertImage } from "../../../lib/actions";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
-import { getPresignedUrl } from "@/app/lib/s3";
-import { getUsername, insertImage } from "../../../lib/actions";
-import { insertPost } from "@/app/lib/posts";
-import { PostType } from "@/app/data/posts";
-import { useQueryClient } from "@tanstack/react-query";
-import { User } from "@/db/schema";
+import SubmitPostButton from "./SubmitPostButton";
 import { TextInput } from "./TextInput";
-import { RichTextareaHandle } from "rich-textarea";
 
 type NewPostProps = {
   user: User;
@@ -28,7 +28,6 @@ export default function Page({
   inputRef,
 }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
-  const theme = useTheme();
   const queryClient = useQueryClient();
 
   const [textValue, setTextValue] = useState<string>("");
@@ -145,12 +144,8 @@ export default function Page({
           maxWidth: "600px",
           padding: 2,
           paddingY: 4,
-          backgroundColor: "#ffffff",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-          ...theme.applyStyles("dark", {
-            backgroundColor: "#1c1c1c",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-          }),
+          backgroundColor: "#1c1c1c",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
         }}
         spacing={2}
       >

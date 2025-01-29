@@ -19,8 +19,13 @@ export default function SubmitPostButton({
           backgroundColor: "#357abf",
         },
         position: "relative",
+        "&.Mui-disabled": {
+          backgroundColor: "rgba(255, 255, 255, 0.12)",
+          color: "rgba(255, 255, 255, 0.3)",
+        },
       }}
       disabled={isLoading || disabled}
+      color="primary"
     >
       {isLoading && (
         <Box

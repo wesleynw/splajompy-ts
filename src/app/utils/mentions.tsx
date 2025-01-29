@@ -13,6 +13,7 @@ export const toPreviewFormat = (text: string): React.ReactNode => {
       <span
         key={`${part}-${index}`}
         style={{
+          color: "white",
           backgroundColor: "rgba(53, 122, 191, 0.5)",
           borderRadius: "3px",
         }}
@@ -20,7 +21,14 @@ export const toPreviewFormat = (text: string): React.ReactNode => {
         {part}
       </span>
     ) : (
-      part
+      <span
+        key={`${part}-${index}`}
+        style={{
+          color: "white",
+        }}
+      >
+        {part}
+      </span>
     )
   );
 };

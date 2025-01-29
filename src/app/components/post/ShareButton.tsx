@@ -1,6 +1,6 @@
-import { useState } from "react";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { IconButton, Snackbar } from "@mui/material";
+import { useState } from "react";
 
 export default function ShareButton() {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function ShareButton() {
 
   return (
     <>
-      <IconButton onClick={handleClick} disableRipple>
+      <IconButton onClick={handleClick} disableRipple color="primary">
         <IosShareIcon sx={{ width: "22px", height: "22px" }} />
       </IconButton>
       <Snackbar

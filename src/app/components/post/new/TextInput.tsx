@@ -1,10 +1,10 @@
 "use client";
 
+import { toDisplayFormat, toPreviewFormat } from "@/app/utils/mentions";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
-import MentionDialog from "./MentionDialog";
-import { toPreviewFormat, toDisplayFormat } from "@/app/utils/mentions";
 import { RichTextarea, RichTextareaHandle } from "rich-textarea";
+import MentionDialog from "./MentionDialog";
 
 interface TextInputProps {
   placeholder: string;

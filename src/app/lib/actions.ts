@@ -3,7 +3,6 @@
 import { db } from "@/db";
 import { images, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export async function insertImage(
   post_id: number,
@@ -17,8 +16,6 @@ export async function insertImage(
     width: width,
     imageBlobUrl: imageBlobUrl,
   });
-
-  revalidatePath("/");
 }
 
 export async function getUsername(user_id: number) {

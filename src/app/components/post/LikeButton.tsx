@@ -23,6 +23,7 @@ export default function LikeButton({
           e.stopPropagation();
           toggleLike();
         }}
+        color="primary"
       >
         {liked ? (
           <FavoriteIcon fontSize={isComment ? "small" : "medium"} />

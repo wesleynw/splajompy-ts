@@ -51,6 +51,7 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
         aria-controls={openMenu ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={openMenu ? "true" : undefined}
+        color="primary"
       >
         <MoreVertIcon />
       </IconButton>

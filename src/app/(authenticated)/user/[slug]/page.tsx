@@ -1,11 +1,8 @@
+import { getCurrentSession } from "@/app/auth/session";
 import UserView from "@/app/components/user/UserView";
 import { getUserByUsername } from "@/app/lib/users";
-import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
-import { Suspense } from "react";
-import StandardWrapper from "@/app/components/loading/StandardWrapper";
-import FeedSkeleton from "@/app/components/loading/FeedSkeleton";
-import { getCurrentSession } from "@/app/auth/session";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -65,18 +62,10 @@ export default async function Page({
         paddingBottom: 20,
       }}
     >
-      <Suspense
-        fallback={
-          <StandardWrapper>
-            <FeedSkeleton />
-          </StandardWrapper>
-        }
-      >
-        <UserView
-          user={user}
-          isOwnProfile={user.user_id === session_user.user_id}
-        />
-      </Suspense>
+      <UserView
+        user={user}
+        isOwnProfile={user.user_id === session_user.user_id}
+      />
     </Box>
   );
 }

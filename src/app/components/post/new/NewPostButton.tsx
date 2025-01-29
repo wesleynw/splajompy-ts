@@ -1,5 +1,5 @@
-import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 
 type Props = {
   isOpen: boolean;
@@ -28,6 +28,7 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
           padding: "5px",
         }}
         disableRipple
+        color="primary"
       >
         <AddCircleIcon
           sx={{
