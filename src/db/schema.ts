@@ -123,6 +123,8 @@ export const likes = pgTable(
   (table) => [unique().on(table.user_id, table.post_id, table.comment_id)]
 );
 
+export type Like = typeof likes.$inferSelect;
+
 export const notifications = pgTable("notifications", {
   notification_id: serial().primaryKey().notNull(),
   user_id: integer("user_id")

@@ -1,9 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { likes, notifications } from "@/db/schema";
-import { and, eq, isNull } from "drizzle-orm";
+import { follows, likes, notifications, users } from "@/db/schema";
+import { and, desc, eq, exists, isNull } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
+import { seededRandom } from "../utils/random";
 import { getCommentById } from "./comments";
 import { getPostById } from "./posts";
 
@@ -108,4 +109,35 @@ export async function toggleLiked(
   } else {
     await addLike(post_id, comment_id);
   }
+}
+
+export async function getRelevantLikes(post_id: number) {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  const relevantLikes = await db
+    .select({ username: users.username, user_id: users.user_id })
+    .from(likes)
+    .leftJoin(users, eq(likes.user_id, users.user_id))
+    .where(
+      and(
+        eq(likes.post_id, post_id),
+        isNull(likes.comment_id),
+        exists(
+          db.select().from(follows).where(eq(follows.follower_id, user.user_id))
+        )
+      )
+    )
+    .orderBy(desc(users.user_id));
+
+  const shuffled = relevantLikes.toSorted((a, b) => {
+    return (
+      seededRandom(post_id + (a.user_id ?? 0)) -
+      seededRandom(post_id + (b.user_id ?? 0))
+    );
+  });
+
+  return shuffled.slice(0, 2);
 }
