@@ -10,6 +10,7 @@ import CommentCount from "../comment/CommentCount";
 import ImageModal from "./images/ImageModal";
 import ResponsiveImage from "./images/ResponsiveImage";
 import LikeButton from "./LikeButton";
+import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
 import PostTextContent from "./PostTextContent";
 
@@ -114,23 +115,23 @@ export default function Post({
         </Box>
       )}
 
-      <Typography
-        variant="body2"
-        sx={{
-          color: "#e0e0e0",
-          fontWeight: 700,
-        }}
-      >
-        {dayjs.utc(date).tz(userTimezone).fromNow()}
-      </Typography>
-
-      <Stack direction="row" alignItems="center">
-        <CommentCount count={commentCount} />
-
+      <Stack direction="row" justifyContent="center" alignContent="center">
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#e0e0e0",
+            fontWeight: 700,
+            alignContent: "center",
+          }}
+        >
+          {dayjs.utc(date).tz(userTimezone).fromNow()}
+        </Typography>
         <Box sx={{ flexGrow: 1 }} />
-
+        <CommentCount count={commentCount} />
         <LikeButton liked={liked} toggleLike={toggleLiked} />
       </Stack>
+
+      <OtherLikes post_id={id} />
     </Box>
   );
 }

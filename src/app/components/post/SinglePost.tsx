@@ -17,6 +17,7 @@ import Spinner from "../loading/Spinner";
 import ImageModal from "./images/ImageModal";
 import ResponsiveImage from "./images/ResponsiveImage";
 import LikeButton from "./LikeButton";
+import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
 import ShareButton from "./ShareButton";
 
@@ -142,12 +143,14 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         </>
       )}
 
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" justifyContent="space-between" alignContent="center">
         <Typography
           variant="body2"
           sx={{
             color: "white",
             marginBottom: 1,
+            fontWeight: 700,
+            alignContent: "center",
           }}
         >
           {dayjs.utc(post.postdate).tz(userTimezone).fromNow()}
@@ -155,6 +158,8 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
 
         <LikeButton liked={post.liked} toggleLike={() => toggleLiked()} />
       </Box>
+
+      <OtherLikes post_id={post_id} />
 
       <CommentList post_id={post.post_id} user={user} />
     </Box>
