@@ -7,9 +7,9 @@ type Props = {
 };
 
 export default function OtherLikes({ post_id }: Readonly<Props>) {
-  const { isPending, likes } = useOtherLikes(post_id);
+  const { isPending, data } = useOtherLikes(post_id);
 
-  if (isPending || !likes || likes?.length < 1) {
+  if (isPending || !data || (data.likes?.length == 0 && !data.hasOthers)) {
     return;
   }
 
@@ -31,19 +31,28 @@ export default function OtherLikes({ post_id }: Readonly<Props>) {
         e.stopPropagation();
       }}
     >
-      Also liked by{" "}
-      {likes?.reduce<React.ReactNode[]>((acc, like, index) => {
+      Liked by{" "}
+      {data?.likes.reduce<React.ReactNode[]>((acc, like, index) => {
         const mention = renderMentions(
           `{tag:${like.user_id ?? ""}:${like.username}}`
         );
         if (index === 0) {
           return [mention];
-        } else if (index === likes.length - 1) {
+        } else if (index === 1) {
+          if (data.likes.length === 2 && data.hasOthers) {
+            return [...acc, ", ", mention];
+          }
           return [...acc, " and ", mention];
         } else {
           return [...acc, ", ", mention];
         }
       }, [])}
+      {data.hasOthers &&
+        (data.likes.length === 0
+          ? " others"
+          : data.likes.length === 1
+          ? " and others"
+          : ", and others")}
     </Box>
   );
 }

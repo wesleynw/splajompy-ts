@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { follows, likes, notifications, users } from "@/db/schema";
-import { and, desc, eq, exists, isNull } from "drizzle-orm";
+import { and, desc, eq, exists, isNull, notExists } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { seededRandom } from "../utils/random";
 import { getCommentById } from "./comments";
@@ -126,11 +126,44 @@ export async function getRelevantLikes(post_id: number) {
         eq(likes.post_id, post_id),
         isNull(likes.comment_id),
         exists(
-          db.select().from(follows).where(eq(follows.follower_id, user.user_id))
+          db
+            .select()
+            .from(follows)
+            .where(
+              and(
+                eq(follows.follower_id, user.user_id),
+                eq(follows.following_id, likes.user_id)
+              )
+            )
         )
       )
     )
     .orderBy(desc(users.user_id));
+
+  const hasOthers =
+    (
+      await db
+        .select({})
+        .from(likes)
+        .where(
+          and(
+            eq(likes.post_id, post_id),
+            isNull(likes.comment_id),
+            notExists(
+              db
+                .select()
+                .from(follows)
+                .where(
+                  and(
+                    eq(follows.follower_id, user.user_id),
+                    eq(follows.following_id, likes.user_id)
+                  )
+                )
+            )
+          )
+        )
+        .limit(1)
+    ).length > 0;
 
   const shuffled = relevantLikes.toSorted((a, b) => {
     return (
@@ -139,5 +172,5 @@ export async function getRelevantLikes(post_id: number) {
     );
   });
 
-  return shuffled.slice(0, 2);
+  return { likes: shuffled.slice(0, 2), hasOthers };
 }

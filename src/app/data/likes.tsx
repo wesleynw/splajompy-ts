@@ -9,5 +9,5 @@ export function useOtherLikes(post_id: number) {
     queryFn: () => getRelevantLikes(post_id),
   });
 
-  return { isPending, isError, likes: data, error };
+  return { isPending, isError, data, error };
 }
