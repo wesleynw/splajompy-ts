@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { follows, likes, notifications, users } from "@/db/schema";
-import { and, desc, eq, exists, isNull, notExists } from "drizzle-orm";
+import { and, desc, eq, exists, isNull, ne, notExists } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { seededRandom } from "../utils/random";
 import { getCommentById } from "./comments";
@@ -149,6 +149,7 @@ export async function getRelevantLikes(post_id: number) {
           and(
             eq(likes.post_id, post_id),
             isNull(likes.comment_id),
+            ne(likes.user_id, user.user_id),
             notExists(
               db
                 .select()
