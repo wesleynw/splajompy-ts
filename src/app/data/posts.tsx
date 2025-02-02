@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { toggleLiked } from "../lib/likes";
 import {
+  deletePost,
   getAllPostsForFollowing,
   getAllPostsFromDb,
   getPostsByUserId,
@@ -104,20 +105,23 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     );
   };
 
-  const deletePost = (postId: number) => {
-    queryClient.setQueriesData<{ pages: PostType[][] }>(
-      { queryKey: ["feed"] },
-      (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          pages: oldData.pages.map((posts) =>
-            posts.filter((post) => post.post_id !== postId)
-          ),
-        };
-      }
-    );
-  };
+  const deletePostMutation = useMutation({
+    mutationFn: (post_id: number) => deletePost(post_id),
+    onMutate: async (post_id: number) => {
+      queryClient.setQueriesData<{ pages: PostType[][] }>(
+        { queryKey: ["feed"] },
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((posts) =>
+              posts.filter((post) => post.post_id !== post_id)
+            ),
+          };
+        }
+      );
+    },
+  });
 
   const likedMutation = useMutation({
     mutationFn: (post_id: number) => toggleLiked(post_id),
@@ -162,7 +166,7 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     status,
     updateCachedPost,
     insertPost,
-    deletePost,
+    deletePost: deletePostMutation.mutate,
     toggleLiked: likedMutation.mutate,
   };
 }
