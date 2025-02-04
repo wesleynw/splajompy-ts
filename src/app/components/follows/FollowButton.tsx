@@ -34,8 +34,10 @@ export default function FollowButton({
     return null;
   }
 
-  const handleFollow = async (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setLoading(true);
     try {
       if (isFollowing) {

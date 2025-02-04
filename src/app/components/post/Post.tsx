@@ -80,6 +80,15 @@ export default function Post({
       }}
       onClick={() => router.push(`/post/${id}`)}
     >
+      <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "absolute", top: "10%", right: "0%" }}>
+          {user.user_id === user_id ? (
+            <PostDropdown post_id={id} />
+          ) : (
+            <FollowButton user_id={user_id} show_unfollow={false} />
+          )}
+        </Box>
+      </Box>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography
           sx={{
@@ -99,13 +108,6 @@ export default function Post({
           @{author}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <Stack direction="row">
-          {user.user_id === user_id ? (
-            <PostDropdown post_id={id} />
-          ) : (
-            <FollowButton user_id={user_id} show_unfollow={false} />
-          )}
-        </Stack>
       </Stack>
 
       <PostTextContent text={text} />
