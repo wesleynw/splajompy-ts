@@ -7,12 +7,15 @@ import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CommentCount from "../comment/CommentCount";
+import CommentList from "../comment/CommentList";
+import FollowButton from "../follows/FollowButton";
 import ImageModal from "./images/ImageModal";
 import ResponsiveImage from "./images/ResponsiveImage";
 import LikeButton from "./LikeButton";
 import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
 import PostTextContent from "./PostTextContent";
+import ShareButton from "./ShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -31,6 +34,7 @@ type Props = {
   commentCount: number;
   liked: boolean;
   toggleLiked: () => void;
+  showComments?: boolean;
 };
 
 export default function Post({
@@ -46,6 +50,7 @@ export default function Post({
   commentCount,
   liked,
   toggleLiked,
+  showComments = false,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -60,15 +65,16 @@ export default function Post({
         margin: "10px auto",
         width: "100%",
         maxWidth: 600,
-        padding: 3,
+        padding: "20px",
         display: "flex",
         flexDirection: "column",
         gap: 1,
         transition: "background-color 0.3s",
-        background: "linear-gradient(200deg, #1b1b1b, #222222)",
+        background: "#1b1b1b",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
         "&:hover": {
-          background: "linear-gradient(135deg, #222222, #2a2a2a)",
+          background: "#222222",
+          cursor: "pointer",
         },
       }}
       onClick={() => router.push(`/post/${id}`)}
@@ -92,7 +98,14 @@ export default function Post({
           @{author}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        {user.user_id == user_id && <PostDropdown post_id={id} />}
+        <Stack direction="row">
+          <ShareButton />
+          {user.user_id === user_id ? (
+            <PostDropdown post_id={id} />
+          ) : (
+            <FollowButton user_id={user_id} show_unfollow={false} />
+          )}
+        </Stack>
       </Stack>
 
       <PostTextContent text={text} />
@@ -132,6 +145,8 @@ export default function Post({
       </Stack>
 
       <OtherLikes post_id={id} />
+
+      {showComments && <CommentList post_id={id} user={user} />}
     </Box>
   );
 }

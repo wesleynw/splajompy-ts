@@ -1,5 +1,6 @@
 import { useComments } from "@/app/data/comments";
-import { User } from "@/db/schema";
+import { PublicUser } from "@/db/schema";
+import { Divider } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Spinner from "../loading/Spinner";
@@ -7,7 +8,7 @@ import Comment from "./Comment";
 import CommentInput from "./CommentInput";
 
 interface CommentListProps {
-  user: User;
+  user: PublicUser;
   post_id: number;
 }
 
@@ -49,6 +50,7 @@ export default function CommentList({
 
   return (
     <Box>
+      <Divider sx={{ marginY: "10px" }} />
       <CommentInput onAddComment={addComment} />
       <Box sx={{ marginTop: 3 }}>{renderComments()}</Box>
     </Box>

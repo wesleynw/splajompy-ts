@@ -21,7 +21,7 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@react-spring/web": "^9.7.5",
-    "@tanstack/react-query": "^5.64.2",
+    "@tanstack/react-query": "^5.66.0",
     "@use-gesture/react": "^10.3.1",
     "bcryptjs": "^2.4.3",
     "dayjs": "^1.11.13",
@@ -34,7 +34,7 @@
     "pg": "^8.13.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "resend": "^4.1.1",
+    "resend": "^4.1.2",
     "rich-textarea": "^0.26.4",
     "sharp": "^0.33.5",
     "uuid": "^11.0.5",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.19.0",
-    "@tanstack/eslint-plugin-query": "^5.64.2",
+    "@tanstack/eslint-plugin-query": "^5.66.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.10",
     "@types/pg": "^8.11.11",
@@ -56,5 +56,5 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+  "packageManager": "pnpm@10.2.0+sha512.0d27364e0139c6aadeed65ada153135e0ca96c8da42123bd50047f961339dc7a758fc2e944b428f52be570d1bd3372455c1c65fa2e7aa0bfbf931190f9552001"
 }

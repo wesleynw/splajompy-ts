@@ -76,6 +76,7 @@ export default function Comment({
                 sx={{
                   lineHeight: 1.6,
                   color: "#ccc",
+                  wordBreak: "break-word",
                 }}
               >
                 <Linkify options={options}>

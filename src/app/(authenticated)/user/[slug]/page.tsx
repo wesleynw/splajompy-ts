@@ -53,15 +53,7 @@ export default async function Page({
   }
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: { xs: "100%", md: "600" },
-        margin: "auto",
-        boxSizing: "border-box",
-        paddingBottom: 20,
-      }}
-    >
+    <Box>
       <UserView
         user={user}
         isOwnProfile={user.user_id === session_user.user_id}

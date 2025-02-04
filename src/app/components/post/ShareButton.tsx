@@ -5,7 +5,10 @@ import { useState } from "react";
 export default function ShareButton() {
   const [open, setOpen] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (navigator.share && navigator.canShare({ url: window.location.href })) {
       try {
         await navigator.share({ url: window.location.href });
