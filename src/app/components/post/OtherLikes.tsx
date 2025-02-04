@@ -9,7 +9,7 @@ type Props = {
 export default function OtherLikes({ post_id }: Readonly<Props>) {
   const { isPending, data } = useOtherLikes(post_id);
 
-  if (isPending || !data || (data.likes?.length == 0 && !data.hasOthers)) {
+  if (isPending || !data || (data.likes?.length == 0 && !data.hasOtherLikes)) {
     return;
   }
 
@@ -39,7 +39,7 @@ export default function OtherLikes({ post_id }: Readonly<Props>) {
         if (index === 0) {
           return [mention];
         } else if (index === 1) {
-          if (data.likes.length === 2 && data.hasOthers) {
+          if (data.likes.length === 2 && data.hasOtherLikes) {
             return [...acc, ", ", mention];
           }
           return [...acc, " and ", mention];
@@ -47,7 +47,7 @@ export default function OtherLikes({ post_id }: Readonly<Props>) {
           return [...acc, ", ", mention];
         }
       }, [])}
-      {data.hasOthers &&
+      {data.hasOtherLikes &&
         (data.likes.length === 0
           ? " others"
           : data.likes.length === 1

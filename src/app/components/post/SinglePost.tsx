@@ -48,7 +48,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         user={user}
         author={post.poster}
         user_id={post.user_id}
-        date={new Date(post.postdate)}
+        date={new Date(post.postdate + "Z")}
         text={post.text}
         liked={post.liked}
         commentCount={post.comment_count}
