@@ -1,11 +1,14 @@
 import IosShareIcon from "@mui/icons-material/IosShare";
-import { IconButton, Snackbar } from "@mui/material";
+import { Box, IconButton, Snackbar } from "@mui/material";
 import { useState } from "react";
 
 export default function ShareButton() {
   const [open, setOpen] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (navigator.share && navigator.canShare({ url: window.location.href })) {
       try {
         await navigator.share({ url: window.location.href });
@@ -33,7 +36,7 @@ export default function ShareButton() {
   };
 
   return (
-    <>
+    <Box>
       <IconButton onClick={handleClick} disableRipple color="primary">
         <IosShareIcon sx={{ width: "22px", height: "22px" }} />
       </IconButton>
@@ -45,6 +48,6 @@ export default function ShareButton() {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         sx={{ marginBottom: "50px" }}
       />
-    </>
+    </Box>
   );
 }

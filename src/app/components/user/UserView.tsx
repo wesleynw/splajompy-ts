@@ -21,23 +21,22 @@ interface Props {
 export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
   return (
     <Box>
-      <Box sx={{ px: { xs: 2, md: 4 } }}>
+      <Box sx={{ px: { xs: 1, md: 3 } }}>
         <Box
           sx={{
             width: "100%",
-            maxWidth: 600,
+            maxWidth: "600px",
             borderRadius: "8px",
-            gap: 1,
             padding: 3,
             margin: "10px auto",
-            background: "linear-gradient(135deg, #1b1b1b, #2a2a2a)",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
+            background: "#1b1b1b",
           }}
         >
           <Stack
             direction="row"
             alignItems="left"
             justifyContent="space-between"
+            sx={{ width: "100%" }}
           >
             <Typography
               variant="h6"

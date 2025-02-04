@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
 import { Button } from "@mui/material";
-import theme from "@/theme";
+import { useEffect, useState } from "react";
 
 type Props = {
   user_id: number;
@@ -35,8 +34,10 @@ export default function FollowButton({
     return null;
   }
 
-  const handleFollow = async (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setLoading(true);
     try {
       if (isFollowing) {
@@ -73,7 +74,7 @@ export default function FollowButton({
         fontSize: "0.875rem",
         minWidth: "auto",
         color: "#ffffff",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: "#1DA1F2",
         "&:hover": {
           backgroundColor: "#0d8de6",
         },
