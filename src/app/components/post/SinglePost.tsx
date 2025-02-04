@@ -56,8 +56,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         imageWidth={post.imageWidth}
         imageHeight={post.imageHeight}
         toggleLiked={toggleLiked}
-        showComments
-        showShareButton
+        standaloneView
       />
     </Box>
   );

@@ -34,8 +34,7 @@ type Props = {
   commentCount: number;
   liked: boolean;
   toggleLiked: () => void;
-  showComments?: boolean;
-  showShareButton?: boolean;
+  standaloneView?: boolean;
 };
 
 export default function Post({
@@ -51,8 +50,7 @@ export default function Post({
   commentCount,
   liked,
   toggleLiked,
-  showComments = false,
-  showShareButton = false,
+  standaloneView = false,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -73,11 +71,12 @@ export default function Post({
         gap: 1,
         transition: "background-color 0.3s",
         background: "#1b1b1b",
-        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
-        "&:hover": {
-          background: "#222222",
-          cursor: "pointer",
-        },
+        "&:hover": !standaloneView
+          ? {
+              background: "#222222",
+              cursor: "pointer",
+            }
+          : {},
       }}
       onClick={() => router.push(`/post/${id}`)}
     >
@@ -101,7 +100,6 @@ export default function Post({
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Stack direction="row">
-          {showShareButton && <ShareButton />}
           {user.user_id === user_id ? (
             <PostDropdown post_id={id} />
           ) : (
@@ -142,13 +140,15 @@ export default function Post({
           {dayjs.utc(date).tz(userTimezone).fromNow()}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
+        {standaloneView && <ShareButton />}
+        <Box sx={{ width: "20px" }}></Box>
         <CommentCount count={commentCount} />
         <LikeButton liked={liked} toggleLike={toggleLiked} />
       </Stack>
 
       <OtherLikes post_id={id} />
 
-      {showComments && <CommentList post_id={id} user={user} />}
+      {standaloneView && <CommentList post_id={id} user={user} />}
     </Box>
   );
 }
