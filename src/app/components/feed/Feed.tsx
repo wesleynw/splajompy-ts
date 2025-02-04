@@ -67,7 +67,7 @@ export default function Feed({ user, page, user_id }: Readonly<Props>) {
     <Box
       sx={{
         marginBottom: "60px",
-        px: { xs: 2, md: 4 },
+        px: { xs: 1, md: 3 },
         width: "100%",
       }}
     >

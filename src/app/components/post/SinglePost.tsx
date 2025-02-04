@@ -42,12 +42,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
   }
 
   return (
-    <Box
-      sx={{
-        margin: "0px auto",
-        borderRaius: "8px",
-      }}
-    >
+    <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
       <Post
         id={post_id}
         user={user}
@@ -62,6 +57,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
         imageHeight={post.imageHeight}
         toggleLiked={toggleLiked}
         showComments
+        showShareButton
       />
     </Box>
   );

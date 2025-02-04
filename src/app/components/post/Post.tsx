@@ -35,6 +35,7 @@ type Props = {
   liked: boolean;
   toggleLiked: () => void;
   showComments?: boolean;
+  showShareButton?: boolean;
 };
 
 export default function Post({
@@ -51,6 +52,7 @@ export default function Post({
   liked,
   toggleLiked,
   showComments = false,
+  showShareButton = false,
 }: Readonly<Props>) {
   const router = useRouter();
   const userTimezone = dayjs.tz.guess();
@@ -99,7 +101,7 @@ export default function Post({
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Stack direction="row">
-          <ShareButton />
+          {showShareButton && <ShareButton />}
           {user.user_id === user_id ? (
             <PostDropdown post_id={id} />
           ) : (
