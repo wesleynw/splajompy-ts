@@ -41,8 +41,6 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
     );
   }
 
-  console.log("post: ", post);
-
   return (
     <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
       <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />

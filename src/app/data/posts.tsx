@@ -139,8 +139,6 @@ export function usePosts({
         target_user_id,
       ]);
 
-      console.log("previous posts: ", previousPosts);
-
       if (previousPosts) {
         queryClient.setQueryData(
           ["feed", target_following_only, target_post_id, target_user_id],

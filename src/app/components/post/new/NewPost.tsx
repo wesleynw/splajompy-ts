@@ -1,6 +1,5 @@
 "use client";
 
-import { PostType } from "@/app/data/posts";
 import { insertPost } from "@/app/lib/posts";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { User } from "@/db/schema";
@@ -8,7 +7,7 @@ import { Box, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { RichTextareaHandle } from "rich-textarea";
-import { getUsername, insertImage } from "../../../lib/actions";
+import { insertImage } from "../../../lib/actions";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import SubmitPostButton from "./SubmitPostButton";
@@ -17,14 +16,12 @@ import { TextInput } from "./TextInput";
 type NewPostProps = {
   user: User;
   onPost: () => void;
-  insertPostToCache: (post: PostType) => void;
   inputRef: React.RefObject<RichTextareaHandle | null>;
 };
 
 export default function Page({
   user,
   onPost,
-  insertPostToCache,
   inputRef,
 }: Readonly<NewPostProps>) {
   const ref = useRef<HTMLFormElement>(null);
@@ -49,7 +46,6 @@ export default function Page({
     if (!post) {
       return;
     }
-    let imagePath: string | null = null;
 
     const img = new Image();
     if (selectedFile) {
@@ -93,25 +89,11 @@ export default function Page({
           return;
         }
 
-        imagePath = uniqueFilename;
-
         await insertImage(post.post_id, uniqueFilename, img.width, img.height);
       } catch (err) {
         console.error("Error processing file upload", err);
       }
     }
-
-    const mappedPost = {
-      ...post,
-      poster: user.username || (await getUsername(user.user_id)),
-      comment_count: 0,
-      imageBlobUrl: imagePath ?? null,
-      imageWidth: selectedFile ? img.width : null,
-      imageHeight: selectedFile ? img.height : null,
-      liked: false,
-    };
-
-    insertPostToCache(mappedPost);
 
     setTextValue("");
     setPreviewFile(null);
