@@ -1,3 +1,4 @@
+import { EnhancedPost } from "@/app/lib/posts";
 import { PublicUser } from "@/db/schema";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -21,33 +22,24 @@ dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-type Props = {
-  id: number;
+type Props = EnhancedPost & {
   user: PublicUser;
-  user_id: number;
-  author: string;
-  date: Date;
-  text: string | null;
-  imageUrl: string | null;
-  imageWidth: number | null;
-  imageHeight: number | null;
-  commentCount: number;
-  liked: boolean;
   toggleLiked: () => void;
   standaloneView?: boolean;
 };
 
 export default function Post({
-  id,
+  post_id,
   user,
   user_id,
   author,
   date,
   text,
-  imageUrl,
-  imageWidth,
-  imageHeight,
-  commentCount,
+  image_blob_url,
+  image_width,
+  image_height,
+  comment_count,
+  relevant_likes,
   liked,
   toggleLiked,
   standaloneView = false,
@@ -78,14 +70,16 @@ export default function Post({
             }
           : {},
       }}
-      onClick={() => router.push(`/post/${id}`)}
+      onClick={() => router.push(`/post/${post_id}`)}
     >
       <Box sx={{ position: "relative" }}>
         <Box sx={{ position: "absolute", top: "10%", right: "0%" }}>
           {user.user_id === user_id ? (
-            <PostDropdown post_id={id} />
+            <PostDropdown post_id={post_id} />
           ) : (
-            <FollowButton user_id={user_id} show_unfollow={false} />
+            standaloneView && (
+              <FollowButton user_id={user_id} show_unfollow={false} />
+            )
           )}
         </Box>
       </Box>
@@ -112,18 +106,18 @@ export default function Post({
 
       <PostTextContent text={text} />
 
-      {imageUrl && imageHeight && imageWidth && (
+      {image_blob_url && image_height && image_width && (
         <Box>
           <ResponsiveImage
-            imagePath={imageUrl}
-            width={imageWidth}
-            height={imageHeight}
+            imagePath={image_blob_url}
+            width={image_width}
+            height={image_height}
             setOpen={setOpen}
           />
           <ImageModal
-            imagePath={imageUrl}
-            imageWidth={imageWidth}
-            imageHeight={imageHeight}
+            imagePath={image_blob_url}
+            imageWidth={image_width}
+            imageHeight={image_height}
             open={open}
             handleClose={handleClose}
           />
@@ -144,13 +138,13 @@ export default function Post({
         <Box sx={{ flexGrow: 1 }} />
         {standaloneView && <ShareButton />}
         <Box sx={{ width: "20px" }}></Box>
-        <CommentCount count={commentCount} />
+        <CommentCount count={comment_count} />
         <LikeButton liked={liked} toggleLike={toggleLiked} />
       </Stack>
 
-      <OtherLikes post_id={id} />
+      <OtherLikes relevant_likes={relevant_likes} />
 
-      {standaloneView && <CommentList post_id={id} user={user} />}
+      {standaloneView && <CommentList post_id={post_id} user={user} />}
     </Box>
   );
 }

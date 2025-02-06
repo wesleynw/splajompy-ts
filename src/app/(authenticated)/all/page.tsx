@@ -8,5 +8,5 @@ export default async function Home() {
     redirect("/login");
   }
 
-  return <Feed user={user} page="all" />;
+  return <Feed user={user} />;
 }
