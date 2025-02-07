@@ -45,7 +45,7 @@ export async function addLike(
   let recipient_id = post.user_id;
   if (comment_id) {
     const comment = await getCommentById(comment_id);
-    recipient_id = comment?.user_id ?? recipient_id; // TODO: this is dumb
+    recipient_id = comment?.user_id ?? recipient_id;
   }
 
   await db.insert(notifications).values({
@@ -179,6 +179,21 @@ export async function getRelevantLikesForPosts(
     }
   });
 
+  const processedLikesMap = new Map<
+    number,
+    { username: string; user_id: number }[]
+  >();
+  post_ids.forEach((post_id) => {
+    const likes = relevantLikesMap.get(post_id) || [];
+    const shuffled = likes
+      .toSorted(
+        (a, b) =>
+          seededRandom(post_id + a.user_id) - seededRandom(post_id + b.user_id)
+      )
+      .slice(0, 2);
+    processedLikesMap.set(post_id, shuffled);
+  });
+
   const otherLikesCounts = await db
     .select({
       post_id: likes.post_id,
@@ -192,7 +207,11 @@ export async function getRelevantLikesForPosts(
         ne(likes.user_id, user.user_id),
         notInArray(
           likes.user_id,
-          relevantLikes.map((l) => l.user_id).filter((id) => id !== null)
+          post_ids.flatMap(
+            (post_id) =>
+              processedLikesMap.get(post_id)?.map((likes) => likes.user_id) ||
+              []
+          )
         )
       )
     )
@@ -204,16 +223,8 @@ export async function getRelevantLikesForPosts(
 
   const resultMap = new Map();
   post_ids.forEach((post_id) => {
-    const likes = relevantLikesMap.get(post_id) || [];
-    const shuffled = likes
-      .toSorted(
-        (a, b) =>
-          seededRandom(post_id + a.user_id) - seededRandom(post_id + b.user_id)
-      )
-      .slice(0, 2);
-
     resultMap.set(post_id, {
-      likes: shuffled,
+      likes: processedLikesMap.get(post_id) || [],
       hasOtherLikes: otherLikesMap.get(post_id) || false,
     });
   });
