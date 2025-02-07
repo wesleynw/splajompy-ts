@@ -6,12 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toggleLiked } from "../lib/likes";
-import {
-  deletePost,
-  getAllPostsForFollowing,
-  getAllPostsFromDb,
-  getPostsByUserId,
-} from "../lib/posts";
+import { deletePost, EnhancedPost, fetchPosts } from "../lib/posts";
 
 export type FeedType = "home" | "all" | "profile";
 
@@ -28,25 +23,27 @@ export type PostType = {
   liked: boolean;
 };
 
-function getFetcherForPage(page: "home" | "all" | "profile", user_id?: number) {
-  switch (page) {
-    case "home":
-      return getAllPostsForFollowing;
-    case "all":
-      return getAllPostsFromDb;
-    case "profile":
-      return (offset: number) => getPostsByUserId(offset, user_id!);
-    default:
-      throw new Error("Invalid page type");
-  }
-}
+type FetchOptions = {
+  offset?: number;
+  target_following_only?: boolean;
+  target_post_id?: number | null;
+  target_user_id?: number | null;
+};
 
-export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
+export function usePosts({
+  target_following_only = false,
+  target_post_id = null,
+  target_user_id = null,
+}: FetchOptions = {}) {
   const queryClient = useQueryClient();
 
-  const fetchFeed = async ({ pageParam }: { pageParam: number }) => {
-    const fetcher = getFetcherForPage(page, user_id);
-    return await fetcher(pageParam);
+  const fetcher = async ({ pageParam }: { pageParam: number }) => {
+    return await fetchPosts(
+      pageParam,
+      target_following_only,
+      target_post_id,
+      target_user_id
+    );
   };
 
   const {
@@ -58,17 +55,17 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["feed", page],
-    queryFn: fetchFeed,
+    queryKey: ["feed", target_following_only, target_post_id, target_user_id],
+    queryFn: fetcher,
     initialPageParam: 0,
-    getNextPageParam: (lastPage: PostType[], pages: PostType[][]) => {
+    getNextPageParam: (lastPage: EnhancedPost[], pages: EnhancedPost[][]) => {
       return lastPage.length === 10 ? pages.length * 10 : undefined;
     },
   });
 
   const updateCachedPost = async (updatedPost: Partial<PostType>) => {
     queryClient.setQueryData<{ pages: PostType[][]; pageParams: number[] }>(
-      ["feed", page],
+      ["feed", target_following_only, target_post_id, target_user_id],
       (oldData) => {
         if (!oldData) return oldData;
         return {
@@ -89,7 +86,7 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
 
   const insertPost = (newPost: PostType) => {
     queryClient.setQueryData<{ pages: PostType[][] }>(
-      ["feed", page, user_id],
+      ["feed", target_following_only, target_post_id, target_user_id],
       (oldData) => {
         if (!oldData) {
           return {
@@ -126,33 +123,58 @@ export function useFeed(page: "home" | "all" | "profile", user_id?: number) {
   const likedMutation = useMutation({
     mutationFn: (post_id: number) => toggleLiked(post_id),
     onMutate: async (post_id) => {
-      await queryClient.cancelQueries({ queryKey: ["feed", page] });
+      await queryClient.cancelQueries({
+        queryKey: [
+          "feed",
+          target_following_only,
+          target_post_id,
+          target_user_id,
+        ],
+      });
 
       const previousPosts = queryClient.getQueryData<{ pages: PostType[][] }>([
         "feed",
-        page,
+        target_following_only,
+        target_post_id,
+        target_user_id,
       ]);
 
       if (previousPosts) {
-        queryClient.setQueryData(["feed", page], {
-          ...previousPosts,
-          pages: previousPosts.pages.map((posts) =>
-            posts.map((post) =>
-              post.post_id === post_id ? { ...post, liked: !post.liked } : post
-            )
-          ),
-        });
+        queryClient.setQueryData(
+          ["feed", target_following_only, target_post_id, target_user_id],
+          {
+            ...previousPosts,
+            pages: previousPosts.pages.map((posts) =>
+              posts.map((post) =>
+                post.post_id === post_id
+                  ? { ...post, liked: !post.liked }
+                  : post
+              )
+            ),
+          }
+        );
       }
 
       return { previousPosts };
     },
     onError: (_err, _variables, context) => {
       if (context?.previousPosts) {
-        queryClient.setQueryData(["feed", page], context.previousPosts);
+        queryClient.setQueryData(
+          ["feed", target_following_only, target_post_id, target_user_id],
+
+          context.previousPosts
+        );
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["feed", page] });
+      queryClient.invalidateQueries({
+        queryKey: [
+          "feed",
+          target_following_only,
+          target_post_id,
+          target_user_id,
+        ],
+      });
     },
   });
 

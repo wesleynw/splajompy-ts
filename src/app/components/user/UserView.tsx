@@ -85,7 +85,7 @@ export default function UserView({ user, isOwnProfile }: Readonly<Props>) {
         </Box>
       </Box>
       <Box>
-        <Feed user={user} page="profile" user_id={user.user_id} />
+        <Feed user={user} target_user_id={user.user_id} />
       </Box>
     </Box>
   );

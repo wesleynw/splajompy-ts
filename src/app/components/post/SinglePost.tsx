@@ -1,7 +1,7 @@
 "use client";
 
 import { useSinglePost } from "@/app/data/post";
-import { User } from "@/db/schema";
+import { PublicUser } from "@/db/schema";
 import { Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -16,8 +16,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 type Props = {
+  user: PublicUser;
   post_id: number;
-  user: User;
 };
 
 export default function SinglePost({ post_id, user }: Readonly<Props>) {
@@ -43,21 +43,7 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
 
   return (
     <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
-      <Post
-        id={post_id}
-        user={user}
-        author={post.poster}
-        user_id={post.user_id}
-        date={new Date(post.postdate + "Z")}
-        text={post.text}
-        liked={post.liked}
-        commentCount={post.comment_count}
-        imageUrl={post.imageBlobUrl}
-        imageWidth={post.imageWidth}
-        imageHeight={post.imageHeight}
-        toggleLiked={toggleLiked}
-        standaloneView
-      />
+      <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
     </Box>
   );
 }

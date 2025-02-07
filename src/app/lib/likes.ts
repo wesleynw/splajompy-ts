@@ -2,7 +2,17 @@
 
 import { db } from "@/db";
 import { follows, likes, notifications, users } from "@/db/schema";
-import { and, desc, eq, exists, isNull, ne, notInArray } from "drizzle-orm";
+import {
+  and,
+  desc,
+  eq,
+  exists,
+  inArray,
+  isNull,
+  ne,
+  notInArray,
+  sql,
+} from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { seededRandom } from "../utils/random";
 import { getCommentById } from "./comments";
@@ -111,19 +121,32 @@ export async function toggleLiked(
   }
 }
 
-export async function getRelevantLikes(post_id: number) {
+export type RelevantLikesData = {
+  likes: { user_id: number; username: string }[];
+  hasOtherLikes: boolean;
+};
+
+export async function getRelevantLikesForPosts(
+  post_ids: number[]
+): Promise<Map<number, RelevantLikesData>> {
   const { user } = await getCurrentSession();
   if (user === null) {
-    return;
+    return new Map();
   }
 
+  if (post_ids.length === 0) return new Map();
+
   const relevantLikes = await db
-    .select({ username: users.username, user_id: users.user_id })
+    .select({
+      post_id: likes.post_id,
+      username: users.username,
+      user_id: users.user_id,
+    })
     .from(likes)
     .leftJoin(users, eq(likes.user_id, users.user_id))
     .where(
       and(
-        eq(likes.post_id, post_id),
+        inArray(likes.post_id, post_ids),
         isNull(likes.comment_id),
         exists(
           db
@@ -140,12 +163,31 @@ export async function getRelevantLikes(post_id: number) {
     )
     .orderBy(desc(users.user_id));
 
-  const otherLikes = await db
-    .select()
+  const relevantLikesMap = new Map<
+    number,
+    { username: string; user_id: number }[]
+  >();
+
+  relevantLikes.forEach((like) => {
+    if (!relevantLikesMap.has(like.post_id))
+      relevantLikesMap.set(like.post_id, []);
+    if (like.username !== null && like.user_id !== null) {
+      relevantLikesMap.get(like.post_id)?.push({
+        username: like.username,
+        user_id: like.user_id,
+      });
+    }
+  });
+
+  const otherLikesCounts = await db
+    .select({
+      post_id: likes.post_id,
+      count: sql<number>`COUNT(*)`,
+    })
     .from(likes)
     .where(
       and(
-        eq(likes.post_id, post_id),
+        inArray(likes.post_id, post_ids),
         isNull(likes.comment_id),
         ne(likes.user_id, user.user_id),
         notInArray(
@@ -153,14 +195,28 @@ export async function getRelevantLikes(post_id: number) {
           relevantLikes.map((l) => l.user_id).filter((id) => id !== null)
         )
       )
-    );
+    )
+    .groupBy(likes.post_id);
 
-  const shuffled = relevantLikes.toSorted((a, b) => {
-    return (
-      seededRandom(post_id + (a.user_id ?? 0)) -
-      seededRandom(post_id + (b.user_id ?? 0))
-    );
+  const otherLikesMap = new Map(
+    otherLikesCounts.map((like) => [like.post_id, like.count > 0])
+  );
+
+  const resultMap = new Map();
+  post_ids.forEach((post_id) => {
+    const likes = relevantLikesMap.get(post_id) || [];
+    const shuffled = likes
+      .toSorted(
+        (a, b) =>
+          seededRandom(post_id + a.user_id) - seededRandom(post_id + b.user_id)
+      )
+      .slice(0, 2);
+
+    resultMap.set(post_id, {
+      likes: shuffled,
+      hasOtherLikes: otherLikesMap.get(post_id) || false,
+    });
   });
 
-  return { likes: shuffled.slice(0, 2), hasOtherLikes: otherLikes.length > 0 };
+  return resultMap;
 }

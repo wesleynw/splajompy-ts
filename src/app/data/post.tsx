@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toggleLiked } from "../lib/likes";
-import { getPostById } from "../lib/posts";
+import { fetchPosts } from "../lib/posts";
 import { PostType } from "./posts";
 
 export function useSinglePost(post_id: number) {
@@ -10,7 +10,7 @@ export function useSinglePost(post_id: number) {
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["post", post_id],
-    queryFn: () => getPostById(post_id),
+    queryFn: async () => (await fetchPosts(undefined, undefined, post_id))[0],
   });
 
   const updatePost = (updatedPost: Partial<PostType>) => {

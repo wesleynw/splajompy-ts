@@ -63,12 +63,7 @@ export default function NewPostDialog({
           padding: 0,
         }}
       >
-        <NewPost
-          user={user}
-          onPost={toggleOpen}
-          insertPostToCache={() => console.log("a")} // TODO: why is this here?
-          inputRef={inputRef}
-        />
+        <NewPost user={user} onPost={toggleOpen} inputRef={inputRef} />
       </DialogContent>
     </Dialog>
   );

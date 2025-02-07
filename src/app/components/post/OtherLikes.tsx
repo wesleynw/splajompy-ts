@@ -1,15 +1,13 @@
-import { useOtherLikes } from "@/app/data/likes";
+import { RelevantLikesData } from "@/app/lib/likes";
 import { renderMentions } from "@/app/utils/mentions";
 import Box from "@mui/material/Box";
 
 type Props = {
-  post_id: number;
+  relevant_likes: RelevantLikesData;
 };
 
-export default function OtherLikes({ post_id }: Readonly<Props>) {
-  const { isPending, data } = useOtherLikes(post_id);
-
-  if (isPending || !data || (data.likes?.length == 0 && !data.hasOtherLikes)) {
+export default function OtherLikes({ relevant_likes }: Readonly<Props>) {
+  if (relevant_likes.likes.length == 0 && !relevant_likes.hasOtherLikes) {
     return;
   }
 
@@ -32,14 +30,17 @@ export default function OtherLikes({ post_id }: Readonly<Props>) {
       }}
     >
       Liked by{" "}
-      {data?.likes.reduce<React.ReactNode[]>((acc, like, index) => {
+      {relevant_likes?.likes.reduce<React.ReactNode[]>((acc, like, index) => {
         const mention = renderMentions(
           `{tag:${like.user_id ?? ""}:${like.username}}`
         );
         if (index === 0) {
           return [mention];
         } else if (index === 1) {
-          if (data.likes.length === 2 && data.hasOtherLikes) {
+          if (
+            relevant_likes.likes.length === 2 &&
+            relevant_likes.hasOtherLikes
+          ) {
             return [...acc, ", ", mention];
           }
           return [...acc, " and ", mention];
@@ -47,10 +48,10 @@ export default function OtherLikes({ post_id }: Readonly<Props>) {
           return [...acc, ", ", mention];
         }
       }, [])}
-      {data.hasOtherLikes &&
-        (data.likes.length === 0
+      {relevant_likes.hasOtherLikes &&
+        (relevant_likes.likes.length === 0
           ? " others"
-          : data.likes.length === 1
+          : relevant_likes.likes.length === 1
           ? " and others"
           : ", and others")}
     </Box>

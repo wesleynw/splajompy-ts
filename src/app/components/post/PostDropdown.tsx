@@ -1,6 +1,6 @@
 "use client";
 
-import { useFeed } from "@/app/data/posts";
+import { usePosts } from "@/app/data/posts";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
@@ -13,7 +13,7 @@ interface PostDropdownProps {
 
 export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
   const router = useRouter();
-  const { deletePost } = useFeed("all", post_id);
+  const { deletePost } = usePosts();
   const pathname = usePathname();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
