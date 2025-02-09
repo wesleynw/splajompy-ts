@@ -1,5 +1,4 @@
 import { getCurrentUserHasUnreadNotifications } from "@/app/lib/notifications";
-import { Badge } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
@@ -16,21 +15,11 @@ export default function NotificationBadge({
   }
 
   return (
-    <Badge
-      variant="dot"
-      badgeContent=""
-      color="info"
-      overlap="circular"
-      invisible={!data}
-      sx={{
-        "& .MuiBadge-badge": {
-          position: "absolute",
-          transform: "translate(50%, -50%)",
-          zIndex: 1,
-        },
-      }}
-    >
+    <div className="relative">
+      <div className="absolute -end-1 -top-1 inline-flex h-2 w-2 items-center justify-center rounded-full bg-blue-400 md:h-3 md:w-3">
+        {data}
+      </div>
       {children}
-    </Badge>
+    </div>
   );
 }
