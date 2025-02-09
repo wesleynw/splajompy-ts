@@ -34,8 +34,8 @@ a {
 }
 
 .rich-textarea::selection {
-  background: #4a90e2; 
-  color: white;      
+  background: #4a90e2;
+  color: white;
 }
 
 .rich-textarea:focus {

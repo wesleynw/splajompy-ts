@@ -130,6 +130,12 @@ export const notifications = pgTable("notifications", {
   user_id: integer("user_id")
     .notNull()
     .references(() => users.user_id, { onDelete: "cascade" }),
+  post_id: integer("post_id").references(() => posts.post_id, {
+    onDelete: "cascade",
+  }),
+  comment_id: integer("comment_id").references(() => comments.comment_id, {
+    onDelete: "cascade",
+  }),
   message: text().notNull(),
   link: text(),
   viewed: boolean().default(false),

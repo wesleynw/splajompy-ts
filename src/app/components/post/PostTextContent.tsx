@@ -1,4 +1,4 @@
-import { renderMentions } from "@/app/utils/mentions";
+import { RenderMentions } from "@/app/utils/mentions";
 import Box from "@mui/material/Box";
 import Linkify from "linkify-react";
 
@@ -41,7 +41,9 @@ export default function PostTextContent({ text }: Readonly<Props>) {
       }}
     >
       <Box onClick={handleLinkClick}>
-        <Linkify options={options}>{renderMentions(text)}</Linkify>
+        <Linkify options={options}>
+          <RenderMentions text={text} />
+        </Linkify>
       </Box>
     </Box>
   );

@@ -27,7 +27,7 @@ export function TextInput({
       return newValue.replace(/@\S+/g, (match) => {
         const username = match.slice(1);
         const tagMatch = RegExp(new RegExp(`\\{tag:\\d+:${username}\\}`)).exec(
-          prev
+          prev,
         );
         return tagMatch ? tagMatch[0] : match;
       });

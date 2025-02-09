@@ -1,9 +1,14 @@
 "use server";
 
 import { db } from "@/db";
-import { NotificationData, notifications } from "@/db/schema";
+import { Comment, NotificationData, notifications } from "@/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
+import { PostType } from "../data/posts";
+import { toMentionInternalFormat } from "../utils/mentions-serverside";
+import { getCommentById } from "./comments";
+import { getPostById } from "./posts";
+import { getUserById } from "./users";
 
 const FETCH_LIMIT = 10;
 
@@ -42,9 +47,14 @@ export async function getNotifications() {
   return result;
 }
 
+export type ExtendedNotificationData = NotificationData & {
+  post: PostType | undefined;
+  comment: Comment | undefined;
+};
+
 export async function fetchNotifications(
   offset: number = 0,
-): Promise<NotificationData[]> {
+): Promise<ExtendedNotificationData[]> {
   const { user } = await getCurrentSession();
   if (user === null) {
     return [];
@@ -58,7 +68,26 @@ export async function fetchNotifications(
     .offset(offset)
     .limit(FETCH_LIMIT);
 
-  return results;
+  const notificationsWithDetails = await Promise.all(
+    results.map(async (notification) => {
+      let post: PostType | undefined = undefined;
+      let comment: Comment | undefined = undefined;
+
+      if (notification.post_id) {
+        post = await getPostById(notification.post_id);
+      } else if (notification.comment_id) {
+        comment = await getCommentById(notification.comment_id);
+      }
+
+      return {
+        ...notification,
+        post,
+        comment,
+      };
+    }),
+  );
+
+  return notificationsWithDetails;
 }
 
 export async function markAllNotificationAsRead() {
@@ -71,4 +100,37 @@ export async function markAllNotificationAsRead() {
     .update(notifications)
     .set({ viewed: true })
     .where(eq(notifications.user_id, user.user_id));
+}
+
+type SendNotificationKwargs = {
+  target_user_id: number;
+  post_id?: number;
+  comment_id?: number;
+  message: string;
+};
+
+export async function sendNotification(
+  args: SendNotificationKwargs,
+): Promise<void> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  console.log("a");
+
+  const target_user = await getUserById(args.target_user_id);
+  if (!target_user) {
+    return;
+  }
+
+  const message = `${toMentionInternalFormat(user.user_id, user.username)} ${args.message}`;
+
+  await db.insert(notifications).values({
+    user_id: args.target_user_id,
+    post_id: args.post_id,
+    comment_id: args.comment_id,
+    message: message,
+    link: `/post/${args.post_id}`,
+  });
 }
