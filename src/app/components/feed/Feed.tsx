@@ -3,11 +3,11 @@
 import { usePosts } from "@/app/data/posts";
 import { User } from "@/db/schema";
 import Box from "@mui/material/Box";
-import { useEffect, useRef } from "react";
 import Spinner from "../loading/Spinner";
 import Post from "../post/Post";
 import EmptyFeed from "./EmptyFeed";
 import FeedBottom from "./FeedBottom";
+import ScrollObserver from "./ScrollObserver";
 
 type Props = {
   user: User;
@@ -22,36 +22,19 @@ export default function Feed({
   target_user_id = null,
   target_post_id,
 }: Readonly<Props>) {
-  const { posts, fetchNextPage, hasNextPage, isFetching, status, toggleLiked } =
-    usePosts({
-      target_following_only,
-      target_post_id,
-      target_user_id,
-    });
-
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
-        }
-      },
-      { root: null, rootMargin: "400px", threshold: 0 }
-    );
-
-    const currentObserverRef = observerRef.current;
-    if (currentObserverRef) {
-      observer.observe(currentObserverRef);
-    }
-
-    return () => {
-      if (currentObserverRef) {
-        observer.unobserve(currentObserverRef);
-      }
-    };
-  }, [hasNextPage, fetchNextPage]);
+  const {
+    posts,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    toggleLiked,
+  } = usePosts({
+    target_following_only,
+    target_post_id,
+    target_user_id,
+  });
 
   if (status === "pending") {
     return <Spinner />;
@@ -85,10 +68,14 @@ export default function Feed({
             toggleLiked={() => toggleLiked(post.post_id)}
             {...post}
           />
-        ))
+        )),
       )}
       {isFetching && <Spinner />}
-      <div ref={observerRef} style={{ height: "1px" }} />
+      <ScrollObserver
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+      />
       {!hasNextPage &&
         !target_following_only &&
         !target_post_id &&

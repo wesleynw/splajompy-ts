@@ -32,6 +32,7 @@ export default function NotificationList() {
           />
         )),
       )}
+      {isFetchingNextPage && <Spinner />}
       <ScrollObserver
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
