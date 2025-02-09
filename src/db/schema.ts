@@ -103,7 +103,7 @@ export const follows = pgTable(
       }),
     created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (table) => [unique().on(table.follower_id, table.following_id)]
+  (table) => [unique().on(table.follower_id, table.following_id)],
 );
 
 export const likes = pgTable(
@@ -120,7 +120,7 @@ export const likes = pgTable(
       .references(() => users.user_id, { onDelete: "cascade" }),
     created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (table) => [unique().on(table.user_id, table.post_id, table.comment_id)]
+  (table) => [unique().on(table.user_id, table.post_id, table.comment_id)],
 );
 
 export type Like = typeof likes.$inferSelect;
@@ -136,4 +136,4 @@ export const notifications = pgTable("notifications", {
   created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
 });
 
-export type SelectNotification = typeof notifications.$inferSelect;
+export type NotificationData = typeof notifications.$inferSelect;

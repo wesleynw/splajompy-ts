@@ -1,7 +1,7 @@
-import React from "react";
-import NotificationsView from "@/app/components/notifications/NotificationView";
-import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/app/auth/session";
+import NotificationsList from "@/app/components/notifications/NotificationList";
+import { redirect } from "next/navigation";
+import React from "react";
 
 export default async function Notifications() {
   const { user } = await getCurrentSession();
@@ -9,5 +9,5 @@ export default async function Notifications() {
     redirect("/login");
   }
 
-  return <NotificationsView />;
+  return <NotificationsList />;
 }
