@@ -73,10 +73,10 @@ export async function fetchNotifications(
       let post: PostType | undefined = undefined;
       let comment: Comment | undefined = undefined;
 
-      if (notification.post_id) {
-        post = await getPostById(notification.post_id);
-      } else if (notification.comment_id) {
+      if (notification.comment_id) {
         comment = await getCommentById(notification.comment_id);
+      } else if (notification.post_id) {
+        post = await getPostById(notification.post_id);
       }
 
       return {
@@ -116,8 +116,6 @@ export async function sendNotification(
   if (user === null) {
     return;
   }
-
-  console.log("a");
 
   const target_user = await getUserById(args.target_user_id);
   if (!target_user) {

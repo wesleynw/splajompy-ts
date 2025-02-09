@@ -91,7 +91,5 @@ export function RenderMentions({ text }: Readonly<{ text: string }>) {
     parts.push(text.slice(lastIndex));
   }
 
-  console.log("parts: ", parts);
-
   return <>{parts}</>;
 }
