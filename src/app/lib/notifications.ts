@@ -1,9 +1,11 @@
 "use server";
 
 import { db } from "@/db";
-import { eq, and, desc } from "drizzle-orm";
-import { notifications } from "@/db/schema";
+import { NotificationData, notifications } from "@/db/schema";
+import { and, desc, eq } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
+
+const FETCH_LIMIT = 10;
 
 export async function getCurrentUserHasUnreadNotifications() {
   const { user } = await getCurrentSession();
@@ -17,8 +19,8 @@ export async function getCurrentUserHasUnreadNotifications() {
     .where(
       and(
         eq(notifications.user_id, user.user_id),
-        eq(notifications.viewed, false)
-      )
+        eq(notifications.viewed, false),
+      ),
     )
     .limit(1);
 
@@ -38,6 +40,25 @@ export async function getNotifications() {
     .orderBy(desc(notifications.notification_id));
 
   return result;
+}
+
+export async function fetchNotifications(
+  offset: number = 0,
+): Promise<NotificationData[]> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return [];
+  }
+
+  const results = await db
+    .select()
+    .from(notifications)
+    .where(eq(notifications.user_id, user.user_id))
+    .orderBy(desc(notifications.created_at))
+    .offset(offset)
+    .limit(FETCH_LIMIT);
+
+  return results;
 }
 
 export async function markAllNotificationAsRead() {

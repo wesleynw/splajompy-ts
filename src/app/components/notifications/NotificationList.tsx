@@ -1,18 +1,20 @@
 "use client";
 
 import { useNotifications } from "@/app/data/notifications";
+import ScrollObserver from "../feed/ScrollObserver";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Notification from "./Notification";
 
 export default function NotificationList() {
-  const { isPending, notifications } = useNotifications();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useNotifications();
 
-  if (isPending) {
+  if (status === "pending") {
     return <Spinner />;
   }
 
-  if (!notifications || notifications.length === 0) {
+  if (!data || data.pages.length === 0) {
     return (
       <CenteredLayout>
         <p className="mt-10 text-xl font-bold">No notifications yet.</p>
@@ -22,12 +24,19 @@ export default function NotificationList() {
 
   return (
     <CenteredLayout>
-      {notifications.map((notification) => (
-        <Notification
-          key={notification.notification_id}
-          notificationData={notification}
-        />
-      ))}
+      {data.pages.map((page) =>
+        page.map((notification) => (
+          <Notification
+            key={notification.notification_id}
+            notificationData={notification}
+          />
+        )),
+      )}
+      <ScrollObserver
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </CenteredLayout>
   );
 }

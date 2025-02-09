@@ -1,17 +1,33 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  getNotifications,
+  fetchNotifications,
   markAllNotificationAsRead,
 } from "../lib/notifications";
+
+const fetcher = async ({ pageParam }: { pageParam: number }) => {
+  return fetchNotifications(pageParam);
+};
 
 export function useNotifications() {
   const queryClient = useQueryClient();
 
-  const { isPending, isError, data, error } = useQuery({
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
     queryKey: ["notifications"],
-    queryFn: getNotifications,
+    queryFn: fetcher,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.length === 10 ? pages.length * 10 : null;
+    },
   });
 
   const markRead = async () => {
@@ -22,10 +38,13 @@ export function useNotifications() {
   };
 
   return {
-    isPending,
-    isError,
-    notifications: data,
+    data,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
     markRead,
   };
 }
