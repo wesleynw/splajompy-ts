@@ -27,7 +27,9 @@ export default function Notification({ notificationData }: Readonly<Props>) {
       href={notificationData.link ?? ""}
       className="w-full"
     >
-      <div className="group m-1.5 rounded-lg bg-neutral-800 p-4 transition-all">
+      <div
+        className={`${notificationData.viewed ? "border-neutral-800" : "border-neutral-500"} group m-1.5 rounded-lg border-2 bg-neutral-800 p-4 transition-all`}
+      >
         <p className="mb-1.5 font-medium">
           {<RenderMentions text={notificationData.message} />}
         </p>
