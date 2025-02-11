@@ -91,6 +91,21 @@ export async function fetchNotifications(
 }
 
 export async function markAllNotificationAsRead() {
+  console.log("a");
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return;
+  }
+
+  console.log("aaa");
+
+  await db
+    .update(notifications)
+    .set({ viewed: true })
+    .where(eq(notifications.user_id, user.user_id));
+}
+
+export async function markNotificationAsRead(notification_id: number) {
   const { user } = await getCurrentSession();
   if (user === null) {
     return;
@@ -99,7 +114,7 @@ export async function markAllNotificationAsRead() {
   await db
     .update(notifications)
     .set({ viewed: true })
-    .where(eq(notifications.user_id, user.user_id));
+    .where(eq(notifications.notification_id, notification_id));
 }
 
 type SendNotificationKwargs = {

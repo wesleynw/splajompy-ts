@@ -4,11 +4,18 @@ import { useNotifications } from "@/app/data/notifications";
 import ScrollObserver from "../feed/ScrollObserver";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
+import MarkReadButton from "./MarkReadButton";
 import Notification from "./Notification";
 
 export default function NotificationList() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useNotifications();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+    markRead,
+  } = useNotifications();
 
   if (status === "pending") {
     return <Spinner />;
@@ -24,6 +31,9 @@ export default function NotificationList() {
 
   return (
     <CenteredLayout>
+      <div className="flex w-full flex-row justify-start">
+        <MarkReadButton markRead={markRead} />
+      </div>
       {data.pages.map((page) =>
         page.map((notification) => (
           <Notification

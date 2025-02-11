@@ -19,8 +19,6 @@ type Props = {
 export default function Notification({ notificationData }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
 
-  console.log("notification: ", notificationData);
-
   return (
     <Link
       key={notificationData.notification_id}
@@ -28,9 +26,7 @@ export default function Notification({ notificationData }: Readonly<Props>) {
       className="w-full"
     >
       <div
-        className={
-          "group m-1.5 rounded-lg border-2 border-neutral-800 bg-neutral-800 p-4 transition-all"
-        }
+        className={`group m-1.5 rounded-lg ${notificationData.viewed ? "bg-neutral-800" : "bg-neutral-600"} p-4 transition-all`}
       >
         <p className="mb-1.5 font-medium">
           {<RenderMentions text={notificationData.message} />}
