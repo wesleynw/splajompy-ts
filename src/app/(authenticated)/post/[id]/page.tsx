@@ -1,7 +1,7 @@
 import { getCurrentSession } from "@/app/auth/session";
 import SinglePost from "@/app/components/post/SinglePost";
 import { getPostById } from "@/app/lib/posts";
-import { toDisplayFormat } from "@/app/utils/mentions";
+import { toDisplayFormat } from "@/app/utils/mentions-serverside";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";

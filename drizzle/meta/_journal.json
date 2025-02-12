@@ -15,6 +15,13 @@
       "when": 1737596068535,
       "tag": "0001_brave_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739398368342,
+      "tag": "0002_cold_lord_tyger",
+      "breakpoints": true
     }
   ]
 }

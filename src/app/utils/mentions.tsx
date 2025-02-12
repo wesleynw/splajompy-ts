@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const internalTagRegex = /\{tag:(\d+):(.+?)\}/g;
 
@@ -29,7 +32,7 @@ export const toPreviewFormat = (text: string): React.ReactNode => {
       >
         {part}
       </span>
-    )
+    ),
   );
 };
 
@@ -44,7 +47,7 @@ export const renderMentions = (text: string): React.ReactNode => {
     parts.push(
       <Link key={offset} href={`/user/${username}`}>
         {"@" + username}
-      </Link>
+      </Link>,
     );
     lastIndex = offset + match.length;
     return match;
@@ -56,3 +59,37 @@ export const renderMentions = (text: string): React.ReactNode => {
 
   return parts;
 };
+
+export function RenderMentions({ text }: Readonly<{ text: string }>) {
+  const router = useRouter();
+
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+
+  text.replace(internalTagRegex, (match, userId, username, offset) => {
+    if (offset > lastIndex) {
+      parts.push(text.slice(lastIndex, offset));
+    }
+    parts.push(
+      <button
+        key={offset}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          router.push(`/user/${username}`);
+        }}
+        className="text-blue-300 hover:cursor-pointer"
+      >
+        {"@" + username}
+      </button>,
+    );
+    lastIndex = offset + match.length;
+    return match;
+  });
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return <>{parts}</>;
+}

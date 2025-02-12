@@ -1,73 +1,51 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { ExtendedNotificationData } from "@/app/lib/notifications";
+import { RenderMentions } from "@/app/utils/mentions";
 import dayjs from "dayjs";
-import Link from "next/link";
 import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { SelectNotification } from "@/db/schema";
-import { useTheme } from "@mui/material";
+import utc from "dayjs/plugin/utc";
+import { useRouter } from "next/navigation";
+import MiniComment from "./MiniComment";
+import MiniPost from "./MiniPost";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 type Props = {
-  notification: SelectNotification;
-  recentlyViewed: boolean;
+  notificationData: ExtendedNotificationData;
+  markRead: () => void;
 };
 
 export default function Notification({
-  notification,
-  recentlyViewed,
+  notificationData,
+  markRead,
 }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
-  const theme = useTheme();
+  const router = useRouter();
+
+  const handleClick = () => {
+    markRead();
+
+    router.push(notificationData.link ?? "");
+  };
 
   return (
-    <Link
-      key={notification.notification_id}
-      href={notification.link ?? ""}
-      style={{ textDecoration: "none" }}
+    <div
+      className={`m-1.5 rounded-lg ${notificationData.viewed ? "bg-neutral-800" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
+      onClick={handleClick}
+      role="button"
     >
-      <Box
-        key={notification.notification_id}
-        sx={{
-          padding: 2,
-          borderRadius: "12px",
-          background: "linear-gradient(135deg, #1b1b1b, #222222)",
-          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.5)",
-          transition: "all 0.3s ease",
-          border: recentlyViewed
-            ? `2px solid #7F7F7F`
-            : notification.viewed
-            ? "2px solid transparent"
-            : `2px solid ${theme.palette.primary.main}`,
-          "&:hover": {
-            backgroundColor: "#333",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.6)",
-          },
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{
-            color: "#ddd",
-            fontWeight: 500,
-          }}
-        >
-          {notification.message}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{
-            marginTop: 1,
-            color: "#bbb",
-          }}
-        >
-          {dayjs.utc(notification.created_at).tz(userTimezone).fromNow()}
-        </Typography>
-      </Box>
-    </Link>
+      <p className="mb-1.5 font-medium">
+        {<RenderMentions text={notificationData.message} />}
+      </p>
+      {notificationData.post && <MiniPost post={notificationData.post} />}
+      {notificationData.comment && (
+        <MiniComment comment={notificationData.comment} />
+      )}
+      <p className="text-sm text-neutral-400">
+        {dayjs.utc(notificationData.created_at).tz(userTimezone).fromNow()}
+      </p>
+    </div>
   );
 }

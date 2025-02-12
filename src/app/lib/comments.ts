@@ -1,17 +1,18 @@
 "use server";
 
 import { db } from "@/db";
-import { Comment, comments, notifications, User, users } from "@/db/schema";
+import { Comment, comments, User, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
-import { internalTagRegex } from "../utils/mentions";
+import { internalTagRegex } from "../utils/mentions-serverside";
 import { isLiked } from "./likes";
+import { sendNotification } from "./notifications";
 import { getPostById } from "./posts";
 
 export type CommentWithLike = Comment & { isLiked: boolean };
 
 export async function getCommentsByPost(
-  post_id: number
+  post_id: number,
 ): Promise<{ comment: CommentWithLike; user: User }[]> {
   const { user } = await getCurrentSession();
   if (!user) {
@@ -37,14 +38,14 @@ export async function getCommentsByPost(
         },
         user: result.users,
       };
-    })
+    }),
   );
 
   return commentsWithUsers;
 }
 
 export async function getCommentById(
-  comment_id: number
+  comment_id: number,
 ): Promise<Comment | undefined> {
   const { user } = await getCurrentSession();
   if (!user) {
@@ -90,19 +91,21 @@ export async function insertComment(post_id: number, text: string) {
   for (const tag of text.matchAll(internalTagRegex)) {
     const user_id = Number(tag[1]);
     if (user.user_id !== user_id && user_id !== post.user_id) {
-      await db.insert(notifications).values({
-        user_id: user_id,
-        message: `@${user.username} mentioned you in a comment`,
-        link: `/post/${post_id}`,
+      await sendNotification({
+        target_user_id: user_id,
+        post_id: post_id,
+        comment_id: comment[0].comment_id,
+        message: "mentioned you in a comment",
       });
     }
   }
 
   if (post.user_id !== user.user_id) {
-    await db.insert(notifications).values({
-      user_id: post.user_id,
-      message: `@${user.username} commented on your post`,
-      link: `/post/${post_id}`,
+    await sendNotification({
+      target_user_id: post.user_id,
+      post_id: post_id,
+      comment_id: comment[0].comment_id,
+      message: "commented on your post",
     });
   }
 

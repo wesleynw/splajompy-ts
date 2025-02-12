@@ -1,5 +1,5 @@
 import { CommentWithLike } from "@/app/lib/comments";
-import { renderMentions } from "@/app/utils/mentions";
+import { RenderMentions } from "@/app/utils/mentions";
 import { SelectUser } from "@/db/schema";
 import { Box, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -80,7 +80,7 @@ export default function Comment({
                 }}
               >
                 <Linkify options={options}>
-                  {renderMentions(comment.text)}
+                  <RenderMentions text={comment.text} />
                 </Linkify>
               </Typography>
             </Box>
