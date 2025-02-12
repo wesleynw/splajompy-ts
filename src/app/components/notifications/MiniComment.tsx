@@ -7,7 +7,7 @@ type Props = {
 
 export default function MiniComment({ comment }: Readonly<Props>) {
   return (
-    <div className="my-2 rounded-md border-1 border-neutral-500 p-2 transition-all group-hover:bg-neutral-600">
+    <div className="my-2 rounded-md border-1 border-neutral-500 p-2 transition-all">
       <div className="font-bold">
         <RenderMentions text={comment.text} />
       </div>

@@ -14,7 +14,7 @@ export default function MiniPost({ post }: Readonly<Props>) {
   }
 
   return (
-    <div className="my-2 rounded-md border-1 border-neutral-500 p-2 transition-all group-hover:bg-neutral-600">
+    <div className="my-2 rounded-md border-1 border-neutral-500 p-2 transition-all">
       {post.text && (
         <div className="font-bold">
           <RenderMentions text={post.text} />

@@ -9,6 +9,7 @@ import {
   ExtendedNotificationData,
   fetchNotifications,
   markAllNotificationAsRead,
+  markNotificationAsRead,
 } from "../lib/notifications";
 
 const fetcher = async ({ pageParam }: { pageParam: number }) => {
@@ -38,22 +39,13 @@ export function useNotifications() {
   const markAllReadMutation = useMutation({
     mutationFn: () => markAllNotificationAsRead(),
     onMutate: async () => {
-      console.log("1");
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
-
-      console.log("2");
 
       const previousNotifications = queryClient.getQueryData<{
         pages: ExtendedNotificationData[][];
       }>(["notifications"]);
 
-      console.log("3");
-
-      console.log(previousNotifications);
-
       if (previousNotifications) {
-        console.log("4");
-
         queryClient.setQueryData(["notifications"], {
           ...previousNotifications,
           pages: previousNotifications.pages.map((page) =>
@@ -63,11 +55,9 @@ export function useNotifications() {
             })),
           ),
         });
-
-        console.log("4.5");
       }
 
-      console.log("5");
+      queryClient.setQueryData(["has-unread-notifications"], false);
 
       return { previousNotifications };
     },
@@ -84,14 +74,33 @@ export function useNotifications() {
     },
   });
 
-  // const markRead = async () => {
-  //   await markAllNotificationAsRead();
+  const markSingleRead = useMutation({
+    mutationFn: (notification_id: number) =>
+      markNotificationAsRead(notification_id),
+    onMutate: async (notification_id) => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] });
 
-  //   queryClient.invalidateQueries({ queryKey: ["notifications"] });
-  //   queryClient.invalidateQueries({ queryKey: ["has-unread-notifications"] });
-  // };
+      const previousNotifications = queryClient.getQueryData<{
+        pages: ExtendedNotificationData[][];
+      }>(["notifications"]);
+      if (previousNotifications) {
+        queryClient.setQueryData(["notifications"], {
+          ...previousNotifications,
+          pages: previousNotifications.pages.map((page) =>
+            page.map((notification) =>
+              notification.notification_id === notification_id
+                ? { ...notification, viewed: true }
+                : notification,
+            ),
+          ),
+        });
+      }
 
-  // const markSingleRead = async (notification_id: number) => {};
+      queryClient.invalidateQueries({ queryKey: ["has-unread-notifications"] });
+
+      return { previousNotifications };
+    },
+  });
 
   return {
     data,
@@ -102,5 +111,6 @@ export function useNotifications() {
     isFetchingNextPage,
     status,
     markRead: markAllReadMutation.mutate,
+    markSingleRead: markSingleRead.mutate,
   };
 }

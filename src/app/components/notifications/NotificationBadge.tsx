@@ -16,7 +16,9 @@ export default function NotificationBadge({
 
   return (
     <div className="relative">
-      <div className="absolute -end-1 -top-1 inline-flex h-2 w-2 items-center justify-center rounded-full bg-blue-400 md:h-3 md:w-3">
+      <div
+        className={`${data ? "visible" : "invisible"} absolute -end-0.5 -top-0.5 inline-flex h-2 w-2 items-center justify-center rounded-full bg-blue-400 md:h-3 md:w-3`}
+      >
         {data}
       </div>
       {children}

@@ -4,7 +4,6 @@ type Props = {
 
 export default function MarkReadButton({ markRead }: Readonly<Props>) {
   const handleClick = () => {
-    console.log("bbb");
     markRead();
   };
   return (

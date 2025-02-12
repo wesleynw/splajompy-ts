@@ -12,7 +12,7 @@ import { getUserById } from "./users";
 
 const FETCH_LIMIT = 10;
 
-export async function getCurrentUserHasUnreadNotifications() {
+export async function getCurrentUserHasUnreadNotifications(): Promise<boolean> {
   const { user } = await getCurrentSession();
   if (user === null) {
     return false;
@@ -91,13 +91,10 @@ export async function fetchNotifications(
 }
 
 export async function markAllNotificationAsRead() {
-  console.log("a");
   const { user } = await getCurrentSession();
   if (user === null) {
     return;
   }
-
-  console.log("aaa");
 
   await db
     .update(notifications)

@@ -15,6 +15,7 @@ export default function NotificationList() {
     isFetchingNextPage,
     status,
     markRead,
+    markSingleRead,
   } = useNotifications();
 
   if (status === "pending") {
@@ -39,6 +40,7 @@ export default function NotificationList() {
           <Notification
             key={notification.notification_id}
             notificationData={notification}
+            markRead={() => markSingleRead(notification.notification_id)}
           />
         )),
       )}
