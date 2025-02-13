@@ -36,7 +36,7 @@ function ImageModalContent({
   } | null>(null);
 
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
-  const ref = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const lastTapRef = useRef<number>(0);
@@ -77,7 +77,9 @@ function ImageModalContent({
   };
 
   const handleDoubleTap = (clientX: number, clientY: number) => {
-    const { width, height, x, y } = ref.current!.getBoundingClientRect();
+    if (!imageRef.current) return;
+
+    const { width, height, x, y } = imageRef.current.getBoundingClientRect();
 
     const centerX = x + width / 2;
     const centerY = y + height / 2;
@@ -95,7 +97,7 @@ function ImageModalContent({
     const { x: constrainedX, y: constrainedY } = constrainPosition(
       newX,
       newY,
-      newScale
+      newScale,
     );
 
     api.start({ scale: newScale, x: constrainedX, y: constrainedY });
@@ -118,7 +120,7 @@ function ImageModalContent({
         const { x: constrainedX, y: constrainedY } = constrainPosition(
           x,
           y,
-          currentScale
+          currentScale,
         );
         api.start({ x: constrainedX, y: constrainedY });
       },
@@ -129,15 +131,16 @@ function ImageModalContent({
         offset: [s],
         memo,
       }) => {
-        if (first) {
-          const { width, height, x, y } = ref.current!.getBoundingClientRect();
+        if (first && imageRef.current) {
+          const { width, height, x, y } =
+            imageRef.current.getBoundingClientRect();
           const tx = ox - (x + width / 2);
           const ty = oy - (y + height / 2);
           memo = [style.x.get(), style.y.get(), tx, ty];
         }
 
-        const x = memo[0] - (ms - 1) * memo[2];
-        const y = memo[1] - (ms - 1) * memo[3];
+        const x = memo?.[0] - (ms - 1) * memo?.[2];
+        const y = memo?.[1] - (ms - 1) * memo?.[3];
         const { x: constrainedX, y: constrainedY } = constrainPosition(x, y, s);
         api.start({ scale: s, x: constrainedX, y: constrainedY });
         return memo;
@@ -169,17 +172,17 @@ function ImageModalContent({
       },
     },
     {
-      target: ref,
+      target: containerRef,
       drag: {
         from: () => [style.x.get(), style.y.get()],
         filterTaps: true,
         rubberband: true,
       },
       pinch: {
-        scaleBounds: { min: 0.8, max: 4 },
-        rubberband: true,
+        scaleBounds: { min: 1, max: 5 },
+        rubberband: 0.5,
       },
-    }
+    },
   );
 
   const handleDownload = (e: React.MouseEvent) => {
@@ -243,6 +246,7 @@ function ImageModalContent({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          touchAction: "none",
         }}
         onClick={(e) => {
           e.preventDefault();
@@ -251,7 +255,7 @@ function ImageModalContent({
       >
         {!loaded && <CircularProgress />}
         <AnimatedImage
-          ref={ref}
+          ref={imageRef}
           src={src}
           alt="Modal Image"
           width={imageWidth}
@@ -260,8 +264,8 @@ function ImageModalContent({
           unoptimized
           onLoad={() => {
             setLoaded(true);
-            if (ref.current) {
-              const rect = ref.current.getBoundingClientRect();
+            if (imageRef.current) {
+              const rect = imageRef.current.getBoundingClientRect();
               setOriginalSize({ width: rect.width, height: rect.height });
             }
           }}
@@ -274,6 +278,7 @@ function ImageModalContent({
             ...style,
             touchAction: "none",
             willChange: "transform",
+            pointerEvents: "none",
           }}
         />
       </Backdrop>
