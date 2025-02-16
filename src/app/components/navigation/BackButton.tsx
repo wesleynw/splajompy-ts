@@ -1,9 +1,9 @@
 "use client";
 
+import { User } from "@/db/schema";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { User } from "@/db/schema";
 
 type Props = {
   user: User;
@@ -18,7 +18,7 @@ export default function BackButton({ user }: Readonly<Props>) {
   const username = user.username ?? "";
 
   const needsBackButton = !new RegExp(
-    `^(/|/all|/notifications|/user/${username})$`
+    `^(/|/all|/notifications|/user/${username})|/search$`,
   ).test(path);
 
   if (!needsBackButton) {

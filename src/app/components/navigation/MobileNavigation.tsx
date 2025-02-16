@@ -18,6 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
+import SearchIcon from "../icons/SearchIcon";
 import NotificationBadge from "../notifications/NotificationBadge";
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)({
@@ -91,6 +92,12 @@ export default function MobileNavigation() {
           value="/all"
           icon={pathname === "/all" ? <ExploreIcon /> : <ExploreOutlinedIcon />}
           onClick={(event) => handleNavigation(event, "/all")}
+          disableRipple
+        />
+        <StyledBottomNavigationAction
+          value="/search"
+          icon={<SearchIcon />}
+          onClick={(event) => handleNavigation(event, "/search")}
           disableRipple
         />
         <StyledBottomNavigationAction

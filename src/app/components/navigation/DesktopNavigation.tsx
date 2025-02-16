@@ -1,7 +1,13 @@
 "use client";
 
-import React from "react";
+import { useUser } from "@/app/providers/UserProvider";
+import theme from "@/theme";
+import HomeIcon from "@mui/icons-material/Home";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import PersonIcon from "@mui/icons-material/Person";
+import PublicIcon from "@mui/icons-material/Public";
 import {
+  Box,
   Drawer,
   List,
   ListItem,
@@ -9,16 +15,11 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Box,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import PublicIcon from "@mui/icons-material/Public";
-import PersonIcon from "@mui/icons-material/Person";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import { usePathname, useRouter } from "next/navigation";
-import theme from "@/theme";
+import React from "react";
+import SearchIcon from "../icons/SearchIcon";
 import NotificationBadge from "../notifications/NotificationBadge";
-import { useUser } from "@/app/providers/UserProvider";
 
 export default function DesktopNavigation() {
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export default function DesktopNavigation() {
         </NotificationBadge>
       ),
     },
+    { label: "Search", href: "/search", icon: <SearchIcon /> },
     {
       label: "Profile",
       href: `/user/${user.username}`,
