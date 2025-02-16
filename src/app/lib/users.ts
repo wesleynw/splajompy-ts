@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { User, users } from "@/db/schema";
-import { eq, or } from "drizzle-orm";
+import { PublicUser, User, users } from "@/db/schema";
+import { desc, eq, ilike, or } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 
 export async function getAllUsers() {
@@ -39,7 +39,7 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getUserByIdentifier(
-  identifier: string
+  identifier: string,
 ): Promise<User | null> {
   const results = await db
     .select()
@@ -66,4 +66,26 @@ export async function getUserById(user_id: number): Promise<User | undefined> {
     .limit(1);
 
   return results.length > 0 ? results[0] : undefined;
+}
+
+export async function getUserByUsernameSearch(
+  query: string,
+): Promise<PublicUser[]> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return [];
+  }
+
+  if (query == "") {
+    return [];
+  }
+
+  const results = await db
+    .select()
+    .from(users)
+    .where(ilike(users.username, `${query}%`))
+    .orderBy(desc(users.username))
+    .limit(10);
+
+  return results;
 }
