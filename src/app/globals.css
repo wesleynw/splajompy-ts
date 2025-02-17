@@ -13,6 +13,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 a {
   color: inherit;
   text-decoration: none;
