@@ -1,10 +1,6 @@
 import { EnhancedPost } from "@/app/lib/posts";
 import { PublicUser } from "@/db/schema";
 import { Box, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CommentCount from "../comment/CommentCount";
@@ -17,10 +13,7 @@ import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
 import PostTextContent from "./PostTextContent";
 import ShareButton from "./ShareButton";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import Timestamp from "./Timestamp";
 
 type Props = EnhancedPost & {
   user: PublicUser;
@@ -45,7 +38,6 @@ export default function Post({
   standaloneView = false,
 }: Readonly<Props>) {
   const router = useRouter();
-  const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -125,16 +117,7 @@ export default function Post({
       )}
 
       <Stack direction="row" justifyContent="center" alignContent="center">
-        <Typography
-          variant="body2"
-          sx={{
-            color: "#e0e0e0",
-            fontWeight: 700,
-            alignContent: "center",
-          }}
-        >
-          {dayjs.utc(date).tz(userTimezone).fromNow()}
-        </Typography>
+        <Timestamp date={date} />
         <Box sx={{ flexGrow: 1 }} />
         {standaloneView && <ShareButton />}
         <Box sx={{ width: "20px" }}></Box>

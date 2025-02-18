@@ -1,16 +1,9 @@
 import { CommentWithLike } from "@/app/lib/comments";
 import { RenderMentions } from "@/app/utils/mentions";
 import { SelectUser } from "@/db/schema";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import Linkify from "linkify-react";
 import LikeButton from "../post/LikeButton";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(relativeTime);
+import Timestamp from "../post/Timestamp";
 
 type Props = {
   comment: CommentWithLike;
@@ -23,7 +16,6 @@ export default function Comment({
   user,
   toggleLike,
 }: Readonly<Props>) {
-  const userTimezone = dayjs.tz.guess();
   const options = { defaultProtocol: "https", target: "_blank" };
 
   return (
@@ -38,9 +30,7 @@ export default function Comment({
               </Linkify>
             </p>
           </div>
-          <p className="text-sm font-bold">
-            {dayjs.utc(comment.comment_date).tz(userTimezone).fromNow()}
-          </p>
+          <Timestamp date={comment.comment_date} />
         </div>
         <LikeButton
           liked={comment.isLiked}
