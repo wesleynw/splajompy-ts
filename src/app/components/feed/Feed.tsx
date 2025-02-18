@@ -3,6 +3,7 @@
 import { usePosts } from "@/app/data/posts";
 import { User } from "@/db/schema";
 import Box from "@mui/material/Box";
+import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "../post/Post";
 import EmptyFeed from "./EmptyFeed";
@@ -60,16 +61,18 @@ export default function Feed({
         width: "100%",
       }}
     >
-      {posts.pages.map((posts) =>
-        posts.map((post) => (
-          <Post
-            key={post.post_id}
-            user={user}
-            toggleLiked={() => toggleLiked(post.post_id)}
-            {...post}
-          />
-        )),
-      )}
+      <CenteredLayout>
+        {posts.pages.map((posts) =>
+          posts.map((post) => (
+            <Post
+              key={post.post_id}
+              user={user}
+              toggleLiked={() => toggleLiked(post.post_id)}
+              {...post}
+            />
+          )),
+        )}
+      </CenteredLayout>
       {isFetching && <Spinner />}
       <ScrollObserver
         hasNextPage={hasNextPage}

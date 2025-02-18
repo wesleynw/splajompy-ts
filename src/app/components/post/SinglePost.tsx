@@ -8,6 +8,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import React from "react";
+import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "./Post";
 
@@ -42,8 +43,10 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
   }
 
   return (
-    <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
+    // <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
+    <CenteredLayout>
       <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
-    </Box>
+    </CenteredLayout>
+    // </Box>
   );
 }
