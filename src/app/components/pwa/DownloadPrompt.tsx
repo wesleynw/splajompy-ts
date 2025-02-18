@@ -1,14 +1,14 @@
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import {
   Box,
-  IconButton,
-  Typography,
-  Modal,
   Button,
+  IconButton,
+  Modal,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
-import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function DownloadPrompt() {
   const [isPWAEligible, setIsPWAEligible] = useState(false);
@@ -19,7 +19,7 @@ export default function DownloadPrompt() {
 
   useEffect(() => {
     setIsPWAEligible(
-      isMobile && !window.matchMedia("(display-mode: standalone)").matches
+      isMobile && !window.matchMedia("(display-mode: standalone)").matches,
     );
   }, [isMobile]);
 

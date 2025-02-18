@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState } from "react";
+import { register } from "@/app/auth/register";
 import {
   Box,
   CircularProgress,
@@ -9,13 +9,13 @@ import {
   styled,
 } from "@mui/material";
 import Link from "next/link";
+import React, { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { register } from "@/app/auth/register";
 import { StyledButton } from "../forms/button";
-import { StyledInput } from "../forms/input";
 import { StyledFormControl } from "../forms/formControl";
+import { StyledInput } from "../forms/input";
 
-const FormContainer = styled(Box)(({ theme }) => ({
+const FormContainer = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -24,12 +24,8 @@ const FormContainer = styled(Box)(({ theme }) => ({
   padding: "20px",
   margin: "10px auto",
   borderRadius: "8px",
-  background: "linear-gradient(135deg, #ffffff, #f0f0f0)",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-  ...theme.applyStyles("dark", {
-    background: "linear-gradient(135deg, #1b1b1b, #222222)",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
-  }),
+  background: "linear-gradient(135deg, #1b1b1b, #222222)",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
 }));
 
 const initialState = {

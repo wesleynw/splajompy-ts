@@ -1,5 +1,4 @@
-import theme from "@/theme";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function EmptyFeed() {
@@ -34,11 +33,8 @@ export default function EmptyFeed() {
           fontWeight: "bold",
           fontSize: "0.875rem",
           minWidth: "auto",
-          backgroundColor: "#1DA1F2",
           color: "#ffffff",
-          ...theme.applyStyles("dark", {
-            backgroundColor: "#1DA1F2",
-          }),
+          backgroundColor: "#1DA1F2",
           "&:hover": {
             backgroundColor: "#0d8de6",
           },
