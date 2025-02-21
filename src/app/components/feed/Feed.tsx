@@ -2,7 +2,6 @@
 
 import { usePosts } from "@/app/data/posts";
 import { User } from "@/db/schema";
-import Box from "@mui/material/Box";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "../post/Post";
@@ -54,13 +53,7 @@ export default function Feed({
   }
 
   return (
-    <Box
-      sx={{
-        marginBottom: "60px",
-        px: { xs: 1, md: 3 },
-        width: "100%",
-      }}
-    >
+    <>
       <CenteredLayout>
         {posts.pages.map((posts) =>
           posts.map((post) => (
@@ -83,6 +76,6 @@ export default function Feed({
         !target_following_only &&
         !target_post_id &&
         !target_user_id && <FeedBottom />}
-    </Box>
+    </>
   );
 }
