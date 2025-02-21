@@ -87,7 +87,7 @@ export default function RegisterPage() {
               onClick={() => router.push("/login")}
               type="button"
             >
-              Login
+              <p className="font-black">Login</p>
             </button>
           </div>
         </Form>

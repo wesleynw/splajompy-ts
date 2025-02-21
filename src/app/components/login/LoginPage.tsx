@@ -64,7 +64,7 @@ export default function LoginPage() {
             )}
             <div className="flex w-full justify-end">
               <button
-                className="text-sm font-bold"
+                className="my-2 text-sm font-bold"
                 onClick={() => setIsUsingPassword((prev) => !prev)}
                 type="button"
               >
@@ -92,53 +92,47 @@ export default function LoginPage() {
                 onClick={() => router.push("/register")}
                 type="button"
               >
-                Register
+                <p className="font-black">Register</p>
               </button>
             </div>
           </Form>
         )}
         {state.useOtp && (
-          <form
-            action={otpDispatch}
-            className="flex flex-col items-center rounded-lg bg-neutral-800 p-8 text-center"
-          >
+          <Form action={otpDispatch}>
+            <Image
+              width={100}
+              height={100}
+              src={logo}
+              alt="Logo"
+              className="mb-7 rounded-3xl shadow-[0_0_15px_5px_rgba(255,255,255,0.3)]"
+            />
             <p className="mb-4 text-2xl font-black">Check your email</p>
             <p>
               If you have an account, an email has been sent to your email.
               Click the link inside or enter the code below.
             </p>
             <input type="hidden" name="identifier" value={identifier} />
-            <div className="mt-4">
-              <Input
-                placeholder="Code"
-                autoComplete="one-time-code"
-                inputMode="numeric"
-                pattern="\\d{6}"
-                maxLength={6}
-                name="code"
-                required
-                className="text-center tracking-widest"
-              />
-            </div>
+            <div className="h-4"></div>
+            <Input
+              placeholder="Code"
+              autoComplete="one-time-code"
+              inputMode="numeric"
+              pattern="\d{6}"
+              maxLength={6}
+              name="code"
+              required
+              className="tracking-widest"
+            />
             {otpState?.errors?.code && (
               <p style={{ color: "red" }}>{otpState.errors.code}</p>
             )}
-            {isUsingPassword && (
-              <Input
-                placeholder="Password"
-                type="password"
-                name="password"
-                required
-              />
-            )}
-
             <Button2 type="submit">
               {isOtpPending && <Spinner />}
               <p className={`${isOtpPending ? "invisible" : "visible"}`}>
                 Continue
               </p>
             </Button2>
-          </form>
+          </Form>
         )}
       </CenteredLayout>
     </div>
