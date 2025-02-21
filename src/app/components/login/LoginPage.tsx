@@ -6,7 +6,6 @@ import React, { useActionState, useState } from "react";
 import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
-import { StyledInput } from "../forms/input";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 
@@ -48,7 +47,6 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
-                // defaultValue={(state.payload?.get("password") as string) || ""}
               />
             )}
             {state.errors?.password && (
@@ -64,9 +62,17 @@ export default function LoginPage() {
               </button>
             </div>
             <Button2 type="submit" disabled={isPending}>
-              <p className={`${isPending ? "invisible" : "visible"}`}>
-                Continue
-              </p>
+              <div className="flex w-full flex-row justify-between">
+                <div></div>
+                <p>Continue</p>
+                <div className="relative">
+                  {isPending && (
+                    <div className="absolute top-1 -left-4">
+                      <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </Button2>
             <div className="mt-2 flex flex-row space-x-2.5">
               <p className="font-bold">New here?</p>
@@ -106,13 +112,11 @@ export default function LoginPage() {
               <p style={{ color: "red" }}>{otpState.errors.code}</p>
             )}
             {isUsingPassword && (
-              <StyledInput
+              <Input
                 placeholder="Password"
                 type="password"
                 name="password"
-                disableUnderline
                 required
-                defaultValue={state.payload?.get("password") || ""}
               />
             )}
 
