@@ -1,10 +1,19 @@
 import { LightBulbIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function DownloadPrompt() {
   const [openModal, setOpenModal] = useState(false);
+  const [isPWAEligible, setIsPWAEligible] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+
+  useEffect(() => {
+    setIsPWAEligible(!window.matchMedia("(display-mode: standalone)").matches);
+  }, []);
+
+  if (!isPWAEligible) {
+    return;
+  }
 
   return (
     <div className="sm:hidden">
