@@ -73,7 +73,11 @@ export default function RegisterPage() {
           </Button2>
           <div className="mt-2 flex flex-row space-x-2.5">
             <p className="font-bold">Already have an account?</p>
-            <button className="underline" onClick={() => router.push("/login")}>
+            <button
+              className="underline"
+              onClick={() => router.push("/login")}
+              type="button"
+            >
               Login
             </button>
           </div>

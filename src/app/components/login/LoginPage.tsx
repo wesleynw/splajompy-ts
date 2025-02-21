@@ -56,6 +56,7 @@ export default function LoginPage() {
               <button
                 className="text-sm font-bold"
                 onClick={() => setIsUsingPassword((prev) => !prev)}
+                type="button"
               >
                 Sign in with{" "}
                 {isUsingPassword ? "username or email" : "password"}
@@ -79,6 +80,7 @@ export default function LoginPage() {
               <button
                 className="underline"
                 onClick={() => router.push("/register")}
+                type="button"
               >
                 Register
               </button>
