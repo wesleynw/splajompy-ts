@@ -37,7 +37,9 @@ export default function TopBar({ user }: Readonly<Props>) {
           </div>
         </div>
       </div>
-      <NewPostDialog user={user} open={open} toggleOpen={toggleOpen} />
+      <div className="top-15">
+        <NewPostDialog user={user} open={open} toggleOpen={toggleOpen} />
+      </div>
     </>
   );
 }

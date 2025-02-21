@@ -43,7 +43,7 @@ export default function NewPostDialog({
         "& .MuiDialog-paper": {
           backgroundColor: "transparent !important",
           overflow: "hidden",
-          zIndex: 1299,
+          zIndex: 5,
           "--Paper-overlay": "transparent !important",
         },
       }}

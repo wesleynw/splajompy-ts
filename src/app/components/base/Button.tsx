@@ -9,7 +9,7 @@ export default function Button({
   return (
     <button
       {...props}
-      className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
+      className="flex flex-row items-center justify-center rounded-full bg-blue-400 px-2.5 py-1 font-bold"
     >
       {children}
     </button>

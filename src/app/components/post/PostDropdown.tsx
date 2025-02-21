@@ -1,11 +1,8 @@
-"use client";
-
 import { usePosts } from "@/app/data/posts";
-import DeleteIcon from "@mui/icons-material/Delete";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PostDropdownProps {
   post_id: number;
@@ -15,29 +12,30 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
   const router = useRouter();
   const { deletePost } = usePosts();
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const openMenu = Boolean(anchorEl);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setAnchorEl(event.currentTarget);
+    setIsOpen(!isOpen);
   };
 
-  const handleCloseMenu = (
-    event: React.MouseEvent<HTMLLIElement> | React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setAnchorEl(null);
-  };
-
-  const handleDelete = async (event: React.MouseEvent<HTMLLIElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setAnchorEl(null);
-
+    setIsOpen(false);
     deletePost(post_id);
     if (pathname.includes(`post/${post_id}`)) {
       router.back();
@@ -45,33 +43,29 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
   };
 
   return (
-    <Box>
-      <IconButton
+    <div className="relative" ref={menuRef}>
+      <button
         onClick={handleClick}
-        aria-controls={openMenu ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={openMenu ? "true" : undefined}
-        color="primary"
+        className="rounded-full p-2 transition-colors hover:bg-neutral-800"
+        aria-label="Post options"
       >
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        disableScrollLock={true}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          Delete Post
-        </MenuItem>
-      </Menu>
-    </Box>
+        <EllipsisVerticalIcon className="size-6 text-neutral-200" />
+      </button>
+
+      {isOpen && (
+        <div className="ring-opacity-5 absolute right-0 z-50 mt-2 w-48 rounded-md bg-neutral-800 ring-1 shadow-lg ring-black">
+          <div className="py-1" role="menu" aria-orientation="vertical">
+            <button
+              onClick={handleDelete}
+              className="flex w-full items-center px-4 py-2 text-sm text-neutral-300 transition-all hover:bg-neutral-600"
+              role="menuitem"
+            >
+              <TrashIcon className="mr-3 h-4 w-4" />
+              Delete Post
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
