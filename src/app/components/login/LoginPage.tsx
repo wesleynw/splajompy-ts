@@ -9,7 +9,6 @@ import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
 import CenteredLayout from "../layout/CenteredLayout";
-import Spinner from "../loading/Spinner";
 
 const initialState = {
   errors: {},
@@ -108,8 +107,8 @@ export default function LoginPage() {
             />
             <p className="mb-4 text-2xl font-black">Check your email</p>
             <p>
-              If you have an account, an email has been sent to your email.
-              Click the link inside or enter the code below.
+              If you have an account, an email has been sent to your email with
+              a code.
             </p>
             <input type="hidden" name="identifier" value={identifier} />
             <div className="h-4"></div>
@@ -127,10 +126,17 @@ export default function LoginPage() {
               <p style={{ color: "red" }}>{otpState.errors.code}</p>
             )}
             <Button2 type="submit">
-              {isOtpPending && <Spinner />}
-              <p className={`${isOtpPending ? "invisible" : "visible"}`}>
-                Continue
-              </p>
+              <div className="flex w-full flex-row justify-between">
+                <div></div>
+                <p>Continue</p>
+                <div className="relative">
+                  {isOtpPending && (
+                    <div className="absolute top-1 -left-4">
+                      <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </Button2>
           </Form>
         )}
