@@ -1,5 +1,5 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 
 type Props = {
   isOpen: boolean;
@@ -7,8 +7,6 @@ type Props = {
 };
 
 export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
-  const isDesktop = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
   return (
     <Box
       sx={{
@@ -36,11 +34,11 @@ export default function NewPostButton({ isOpen, toggleOpen }: Readonly<Props>) {
             transition: "transform 0.3s ease-in-out",
           }}
         />
-        {isDesktop && (
+        <div className="hidden sm:block">
           <Typography variant="body1" fontWeight={800} sx={{ marginX: "10px" }}>
             Post
           </Typography>
-        )}
+        </div>
       </IconButton>
     </Box>
   );

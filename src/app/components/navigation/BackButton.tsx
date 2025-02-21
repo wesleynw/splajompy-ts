@@ -1,8 +1,7 @@
 "use client";
 
 import { User } from "@/db/schema";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { usePathname, useRouter } from "next/navigation";
 
 type Props = {
@@ -11,8 +10,6 @@ type Props = {
 
 export default function BackButton({ user }: Readonly<Props>) {
   const router = useRouter();
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up("md"), { noSsr: true });
   const path = usePathname();
 
   const username = user.username ?? "";
@@ -26,8 +23,7 @@ export default function BackButton({ user }: Readonly<Props>) {
   }
 
   return (
-    <Button
-      disableRipple
+    <button
       onClick={() => {
         if (window.history?.length && window.history.length > 1) {
           router.back();
@@ -35,22 +31,10 @@ export default function BackButton({ user }: Readonly<Props>) {
           router.push("/");
         }
       }}
-      sx={{
-        color: "#777777",
-        ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-        marginLeft: `${isDesktop ? "20px" : "0px"}`,
-      }}
+      className="ml-3 flex h-full flex-row justify-center align-middle"
     >
-      <ArrowBackIcon />
-      {isDesktop && (
-        <Typography
-          fontWeight={800}
-          fontSize="medium"
-          sx={{ marginLeft: "5px" }}
-        >
-          Back
-        </Typography>
-      )}
-    </Button>
+      <ArrowLeftIcon className="size-6 h-full" />
+      <p className="ml-3 hidden h-full font-black sm:block">Back</p>
+    </button>
   );
 }

@@ -1,13 +1,12 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { User } from "@/db/schema";
 import Link from "next/link";
-import { Suspense, useState } from "react";
-import NewPostDialog from "../post/new/NewPostDialog";
+import { useState } from "react";
 import NewPostButton from "../post/new/NewPostButton";
+import NewPostDialog from "../post/new/NewPostDialog";
 import DownloadPrompt from "../pwa/DownloadPrompt";
 import BackButton from "./BackButton";
-import { User } from "@/db/schema";
 
 type Props = {
   user: User;
@@ -24,49 +23,20 @@ export default function TopBar({ user }: Readonly<Props>) {
 
   return (
     <>
-      <Box
-        component="header"
-        sx={{
-          position: "fixed",
-          top: 0,
-          width: "100%",
-          height: "60px",
-          zIndex: 1900,
-          borderBottom: "0.5px solid rgba(160, 160, 160, 0.3)",
-          backdropFilter: "blur(20px)",
-          backgroundColor: "rgba(0, 0, 0, 0.33)",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          <Box
-            sx={{
-              position: "fixed",
-              left: "0px",
-            }}
-          >
+      <div className="fixed top-0 z-10 w-full border-b-1 border-neutral-700 py-2.5 backdrop-blur-xl">
+        <div className="flex h-full flex-row justify-center">
+          <div className="fixed left-0 flex flex-row">
             <BackButton user={user} />
-            <Suspense>
-              <DownloadPrompt />
-            </Suspense>
-          </Box>
+            <DownloadPrompt />
+          </div>
           <Link href="/">
-            <Typography variant="h5" fontWeight={700} sx={{ paddingX: 2 }}>
-              Splajompy
-            </Typography>
+            <p className="text-2xl font-black">Splajompy</p>
           </Link>
-          <Box sx={{ position: "fixed", right: "20px", zIndex: 9000 }}>
+          <div className="fixed right-3 z-50">
             <NewPostButton isOpen={open} toggleOpen={toggleOpen} />
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
       <NewPostDialog user={user} open={open} toggleOpen={toggleOpen} />
     </>
   );

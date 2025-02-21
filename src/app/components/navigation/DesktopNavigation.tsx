@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@/app/providers/UserProvider";
-import theme from "@/theme";
 import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import PersonIcon from "@mui/icons-material/Person";
@@ -92,24 +91,17 @@ export default function DesktopNavigation() {
                     minHeight: "48px",
                     outline: "none",
                     borderRadius: "30px",
-                    backgroundColor: isActive ? "#e3f2fd" : "transparent",
                     transition: "background-color 0.3s, border-color 0.3s",
+                    backgroundColor: isActive ? "#333333" : "transparent",
                     "&:hover": {
-                      backgroundColor: "#f5f5f5",
+                      backgroundColor: "#444444",
                     },
-                    ...theme.applyStyles("dark", {
-                      backgroundColor: isActive ? "#333333" : "transparent",
-                      "&:hover": {
-                        backgroundColor: "#444444",
-                      },
-                    }),
                   }}
                   disableRipple
                 >
                   <ListItemIcon
                     sx={{
-                      color: "#333333",
-                      ...theme.applyStyles("dark", { color: "#ffffff" }),
+                      color: "#ffffff",
                     }}
                   >
                     {item.icon}
@@ -122,8 +114,7 @@ export default function DesktopNavigation() {
                       },
                     }}
                     sx={{
-                      color: "#333333",
-                      ...theme.applyStyles("dark", { color: "#ffffff" }),
+                      color: "#ffffff",
                     }}
                   />
                 </ListItemButton>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@/app/providers/UserProvider";
-import theme from "@/theme";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import HomeIcon from "@mui/icons-material/Home";
@@ -15,14 +14,13 @@ import {
   BottomNavigationAction,
   Box,
   styled,
-  useTheme,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import SearchIcon from "../icons/SearchIcon";
 import NotificationBadge from "../notifications/NotificationBadge";
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)({
-  color: theme.palette.secondary.dark,
+  color: "white",
   paddingTop: "15px",
   "&.Mui-selected": {
     color: "white",
@@ -34,7 +32,6 @@ export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
-  const theme = useTheme();
 
   const is_standalone =
     typeof window !== "undefined" &&
@@ -62,7 +59,7 @@ export default function MobileNavigation() {
       <BottomNavigation
         value={pathname}
         sx={{
-          backgroundColor: theme.palette.secondary.main,
+          backgroundColor: "black",
           height: is_standalone ? "80px" : "56px",
           alignItems: "flex-start",
         }}

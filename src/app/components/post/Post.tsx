@@ -43,7 +43,7 @@ export default function Post({
 
   return (
     <div
-      className="m-1.5 w-full rounded-lg bg-neutral-900 p-6 transition-all hover:cursor-pointer hover:bg-neutral-800"
+      className="m-1.5 w-full rounded-lg bg-neutral-900 p-6 transition-all hover:cursor-pointer"
       onClick={() => router.push(`/post/${post_id}`)}
     >
       <div className="relative">

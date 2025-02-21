@@ -1,14 +1,17 @@
 "use client";
 
-import { NoSsr, useMediaQuery } from "@mui/material";
-import MobileNavigation from "./MobileNavigation";
 import DesktopNavigation from "./DesktopNavigation";
-import theme from "@/theme";
+import MobileNavigation from "./MobileNavigation";
 
 export default function Navigation() {
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"), { noSsr: true });
-
   return (
-    <NoSsr>{isMobile ? <MobileNavigation /> : <DesktopNavigation />}</NoSsr>
+    <>
+      <div className="sm:hidden">
+        <MobileNavigation />
+      </div>
+      <div className="hidden sm:block">
+        <DesktopNavigation />
+      </div>
+    </>
   );
 }
