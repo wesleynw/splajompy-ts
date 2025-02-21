@@ -7,7 +7,7 @@ export default function Form({
   return (
     <form
       {...props}
-      className="flex w-full flex-col items-center rounded-xl bg-neutral-800 p-8 text-center"
+      className="flex w-full flex-col items-center rounded-xl p-8 text-center"
     >
       {children}
     </form>

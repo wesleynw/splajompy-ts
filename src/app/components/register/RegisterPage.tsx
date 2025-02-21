@@ -1,9 +1,11 @@
 "use client";
 
 import { register } from "@/app/auth/register";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import logo from "../../apple-icon.png";
 import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
@@ -24,9 +26,16 @@ export default function RegisterPage() {
   const [state, dispatch] = useActionState(register, initialState);
 
   return (
-    <div className="flex h-screen w-screen flex-col justify-center">
+    <div className="mt-16 flex w-screen flex-col justify-center">
       <CenteredLayout>
         <Form action={dispatch}>
+          <Image
+            width={100}
+            height={100}
+            src={logo}
+            alt="Logo"
+            className="mb-7 rounded-3xl shadow-[0_0_15px_5px_rgba(255,255,255,0.3)]"
+          />
           <p className="mb-5 text-2xl font-black">Register</p>
           <Input
             type="text"

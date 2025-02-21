@@ -1,8 +1,10 @@
 "use client";
 
 import { authorize, verifyPasswordlessCode } from "@/app/auth/authentication";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useState } from "react";
+import logo from "../../apple-icon.png";
 import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
@@ -25,11 +27,18 @@ export default function LoginPage() {
   const [isUsingPassword, setIsUsingPassword] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen flex-col justify-center">
+    <div className="mt-16 flex w-screen flex-col justify-center">
       <CenteredLayout>
         {!state.useOtp && (
           <Form action={dispatch}>
-            <p className="mb-5 text-2xl font-black">Sign In</p>
+            <Image
+              width={100}
+              height={100}
+              src={logo}
+              alt="Logo"
+              className="mb-7 rounded-3xl shadow-[0_0_15px_5px_rgba(255,255,255,0.3)]"
+            />
+            <p className="mb-5 text-2xl font-black">Sign in</p>
             <Input
               placeholder="Email or Username"
               type="text"
@@ -47,6 +56,7 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
+                defaultValue={(state.payload?.get("password") as string) || ""}
               />
             )}
             {state.errors?.password && (
