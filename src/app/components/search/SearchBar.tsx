@@ -1,8 +1,8 @@
 "use client";
 
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction } from "react";
 import CancelCircleIcon from "../icons/CancelCircleIcon";
-import SearchIcon from "../icons/SearchIcon";
 
 type Props = {
   query: string;
@@ -12,7 +12,7 @@ type Props = {
 export default function SearchBar({ query, setQuery }: Readonly<Props>) {
   return (
     <div className="m-2 flex w-full flex-row rounded-xl bg-neutral-800 p-3 outline-neutral-600 transition-all has-[input:focus-within]:outline-1">
-      <SearchIcon />
+      <MagnifyingGlassIcon className="h-6 w-6" />
       <input
         autoFocus
         placeholder="Search"

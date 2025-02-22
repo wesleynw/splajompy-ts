@@ -1,43 +1,36 @@
 "use client";
 
 import { useUser } from "@/app/providers/UserProvider";
-import ExploreIcon from "@mui/icons-material/Explore";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import HomeIcon from "@mui/icons-material/Home";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import PersonIcon from "@mui/icons-material/Person";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  styled,
-} from "@mui/material";
+  BellIcon,
+  GlobeAltIcon,
+  HomeIcon,
+  MagnifyingGlassCircleIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
+import {
+  BellIcon as BellSolidIcon,
+  GlobeAltIcon as GlobeAltSolidIcon,
+  HomeIcon as HomeSolidIcon,
+  MagnifyingGlassCircleIcon as MagnifyingGlassSolidCircleIcon,
+  UserIcon as UserSolidIcon,
+} from "@heroicons/react/24/solid";
 import { usePathname, useRouter } from "next/navigation";
-import SearchIcon from "../icons/SearchIcon";
 import NotificationBadge from "../notifications/NotificationBadge";
-
-const StyledBottomNavigationAction = styled(BottomNavigationAction)({
-  color: "white",
-  paddingTop: "15px",
-  "&.Mui-selected": {
-    color: "white",
-    filter: "drop-shadow(0 0 5px rgba(255, 255, 255, 0.45))",
-  },
-});
 
 export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
 
-  const is_standalone =
+  const isStandalone =
     typeof window !== "undefined" &&
     (window.matchMedia("(display-mode: standalone)").matches || false);
 
-  const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
+  const handleNavigation = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    targetPath: string,
+  ) => {
     if (targetPath === pathname) {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -46,70 +39,72 @@ export default function MobileNavigation() {
     }
   };
 
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-      }}
-    >
-      <BottomNavigation
-        value={pathname}
-        sx={{
-          backgroundColor: "black",
-          height: is_standalone ? "80px" : "56px",
-          alignItems: "flex-start",
-        }}
-      >
-        <StyledBottomNavigationAction
-          value="/"
-          icon={pathname === "/" ? <HomeIcon /> : <HomeOutlinedIcon />}
-          onClick={(event) => handleNavigation(event, "/")}
-          disableRipple
-        />
+  const navItems = [
+    {
+      href: "/",
+      icon:
+        pathname === "/" ? (
+          <HomeSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
+        ) : (
+          <HomeIcon className="h-6 w-6" />
+        ),
+    },
+    {
+      href: "/notifications",
+      icon: (
+        <NotificationBadge>
+          {pathname === "/notifications" ? (
+            <BellSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
+          ) : (
+            <BellIcon className="h-6 w-6" />
+          )}
+        </NotificationBadge>
+      ),
+    },
+    {
+      href: "/all",
+      icon:
+        pathname === "/all" ? (
+          <GlobeAltSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
+        ) : (
+          <GlobeAltIcon className="h-6 w-6" />
+        ),
+    },
+    {
+      href: "/search",
+      icon:
+        pathname === "/search" ? (
+          <MagnifyingGlassSolidCircleIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
+        ) : (
+          <MagnifyingGlassCircleIcon className="h-6 w-6" />
+        ),
+    },
+    {
+      href: `/user/${user.username}`,
+      icon:
+        pathname === `/user/${user.username}` ? (
+          <UserSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
+        ) : (
+          <UserIcon className="h-6 w-6" />
+        ),
+    },
+  ];
 
-        <StyledBottomNavigationAction
-          value="/notifications"
-          icon={
-            <NotificationBadge>
-              {pathname === "/notifications" ? (
-                <NotificationsIcon />
-              ) : (
-                <NotificationsNoneOutlinedIcon />
-              )}
-            </NotificationBadge>
-          }
-          onClick={(event) => handleNavigation(event, "/notifications")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value="/all"
-          icon={pathname === "/all" ? <ExploreIcon /> : <ExploreOutlinedIcon />}
-          onClick={(event) => handleNavigation(event, "/all")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value="/search"
-          icon={<SearchIcon />}
-          onClick={(event) => handleNavigation(event, "/search")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value={`/user/${user.username}`}
-          icon={
-            pathname === `/user/${user.username}` ? (
-              <PersonIcon />
-            ) : (
-              <PersonOutlineOutlinedIcon />
-            )
-          }
-          onClick={(event) => handleNavigation(event, `/user/${user.username}`)}
-          disableRipple
-        />
-      </BottomNavigation>
-    </Box>
+  return (
+    <div className="fixed right-0 bottom-0 left-0 z-10 w-full">
+      <nav
+        className={`flex w-full flex-row items-start justify-between bg-neutral-900 ${isStandalone ? "h-20" : "h-14"} `}
+      >
+        {navItems.map((item) => (
+          <button
+            key={item.href}
+            onClick={(event) => handleNavigation(event, item.href)}
+            className={`flex flex-1 items-center justify-center pt-4 text-white`}
+          >
+            {item.icon}
+          </button>
+        ))}
+      </nav>
+    </div>
   );
 }

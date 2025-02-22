@@ -6,10 +6,10 @@ import MobileNavigation from "./MobileNavigation";
 export default function Navigation() {
   return (
     <>
-      <div className="sm:hidden">
+      <div className="xl:hidden">
         <MobileNavigation />
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden xl:block">
         <DesktopNavigation />
       </div>
     </>
