@@ -17,7 +17,7 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
   };
 
   return (
-    <div className="mt-5">
+    <div className="mt-8">
       <div>
         <Input
           placeholder="Add a comment..."
@@ -26,9 +26,11 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
           className="border-1 border-neutral-500"
         />
       </div>
-      <Button disabled={!comment.trim()} onClick={handleComment}>
-        Comment
-      </Button>
+      <div className="ml-2">
+        <Button disabled={!comment.trim()} onClick={handleComment}>
+          Comment
+        </Button>
+      </div>
     </div>
   );
 }

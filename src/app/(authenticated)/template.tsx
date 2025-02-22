@@ -16,7 +16,7 @@ export default async function AuthenticatedLayout({
   }
 
   return (
-    <div className="pt-18">
+    <div className="pt-13">
       <UserProvider user={user}>
         <TopBar user={user} />
         {children}

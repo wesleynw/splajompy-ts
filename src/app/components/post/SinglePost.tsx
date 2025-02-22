@@ -43,10 +43,10 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
   }
 
   return (
-    // <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
-    <CenteredLayout>
-      <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
-    </CenteredLayout>
-    // </Box>
+    <div className="mt-5">
+      <CenteredLayout>
+        <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
+      </CenteredLayout>
+    </div>
   );
 }

@@ -53,7 +53,7 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
       </button>
 
       {isOpen && (
-        <div className="ring-opacity-5 absolute right-0 z-50 mt-2 w-48 rounded-md bg-neutral-800 ring-1 shadow-lg ring-black">
+        <div className="ring-opacity-5 absolute right-0 z-50 mt-2 w-48 rounded-md bg-neutral-800 ring-1 shadow-lg">
           <div className="py-1" role="menu" aria-orientation="vertical">
             <button
               onClick={handleDelete}
