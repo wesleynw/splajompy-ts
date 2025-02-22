@@ -31,10 +31,10 @@ export default function BackButton({ user }: Readonly<Props>) {
           router.push("/");
         }
       }}
-      className="ml-3 flex h-full flex-row justify-center align-middle"
+      className="ml-3 flex items-center"
     >
-      <ArrowLeftIcon className="size-6 h-full" />
-      <p className="ml-3 hidden h-full font-black sm:block">Back</p>
+      <ArrowLeftIcon className="h-6 w-6" />
+      <p className="ml-3 hidden font-black sm:block">Back</p>
     </button>
   );
 }

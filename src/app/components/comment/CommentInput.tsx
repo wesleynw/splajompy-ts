@@ -1,6 +1,6 @@
-import { Box, Button } from "@mui/material";
 import { useState } from "react";
-import { TextInput } from "../post/new/TextInput";
+import Button from "../base/Button";
+import Input from "../base/form/Input";
 
 interface Props {
   onAddComment: (text: string) => void;
@@ -9,7 +9,7 @@ interface Props {
 export default function CommentInput({ onAddComment }: Readonly<Props>) {
   const [comment, setComment] = useState("");
 
-  const handleAddComment = () => {
+  const handleComment = () => {
     if (comment.trim()) {
       onAddComment(comment);
       setComment("");
@@ -17,37 +17,18 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
   };
 
   return (
-    <Box sx={{ marginTop: 3 }}>
-      <Box sx={{ marginBottom: 2 }}>
-        <TextInput
+    <div className="mt-5">
+      <div>
+        <Input
           placeholder="Add a comment..."
           value={comment}
-          setTextValue={setComment}
+          onChange={(event) => setComment(event.target.value)}
+          className="border-1 border-neutral-500"
         />
-      </Box>
-      <Button
-        variant="contained"
-        onClick={handleAddComment}
-        disabled={!comment.trim()}
-        sx={{
-          borderRadius: "24px",
-          padding: "8px 20px",
-          textTransform: "none",
-          backgroundColor: "#424242",
-          color: "white",
-          boxShadow: "none",
-          "&:hover": {
-            backgroundColor: "#ffffff",
-            color: "#424242",
-          },
-          "&:disabled": {
-            backgroundColor: "#555555",
-            color: "#888888",
-          },
-        }}
-      >
+      </div>
+      <Button disabled={!comment.trim()} onClick={handleComment}>
         Comment
       </Button>
-    </Box>
+    </div>
   );
 }
