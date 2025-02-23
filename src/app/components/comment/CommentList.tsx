@@ -42,9 +42,9 @@ export default function CommentList({
   };
 
   return (
-    <>
+    <div className="w-full">
       <CommentInput onAddComment={addComment} />
       <div className="mt-5">{renderComments()}</div>
-    </>
+    </div>
   );
 }
