@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
 interface ImagePreviewProps {
   previewFile: File | null;
@@ -41,21 +40,7 @@ export default function ImagePreview({
   }
 
   return (
-    <Box
-      sx={{
-        marginBottom: 2,
-        position: "relative",
-        width: "100%",
-        minHeight: "100px",
-        maxHeight: "300px",
-        borderRadius: "8px",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <div className="relative min-h-20 w-full">
       <Image
         src={imageSrc}
         alt="Selected preview"
@@ -82,6 +67,6 @@ export default function ImagePreview({
       >
         <CloseIcon />
       </IconButton>
-    </Box>
+    </div>
   );
 }

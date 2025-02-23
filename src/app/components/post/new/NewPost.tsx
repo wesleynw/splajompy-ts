@@ -3,7 +3,7 @@
 import { insertPost } from "@/app/lib/posts";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { User } from "@/db/schema";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { RichTextareaHandle } from "rich-textarea";
@@ -65,7 +65,7 @@ export default function Page({
         const presignedUrlData = await getPresignedUrl(
           user.user_id,
           selectedFile.type,
-          selectedFile.name
+          selectedFile.name,
         );
         if (!presignedUrlData) {
           console.error("Failed to get presigned URL");
@@ -106,12 +106,7 @@ export default function Page({
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        padding: 1,
-      }}
-    >
+    <div className="w-full">
       <Stack
         direction="column"
         alignItems="center"
@@ -149,16 +144,7 @@ export default function Page({
           setPreviewFile={setPreviewFile}
           setFile={setSelectedFile}
         />
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            position: "relative",
-            paddingTop: "16px",
-          }}
-        >
+        <div className="align-center flex w-full justify-between pt-5">
           <FileInput
             file={selectedFile}
             setFile={setSelectedFile}
@@ -169,9 +155,9 @@ export default function Page({
             isLoading={isLoading}
             disabled={!!error || (!textValue.trim() && !selectedFile)}
           />
-        </Box>
+        </div>
         {error && <p style={{ color: "red" }}>{error}</p>}{" "}
       </Stack>
-    </Box>
+    </div>
   );
 }

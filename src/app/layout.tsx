@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
@@ -34,7 +33,7 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <ReactQueryProvider>
           <InitColorSchemeScript attribute="class" />
-          <Box component="main">{children}</Box>
+          <div className="mb-16">{children}</div>
         </ReactQueryProvider>
       </body>
     </html>

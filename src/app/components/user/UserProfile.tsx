@@ -20,7 +20,7 @@ export default function UserProfile({ user, isOwnProfile }: Readonly<Props>) {
   };
 
   return (
-    <div className="flex w-full flex-row justify-between rounded-lg bg-neutral-900 p-4">
+    <div className="flex w-full flex-row justify-between border-1 border-neutral-800 p-4">
       <p className="ml-1 text-lg font-black">@{user.username}</p>
       {isOwnProfile && (
         <button

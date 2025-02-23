@@ -1,5 +1,5 @@
 import { useUsers } from "@/app/data/users";
-import { Box, Divider, List, ListItemButton } from "@mui/material";
+import { Divider, List, ListItemButton } from "@mui/material";
 import { RichTextareaHandle } from "rich-textarea";
 
 type Props = {
@@ -26,7 +26,7 @@ export default function MentionDialog({
   }
 
   return (
-    <Box sx={{ zIndex: "100" }}>
+    <div className="z-50">
       <List
         dense={true}
         sx={{
@@ -40,7 +40,7 @@ export default function MentionDialog({
         {users && users.length > 0 && !isPending ? (
           (() => {
             const filteredUsers = users.filter((user) =>
-              user.username.startsWith(mentionedUser)
+              user.username.startsWith(mentionedUser),
             );
             return filteredUsers.length > 0 ? (
               filteredUsers.slice(0, 5).map((user, index) => (
@@ -70,6 +70,6 @@ export default function MentionDialog({
           <ListItemButton>...</ListItemButton>
         )}
       </List>
-    </Box>
+    </div>
   );
 }

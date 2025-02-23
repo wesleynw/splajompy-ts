@@ -1,4 +1,5 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import Spinner from "../../loading/Spinner";
 
 export default function SubmitPostButton({
   isLoading,
@@ -27,22 +28,7 @@ export default function SubmitPostButton({
       disabled={isLoading || disabled}
       color="primary"
     >
-      {isLoading && (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <CircularProgress size="1.5rem" sx={{ color: "inherit" }} />
-        </Box>
-      )}
+      {isLoading && <Spinner />}
 
       <Typography
         variant="subtitle1"

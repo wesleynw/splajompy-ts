@@ -1,5 +1,4 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { Box } from "@mui/material";
 
 interface FileInputProps {
   file: File | null;
@@ -40,7 +39,7 @@ export default function FileInput({
   };
 
   return (
-    <Box sx={{ width: "100%", position: "relative" }}>
+    <div>
       <input
         type="file"
         onChange={handleFileSelect}
@@ -58,6 +57,6 @@ export default function FileInput({
           visibility={file ? "hidden" : "visible"}
         />
       </label>
-    </Box>
+    </div>
   );
 }
