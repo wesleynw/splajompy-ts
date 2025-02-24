@@ -1,4 +1,4 @@
-import { Image } from "@phosphor-icons/react";
+import { Image as ImageIcon } from "@phosphor-icons/react";
 
 interface FileInputProps {
   file: File | null;
@@ -48,7 +48,7 @@ export default function FileInput({
         accept="image/*"
       />
       <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-        <Image
+        <ImageIcon
           size={25}
           className="ml-5"
           visibility={file ? "hidden" : "visible"}

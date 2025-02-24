@@ -30,7 +30,7 @@ export default function ResponsiveImage({
       }}
     >
       <img
-        alt="Image"
+        alt="Post Image"
         src={src}
         style={{
           objectFit: isNonStandardSize ? "cover" : "contain",
