@@ -24,9 +24,8 @@ export default function Notification({
 
   return (
     <div
-      className={`m-1.5 rounded-lg ${notificationData.viewed ? "bg-neutral-800" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
+      className={`border-x-1 border-t-1 border-neutral-700 ${notificationData.viewed ? "transparent" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
       onClick={handleClick}
-      role="button"
     >
       <p className="mb-1.5 font-medium">
         {<RenderMentions text={notificationData.message} />}

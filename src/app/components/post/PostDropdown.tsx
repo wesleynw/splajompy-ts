@@ -55,11 +55,11 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
       </button>
 
       {isOpen && (
-        <div className="ring-opacity-5 absolute right-0 z-50 mt-2 w-48 rounded-md bg-neutral-800 ring-1 shadow-lg">
-          <div className="py-1" role="menu" aria-orientation="vertical">
+        <div className="absolute right-0 z-50 mt-2 w-48 rounded-sm border-1 border-neutral-500 bg-neutral-800 shadow-lg">
+          <div role="menu" aria-orientation="vertical">
             <button
               onClick={handleDelete}
-              className="flex w-full items-center px-4 py-2 text-sm text-neutral-300 transition-all hover:bg-neutral-600"
+              className="flex w-full items-center px-4 py-3 text-sm text-neutral-300 transition-all hover:bg-neutral-600"
               role="menuitem"
             >
               <TrashIcon className="mr-3" size={20} />

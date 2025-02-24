@@ -19,7 +19,7 @@ export default function Comment({
   const options = { defaultProtocol: "https", target: "_blank" };
 
   return (
-    <div className="my-3 rounded-lg bg-neutral-800 p-3">
+    <div className="my-3 border-t-1 border-neutral-800 py-3">
       <div className="flex w-full justify-between">
         <div>
           <p className="font-extrabold">@{user.username}</p>

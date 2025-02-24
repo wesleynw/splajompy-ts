@@ -107,11 +107,11 @@ export default function Page({
   return (
     <CenteredLayout>
       <form
-        className="w-full rounded-2xl bg-neutral-900 p-8"
+        className="mt-10 w-full rounded-lg bg-neutral-900 px-5 py-7"
         onSubmit={handleSubmit}
       >
         <TextInput
-          placeholder="What's your favorite color?"
+          placeholder="What's on your mind?"
           value={textValue}
           setTextValue={setTextValue}
           inputRef={inputRef}

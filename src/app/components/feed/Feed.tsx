@@ -49,7 +49,13 @@ export default function Feed({
   }
 
   if (posts.pages.length === 1 && posts.pages[0].length === 0) {
-    return target_user_id ? <div>no posts</div> : <EmptyFeed />;
+    return target_user_id ? (
+      <CenteredLayout>
+        <p className="mt-5 text-xl font-black">No posts.</p>
+      </CenteredLayout>
+    ) : (
+      <EmptyFeed />
+    );
   }
 
   return (
