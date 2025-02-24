@@ -1,4 +1,4 @@
-import { LightBulbIcon } from "@heroicons/react/24/outline";
+import { Lightbulb as LightbulbIcon } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useState } from "react";
 
 export default function DownloadPrompt() {
@@ -22,7 +22,7 @@ export default function DownloadPrompt() {
           className="flex items-center p-0.5 focus:outline-none"
           onClick={handleOpenModal}
         >
-          <LightBulbIcon className="h-5 w-5 text-green-500" />
+          <LightbulbIcon className="h-5 w-5 text-green-500" />
           <p className="px-1 text-sm font-bold text-green-500">Install</p>
         </button>
       </div>

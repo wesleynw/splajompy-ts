@@ -1,6 +1,8 @@
 import { usePosts } from "@/app/data/posts";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import {
+  DotsThreeVertical as DotsThreeVerticalIcon,
+  Trash as TrashIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -49,7 +51,7 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
         className="rounded-full p-2 transition-colors hover:bg-neutral-800"
         aria-label="Post options"
       >
-        <EllipsisVerticalIcon className="size-6 text-neutral-200" />
+        <DotsThreeVerticalIcon size={23} />
       </button>
 
       {isOpen && (
@@ -60,7 +62,7 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
               className="flex w-full items-center px-4 py-2 text-sm text-neutral-300 transition-all hover:bg-neutral-600"
               role="menuitem"
             >
-              <TrashIcon className="mr-3 h-4 w-4" />
+              <TrashIcon className="mr-3" size={20} />
               Delete Post
             </button>
           </div>

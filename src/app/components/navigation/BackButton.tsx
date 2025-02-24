@@ -1,7 +1,7 @@
 "use client";
 
 import { User } from "@/db/schema";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { CaretLeft as CaretLeftIcon } from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter } from "next/navigation";
 
 type Props = {
@@ -33,8 +33,8 @@ export default function BackButton({ user }: Readonly<Props>) {
       }}
       className="ml-3 flex items-center"
     >
-      <ArrowLeftIcon className="h-6 w-6" />
-      <p className="ml-3 hidden font-black sm:block">Back</p>
+      <CaretLeftIcon size={23} weight="fill" />
+      <p className="ml-1 hidden font-black sm:block">Back</p>
     </button>
   );
 }

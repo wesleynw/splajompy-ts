@@ -1,4 +1,7 @@
-import { ArrowDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  DownloadSimple as DownloadIcon,
+  XCircle as XCircleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { animated, useSpring } from "@react-spring/web";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import Image from "next/image";
@@ -192,7 +195,7 @@ function ImageModalContent({
         onClick={handleDownload}
         className="fixed top-4 right-14 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
-        <ArrowDownIcon className="h-6 w-6" />
+        <DownloadIcon size={23} />
       </button>
       <button
         onClick={(e) => {
@@ -202,7 +205,7 @@ function ImageModalContent({
         }}
         className="fixed top-4 right-4 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
-        <XMarkIcon className="h-6 w-6" />
+        <XCircleIcon size={23} />
       </button>
 
       <div

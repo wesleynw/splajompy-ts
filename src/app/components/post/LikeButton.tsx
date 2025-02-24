@@ -1,5 +1,4 @@
-import { HeartIcon as HeartOutlinedIcon } from "@heroicons/react/24/outline";
-import { HeartIcon } from "@heroicons/react/24/solid";
+import { HeartStraight as HeartIcon } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
 
 type Props = {
@@ -22,11 +21,10 @@ export default function LikeButton({
         toggleLike();
       }}
     >
-      {liked ? (
-        <HeartIcon className={isComment ? "size-5" : "size-6"} />
-      ) : (
-        <HeartOutlinedIcon className={isComment ? "size-5" : "size-6"} />
-      )}
+      <HeartIcon
+        className={isComment ? "size-5" : "size-6"}
+        weight={liked ? "fill" : "regular"}
+      />
     </button>
   );
 }

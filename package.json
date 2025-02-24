@@ -13,7 +13,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.735.0",
     "@aws-sdk/s3-presigned-post": "^3.735.0",
-    "@heroicons/react": "^2.2.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@phosphor-icons/react": "^2.1.7",

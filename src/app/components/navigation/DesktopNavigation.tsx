@@ -2,12 +2,12 @@
 
 import { useUser } from "@/app/providers/UserProvider";
 import {
-  BellIcon,
-  GlobeAltIcon,
-  HomeIcon,
-  MagnifyingGlassIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
+  Bell as BellIcon,
+  Globe as GlobeIcon,
+  House as HouseIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  UserCircle as UserCircleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
 
@@ -20,21 +20,21 @@ export default function DesktopNavigation() {
     {
       label: "Home",
       href: "/",
-      icon: <HomeIcon className="h-6 w-6" />,
-    },
-    {
-      label: "All",
-      href: "/all",
-      icon: <GlobeAltIcon className="h-6 w-6" />,
+      icon: <HouseIcon size={23} />,
     },
     {
       label: "Notifications",
       href: "/notifications",
       icon: (
         <NotificationBadge>
-          <BellIcon className="h-6 w-6" />
+          <BellIcon size={23} />
         </NotificationBadge>
       ),
+    },
+    {
+      label: "All",
+      href: "/all",
+      icon: <GlobeIcon size={23} />,
     },
     {
       label: "Search",
@@ -44,7 +44,7 @@ export default function DesktopNavigation() {
     {
       label: "Profile",
       href: `/user/${user.username}`,
-      icon: <UserIcon className="h-6 w-6" />,
+      icon: <UserCircleIcon size={23} />,
     },
   ];
 

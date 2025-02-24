@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpOnSquareIcon } from "@heroicons/react/24/outline";
+import { Export as ExportIcon } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 
 export default function ShareButton() {
@@ -33,7 +33,7 @@ export default function ShareButton() {
         onClick={handleClick}
         className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100/10"
       >
-        <ArrowUpOnSquareIcon className="h-6 w-6" />
+        <ExportIcon size={23} />
       </button>
       <div
         className={`fixed bottom-14 left-1/2 z-50 -translate-x-1/2 transform rounded-lg bg-neutral-600 px-4 py-2 text-white transition-all duration-300 ease-in-out ${open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"} `}

@@ -1,6 +1,6 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlass as MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import { Dispatch, SetStateAction } from "react";
 import CancelCircleIcon from "../icons/CancelCircleIcon";
 

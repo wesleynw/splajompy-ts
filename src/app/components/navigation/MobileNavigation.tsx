@@ -2,19 +2,12 @@
 
 import { useUser } from "@/app/providers/UserProvider";
 import {
-  BellIcon,
-  GlobeAltIcon,
-  HomeIcon,
-  MagnifyingGlassCircleIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-import {
-  BellIcon as BellSolidIcon,
-  GlobeAltIcon as GlobeAltSolidIcon,
-  HomeIcon as HomeSolidIcon,
-  MagnifyingGlassCircleIcon as MagnifyingGlassSolidCircleIcon,
-  UserIcon as UserSolidIcon,
-} from "@heroicons/react/24/solid";
+  Bell as BellIcon,
+  Globe as GlobeIcon,
+  House as HouseIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  UserCircle as UserCircleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter } from "next/navigation";
 import NotificationBadge from "../notifications/NotificationBadge";
 
@@ -38,51 +31,50 @@ export default function MobileNavigation() {
   const navItems = [
     {
       href: "/",
-      icon:
-        pathname === "/" ? (
-          <HomeSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
-        ) : (
-          <HomeIcon className="h-6 w-6" />
-        ),
+      icon: (
+        <HouseIcon
+          size={23}
+          weight={`${pathname === "/" ? "fill" : "regular"}`}
+        />
+      ),
     },
     {
       href: "/notifications",
       icon: (
         <NotificationBadge>
-          {pathname === "/notifications" ? (
-            <BellSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
-          ) : (
-            <BellIcon className="h-6 w-6" />
-          )}
+          <BellIcon
+            size={23}
+            weight={`${pathname === "/notifications" ? "fill" : "regular"}`}
+          />
         </NotificationBadge>
       ),
     },
     {
       href: "/all",
-      icon:
-        pathname === "/all" ? (
-          <GlobeAltSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
-        ) : (
-          <GlobeAltIcon className="h-6 w-6" />
-        ),
+      icon: (
+        <GlobeIcon
+          size={23}
+          weight={`${pathname === "/all" ? "fill" : "regular"}`}
+        />
+      ),
     },
     {
       href: "/search",
-      icon:
-        pathname === "/search" ? (
-          <MagnifyingGlassSolidCircleIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
-        ) : (
-          <MagnifyingGlassCircleIcon className="h-6 w-6" />
-        ),
+      icon: (
+        <MagnifyingGlassIcon
+          size={23}
+          weight={`${pathname === "/search" ? "fill" : "regular"}`}
+        />
+      ),
     },
     {
       href: `/user/${user.username}`,
-      icon:
-        pathname === `/user/${user.username}` ? (
-          <UserSolidIcon className="h-6 w-6 [filter:drop-shadow(0_0_5px_rgba(255,255,255,0.9))]" />
-        ) : (
-          <UserIcon className="h-6 w-6" />
-        ),
+      icon: (
+        <UserCircleIcon
+          size={23}
+          weight={pathname === `/user/${user.username}` ? "fill" : "regular"}
+        />
+      ),
     },
   ];
 
