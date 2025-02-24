@@ -1,8 +1,8 @@
 "use client";
 
 import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
-import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
+import Button from "../base/Button";
 
 type Props = {
   user_id: number;
@@ -60,26 +60,7 @@ export default function FollowButton({
   }
 
   return (
-    <Button
-      variant="contained"
-      size="medium"
-      onClick={handleFollow}
-      disabled={loading}
-      sx={{
-        textTransform: "none",
-        borderRadius: "20px",
-        paddingX: 2,
-        paddingY: 0.5,
-        fontWeight: "bold",
-        fontSize: "0.875rem",
-        minWidth: "auto",
-        color: "#ffffff",
-        backgroundColor: "#1DA1F2",
-        "&:hover": {
-          backgroundColor: "#0d8de6",
-        },
-      }}
-    >
+    <Button onClick={handleFollow} disabled={loading}>
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>
   );

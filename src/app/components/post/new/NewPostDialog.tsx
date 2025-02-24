@@ -41,9 +41,9 @@ export default function NewPostDialog({
         <div className="flex min-h-full items-start justify-center">
           <div
             ref={dialogRef}
-            className="animate-slide-down w-full transform overflow-hidden bg-transparent transition-all duration-300"
+            className="animate-slide-down w-full transform bg-transparent transition-all duration-300"
           >
-            <div className="relative top-5 h-full w-full p-0">
+            <div className="top-5 h-full w-full p-0">
               <NewPost user={user} onPost={toggleOpen} inputRef={inputRef} />
             </div>
           </div>

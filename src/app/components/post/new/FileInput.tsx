@@ -1,4 +1,4 @@
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { Image } from "@phosphor-icons/react";
 
 interface FileInputProps {
   file: File | null;
@@ -48,12 +48,9 @@ export default function FileInput({
         accept="image/*"
       />
       <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-        <AddPhotoAlternateIcon
-          fontSize="medium"
-          sx={{
-            marginLeft: "20px",
-            color: "#b0b0b0",
-          }}
+        <Image
+          size={25}
+          className="ml-5"
           visibility={file ? "hidden" : "visible"}
         />
       </label>

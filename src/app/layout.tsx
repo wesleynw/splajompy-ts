@@ -1,4 +1,3 @@
-import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
@@ -32,7 +31,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={roboto.variable}>
         <ReactQueryProvider>
-          <InitColorSchemeScript attribute="class" />
           <div className="mb-16">{children}</div>
         </ReactQueryProvider>
       </body>

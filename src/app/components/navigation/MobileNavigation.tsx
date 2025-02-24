@@ -23,10 +23,6 @@ export default function MobileNavigation() {
   const router = useRouter();
   const user = useUser();
 
-  const isStandalone =
-    typeof window !== "undefined" &&
-    (window.matchMedia("(display-mode: standalone)").matches || false);
-
   const handleNavigation = (
     event: React.MouseEvent<HTMLButtonElement>,
     targetPath: string,
@@ -92,9 +88,7 @@ export default function MobileNavigation() {
 
   return (
     <div className="fixed right-0 bottom-0 left-0 z-10 w-full">
-      <nav
-        className={`flex w-full flex-row items-start justify-between bg-neutral-900 ${isStandalone ? "h-20" : "h-14"} `}
-      >
+      <nav className="flex h-14 w-full flex-row items-start justify-between bg-neutral-900 [@media(display-mode:standalone)]:h-20">
         {navItems.map((item) => (
           <button
             key={item.href}

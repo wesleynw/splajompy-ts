@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
+import { XCircle } from "@phosphor-icons/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -54,19 +53,9 @@ export default function ImagePreview({
           cursor: "pointer",
         }}
       />
-      <IconButton
-        onClick={handleFileRemove}
-        sx={{
-          position: "absolute",
-          top: 4,
-          right: 4,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          color: "white",
-          "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
+      <button className="absolute top-4 right-4" onClick={handleFileRemove}>
+        <XCircle size={30} />
+      </button>
     </div>
   );
 }
