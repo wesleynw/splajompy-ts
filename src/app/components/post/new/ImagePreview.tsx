@@ -53,7 +53,14 @@ export default function ImagePreview({
           cursor: "pointer",
         }}
       />
-      <button className="absolute top-4 right-4" onClick={handleFileRemove}>
+      <button
+        className="absolute top-4 right-4"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleFileRemove();
+        }}
+      >
         <XCircle size={30} />
       </button>
     </div>
