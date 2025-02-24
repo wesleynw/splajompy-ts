@@ -1,8 +1,5 @@
 import { useComments } from "@/app/data/comments";
 import { PublicUser } from "@/db/schema";
-import { Divider } from "@mui/material";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Spinner from "../loading/Spinner";
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
@@ -18,7 +15,7 @@ export default function CommentList({
 }: Readonly<CommentListProps>) {
   const { isPending, comments, toggleLiked, addComment } = useComments(
     user,
-    post_id
+    post_id,
   );
 
   const renderComments = () => {
@@ -41,18 +38,13 @@ export default function CommentList({
       ));
     }
 
-    return (
-      <Typography variant="body2" sx={{ color: "textSecondary" }}>
-        No comments yet.
-      </Typography>
-    );
+    return <p className="text-center font-bold">No comments yet.</p>;
   };
 
   return (
-    <Box>
-      <Divider sx={{ marginY: "10px" }} />
+    <div className="w-full">
       <CommentInput onAddComment={addComment} />
-      <Box sx={{ marginTop: 3 }}>{renderComments()}</Box>
-    </Box>
+      <div className="mt-5">{renderComments()}</div>
+    </div>
   );
 }

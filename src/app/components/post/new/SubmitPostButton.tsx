@@ -1,56 +1,12 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import Button from "../../base/Button";
 
 export default function SubmitPostButton({
   isLoading,
   disabled,
 }: Readonly<{ isLoading: boolean; disabled: boolean }>) {
   return (
-    <Button
-      type="submit"
-      variant="contained"
-      sx={{
-        borderRadius: "22px",
-        padding: "4px 12px",
-        backgroundColor: "#4a90e2",
-        color: "#ffffff",
-        fontWeight: "bold",
-        textTransform: "none",
-        "&:hover": {
-          backgroundColor: "#357abf",
-        },
-        position: "relative",
-        "&.Mui-disabled": {
-          backgroundColor: "rgba(255, 255, 255, 0.12)",
-          color: "rgba(255, 255, 255, 0.3)",
-        },
-      }}
-      disabled={isLoading || disabled}
-      color="primary"
-    >
-      {isLoading && (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <CircularProgress size="1.5rem" sx={{ color: "inherit" }} />
-        </Box>
-      )}
-
-      <Typography
-        variant="subtitle1"
-        fontWeight={800}
-        style={{ visibility: isLoading ? "hidden" : "visible" }}
-      >
-        Post
-      </Typography>
+    <Button type="submit" disabled={isLoading || disabled}>
+      <p className="px-1">Post</p>
     </Button>
   );
 }

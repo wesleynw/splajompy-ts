@@ -1,18 +1,10 @@
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import { Stack, Typography } from "@mui/material";
+import { Chat as ChatIcon } from "@phosphor-icons/react/dist/ssr";
 
 export default function CommentCount({ count }: Readonly<{ count: number }>) {
   return (
-    <Stack direction="row" alignItems="center">
-      <Typography sx={{ fontWeight: 800 }}>{count}</Typography>
-      <ChatBubbleOutlineOutlinedIcon
-        sx={{
-          width: "20px",
-          height: "20px",
-          marginLeft: "8px",
-          color: "white",
-        }}
-      />
-    </Stack>
+    <div className="flex flex-row items-center">
+      <p className="font-black">{count}</p>
+      <ChatIcon size={23} className="ml-1.5 h-6 w-6" />
+    </div>
   );
 }

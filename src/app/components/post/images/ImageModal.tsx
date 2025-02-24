@@ -1,12 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
-import VerticalAlignBottomIcon from "@mui/icons-material/VerticalAlignBottom";
 import {
-  Backdrop,
-  Box,
-  CircularProgress,
-  IconButton,
-  Modal,
-} from "@mui/material";
+  DownloadSimple as DownloadIcon,
+  XCircle as XCircleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { animated, useSpring } from "@react-spring/web";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import Image from "next/image";
@@ -38,7 +33,6 @@ function ImageModalContent({
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const lastTapRef = useRef<number>(0);
 
   useEffect(() => {
@@ -145,7 +139,6 @@ function ImageModalContent({
         api.start({ scale: s, x: constrainedX, y: constrainedY });
         return memo;
       },
-
       onClick: ({ event }) => {
         function isTouchEvent(e: Event): e is TouchEvent {
           return "touches" in e;
@@ -197,63 +190,35 @@ function ImageModalContent({
   };
 
   return (
-    <Box sx={{ zIndex: 10001 }}>
-      <IconButton
+    <div className="z-[10001]">
+      <button
         onClick={handleDownload}
-        sx={{
-          position: "fixed",
-          top: 16,
-          right: 56,
-          zIndex: 4000,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-          },
-        }}
+        className="fixed top-4 right-14 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
-        <VerticalAlignBottomIcon />
-      </IconButton>
-      <IconButton
+        <DownloadIcon size={23} />
+      </button>
+      <button
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
           handleClose();
         }}
-        sx={{
-          position: "fixed",
-          top: 16,
-          right: 16,
-          zIndex: 4000,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-          },
-        }}
+        className="fixed top-4 right-4 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
-        <CloseIcon />
-      </IconButton>
+        <XCircleIcon size={23} />
+      </button>
 
-      <Backdrop
+      <div
         ref={containerRef}
-        open
-        sx={{
-          backgroundColor: "black",
-          zIndex: 2000,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          touchAction: "none",
-        }}
+        className="fixed inset-0 z-[2000] flex touch-none items-center justify-center bg-black"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
       >
-        {!loaded && <CircularProgress />}
+        {!loaded && (
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        )}
         <AnimatedImage
           ref={imageRef}
           src={src}
@@ -281,24 +246,13 @@ function ImageModalContent({
             pointerEvents: "none",
           }}
         />
-      </Backdrop>
-    </Box>
+      </div>
+    </div>
   );
 }
 
 export default function ImageModal(props: Readonly<ImageModalProps>) {
-  return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-      style={{ zIndex: 10000 }}
-    >
-      <ImageModalContent
-        imagePath={props.imagePath}
-        imageWidth={props.imageWidth}
-        imageHeight={props.imageHeight}
-        handleClose={props.handleClose}
-      />
-    </Modal>
-  );
+  if (!props.open) return null;
+
+  return <ImageModalContent {...props} />;
 }

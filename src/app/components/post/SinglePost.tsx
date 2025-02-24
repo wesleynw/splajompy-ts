@@ -2,12 +2,12 @@
 
 import { useSinglePost } from "@/app/data/post";
 import { PublicUser } from "@/db/schema";
-import { Box, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import React from "react";
+import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "./Post";
 
@@ -29,21 +29,17 @@ export default function SinglePost({ post_id, user }: Readonly<Props>) {
 
   if (!post) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-        height="30vh"
-      >
-        <Typography variant="h6">Post not found.</Typography>
-      </Box>
+      <CenteredLayout>
+        <p className="mt-5 text-xl font-black">Post not found.</p>
+      </CenteredLayout>
     );
   }
 
   return (
-    <Box sx={{ px: { xs: 1, md: 3 }, marginBottom: "75px" }}>
-      <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
-    </Box>
+    <div>
+      <CenteredLayout>
+        <Post user={user} toggleLiked={toggleLiked} standaloneView {...post} />
+      </CenteredLayout>
+    </div>
   );
 }

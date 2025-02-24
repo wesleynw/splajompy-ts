@@ -13,17 +13,19 @@ export default function SearchPage() {
 
   return (
     <CenteredLayout>
+      {/* <div className="w-full"> */}
       <SearchBar query={query} setQuery={setQuery} />
+      {/* </div> */}
       <div className="my-3 h-0.5 w-full rounded-full bg-neutral-800"></div>
+      {data?.map((user) => {
+        return <SearchResult key={user.user_id} user={user} />;
+      })}
       {isPending && query.length > 0 ? (
         <Spinner />
       ) : (
         data?.length === 0 &&
         query && <p className="mt-10 text-lg font-black">No results</p>
       )}
-      {data?.map((user) => {
-        return <SearchResult key={user.user_id} user={user} />;
-      })}
     </CenteredLayout>
   );
 }

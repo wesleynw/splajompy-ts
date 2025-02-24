@@ -1,5 +1,4 @@
 import { RenderMentions } from "@/app/utils/mentions";
-import Box from "@mui/material/Box";
 import Linkify from "linkify-react";
 
 type Props = {
@@ -24,27 +23,12 @@ export default function PostTextContent({ text }: Readonly<Props>) {
   }
 
   return (
-    <Box
-      sx={{
-        fontWeight: "bold",
-        marginBottom: 3,
-        color: "#ffffff",
-        whiteSpace: "pre-line",
-        overflowWrap: "break-word",
-        "& a": {
-          color: "lightblue",
-          textDecoration: "underline",
-        },
-        "& a:hover": {
-          cursor: "pointer",
-        },
-      }}
-    >
-      <Box onClick={handleLinkClick}>
+    <div className="mb-3 font-bold break-all">
+      <div onClick={handleLinkClick}>
         <Linkify options={options}>
           <RenderMentions text={text} />
         </Linkify>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }

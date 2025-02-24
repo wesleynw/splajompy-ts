@@ -1,5 +1,4 @@
-import { Box, useTheme } from "@mui/material";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { Image as ImageIcon } from "@phosphor-icons/react";
 
 interface FileInputProps {
   file: File | null;
@@ -39,10 +38,8 @@ export default function FileInput({
     }
   };
 
-  const theme = useTheme();
-
   return (
-    <Box sx={{ width: "100%", position: "relative" }}>
+    <div>
       <input
         type="file"
         onChange={handleFileSelect}
@@ -51,16 +48,12 @@ export default function FileInput({
         accept="image/*"
       />
       <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-        <AddPhotoAlternateIcon
-          fontSize="medium"
-          sx={{
-            marginLeft: "20px",
-            color: "#777777",
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-          }}
+        <ImageIcon
+          size={25}
+          className="ml-5"
           visibility={file ? "hidden" : "visible"}
         />
       </label>
-    </Box>
+    </div>
   );
 }

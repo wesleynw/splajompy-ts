@@ -46,7 +46,9 @@ export const renderMentions = (text: string): React.ReactNode => {
     }
     parts.push(
       <Link key={offset} href={`/user/${username}`}>
-        {"@" + username}
+        <span className="font-bold text-blue-300 hover:cursor-pointer hover:underline">
+          {"@" + username}
+        </span>
       </Link>,
     );
     lastIndex = offset + match.length;

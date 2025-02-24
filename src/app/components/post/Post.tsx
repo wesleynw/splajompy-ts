@@ -1,10 +1,5 @@
 import { EnhancedPost } from "@/app/lib/posts";
 import { PublicUser } from "@/db/schema";
-import { Box, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CommentCount from "../comment/CommentCount";
@@ -17,10 +12,7 @@ import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
 import PostTextContent from "./PostTextContent";
 import ShareButton from "./ShareButton";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import Timestamp from "./Timestamp";
 
 type Props = EnhancedPost & {
   user: PublicUser;
@@ -45,35 +37,17 @@ export default function Post({
   standaloneView = false,
 }: Readonly<Props>) {
   const router = useRouter();
-  const userTimezone = dayjs.tz.guess();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
   return (
-    <Box
-      sx={{
-        borderRadius: "8px",
-        margin: "10px auto",
-        width: "100%",
-        maxWidth: 600,
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 1,
-        transition: "background-color 0.3s",
-        background: "#1b1b1b",
-        "&:hover": !standaloneView
-          ? {
-              background: "#222222",
-              cursor: "pointer",
-            }
-          : {},
-      }}
+    <div
+      className="w-full border-x-1 border-t-1 border-neutral-800 p-6 transition-all last:border-b-1 hover:cursor-pointer"
       onClick={() => router.push(`/post/${post_id}`)}
     >
-      <Box sx={{ position: "relative" }}>
-        <Box sx={{ position: "absolute", top: "10%", right: "0%" }}>
+      <div className="relative">
+        <div className="absolute right-0">
           {user.user_id === user_id ? (
             <PostDropdown post_id={post_id} />
           ) : (
@@ -81,33 +55,27 @@ export default function Post({
               <FollowButton user_id={user_id} show_unfollow={false} />
             )
           )}
-        </Box>
-      </Box>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography
-          sx={{
-            fontSize: "12pt",
-            fontWeight: 800,
-            color: "#b0b0b0",
-            "&:hover": {
-              textDecoration: "underline",
-            },
-          }}
+        </div>
+      </div>
+      <div>
+        <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             router.push(`/user/${author}`);
           }}
         >
-          @{author}
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
-      </Stack>
+          <p className="font-bold text-neutral-400 hover:underline">
+            @{author}
+          </p>
+        </button>
+        <div className="grow"></div>
+      </div>
 
       <PostTextContent text={text} />
 
       {image_blob_url && image_height && image_width && (
-        <Box>
+        <div>
           <ResponsiveImage
             imagePath={image_blob_url}
             width={image_width}
@@ -121,30 +89,21 @@ export default function Post({
             open={open}
             handleClose={handleClose}
           />
-        </Box>
+        </div>
       )}
 
-      <Stack direction="row" justifyContent="center" alignContent="center">
-        <Typography
-          variant="body2"
-          sx={{
-            color: "#e0e0e0",
-            fontWeight: 700,
-            alignContent: "center",
-          }}
-        >
-          {dayjs.utc(date).tz(userTimezone).fromNow()}
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
+      <div className="flex flex-row content-center justify-center">
+        <Timestamp date={date} />
+        <div className="grow"></div>
         {standaloneView && <ShareButton />}
-        <Box sx={{ width: "20px" }}></Box>
+        <div className="w-5"></div>
         <CommentCount count={comment_count} />
         <LikeButton liked={liked} toggleLike={toggleLiked} />
-      </Stack>
+      </div>
 
       <OtherLikes relevant_likes={relevant_likes} />
 
       {standaloneView && <CommentList post_id={post_id} user={user} />}
-    </Box>
+    </div>
   );
 }

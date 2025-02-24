@@ -2,14 +2,14 @@
 
 import { db } from "@/db";
 import { Session, sessions, User, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import {
-  encodeHexLowerCase,
-  encodeBase32LowerCaseNoPadding,
-} from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { cache } from "react";
+import {
+  encodeBase32LowerCaseNoPadding,
+  encodeHexLowerCase,
+} from "@oslojs/encoding";
+import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 export async function generateSessionToken(): Promise<string> {
   const bytes = new Uint8Array(20);
@@ -20,10 +20,10 @@ export async function generateSessionToken(): Promise<string> {
 
 export async function createSession(
   token: string,
-  user_id: number
+  user_id: number,
 ): Promise<Session> {
   const session_id = encodeHexLowerCase(
-    sha256(new TextEncoder().encode(token))
+    sha256(new TextEncoder().encode(token)),
   );
   const session: Session = {
     id: session_id,
@@ -35,11 +35,11 @@ export async function createSession(
   return session;
 }
 
-export async function validateSessionToken(
-  token: string
+async function validateSessionToken(
+  token: string,
 ): Promise<SessionValidationResult> {
   const session_id = encodeHexLowerCase(
-    sha256(new TextEncoder().encode(token))
+    sha256(new TextEncoder().encode(token)),
   );
   const result = await db
     .select({ user: users, session: sessions })
@@ -84,5 +84,5 @@ export const getCurrentSession = cache(
     }
     const result = await validateSessionToken(token);
     return result;
-  }
+  },
 );

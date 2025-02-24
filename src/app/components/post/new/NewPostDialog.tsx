@@ -1,9 +1,7 @@
 "use client";
 
 import { User } from "@/db/schema";
-import { Dialog, DialogContent, Slide } from "@mui/material";
-import { TransitionProps } from "@mui/material/transitions";
-import { forwardRef, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { RichTextareaHandle } from "rich-textarea";
 import NewPost from "./NewPost";
 
@@ -13,58 +11,44 @@ type Props = {
   toggleOpen: () => void;
 };
 
-const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
-  <Slide direction="down" ref={ref} {...props}>
-    {props.children as React.ReactElement}
-  </Slide>
-));
-Transition.displayName = "Transition";
-
 export default function NewPostDialog({
   user,
   open,
   toggleOpen,
 }: Readonly<Props>) {
   const inputRef = useRef<RichTextareaHandle>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      const timeoutId = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open]);
+
+  if (!open) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={toggleOpen}
-      onTransitionEnd={() => inputRef.current?.focus()}
-      TransitionComponent={Transition}
-      fullScreen
-      keepMounted
-      sx={{
-        top: "60px",
-        "& .MuiDialog-container": {
-          backgroundColor: "transparent",
-        },
-        "& .MuiDialog-paper": {
-          backgroundColor: "transparent !important",
-          overflow: "hidden",
-          zIndex: 1299,
-          "--Paper-overlay": "transparent !important",
-        },
-      }}
-      slotProps={{
-        backdrop: {
-          sx: { backdropFilter: "blur(10px)", color: "transparent" },
-        },
-      }}
-      PaperProps={{ color: "transparent" }}
-    >
-      <DialogContent
-        sx={{
-          position: "relative",
-          top: "20px",
-          width: "100%",
-          height: "100%",
-          padding: 0,
-        }}
-      >
-        <NewPost user={user} onPost={toggleOpen} inputRef={inputRef} />
-      </DialogContent>
-    </Dialog>
+    <div className="relative z-1">
+      <div
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300"
+        onClick={toggleOpen}
+      />
+
+      <div className="fixed inset-0 top-[60px] overflow-y-auto">
+        <div className="flex min-h-full items-start justify-center">
+          <div
+            ref={dialogRef}
+            className="animate-slide-down w-full transform bg-transparent transition-all duration-300"
+          >
+            <div className="top-5 h-full w-full p-0">
+              <NewPost user={user} onPost={toggleOpen} inputRef={inputRef} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

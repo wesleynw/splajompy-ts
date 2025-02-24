@@ -2,7 +2,7 @@
 
 import { usePosts } from "@/app/data/posts";
 import { User } from "@/db/schema";
-import Box from "@mui/material/Box";
+import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "../post/Post";
 import EmptyFeed from "./EmptyFeed";
@@ -49,27 +49,29 @@ export default function Feed({
   }
 
   if (posts.pages.length === 1 && posts.pages[0].length === 0) {
-    return target_user_id ? <div>no posts</div> : <EmptyFeed />;
+    return target_user_id ? (
+      <CenteredLayout>
+        <p className="mt-5 text-xl font-black">No posts.</p>
+      </CenteredLayout>
+    ) : (
+      <EmptyFeed />
+    );
   }
 
   return (
-    <Box
-      sx={{
-        marginBottom: "60px",
-        px: { xs: 1, md: 3 },
-        width: "100%",
-      }}
-    >
-      {posts.pages.map((posts) =>
-        posts.map((post) => (
-          <Post
-            key={post.post_id}
-            user={user}
-            toggleLiked={() => toggleLiked(post.post_id)}
-            {...post}
-          />
-        )),
-      )}
+    <>
+      <CenteredLayout>
+        {posts.pages.map((posts) =>
+          posts.map((post) => (
+            <Post
+              key={post.post_id}
+              user={user}
+              toggleLiked={() => toggleLiked(post.post_id)}
+              {...post}
+            />
+          )),
+        )}
+      </CenteredLayout>
       {isFetching && <Spinner />}
       <ScrollObserver
         hasNextPage={hasNextPage}
@@ -80,6 +82,6 @@ export default function Feed({
         !target_following_only &&
         !target_post_id &&
         !target_user_id && <FeedBottom />}
-    </Box>
+    </>
   );
 }

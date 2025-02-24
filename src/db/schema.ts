@@ -72,7 +72,9 @@ export const comments = pgTable("comments", {
       onDelete: "cascade",
     }),
   text: text().notNull(),
-  comment_date: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  comment_date: timestamp({ mode: "string" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type Comment = typeof comments.$inferSelect;
@@ -139,7 +141,9 @@ export const notifications = pgTable("notifications", {
   message: text().notNull(),
   link: text(),
   viewed: boolean().default(false),
-  created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
+  created_at: timestamp({ mode: "string" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type NotificationData = typeof notifications.$inferSelect;

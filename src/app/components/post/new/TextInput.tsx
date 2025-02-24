@@ -1,7 +1,6 @@
 "use client";
 
 import { toDisplayFormat, toPreviewFormat } from "@/app/utils/mentions";
-import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import { RichTextarea, RichTextareaHandle } from "rich-textarea";
 import MentionDialog from "./MentionDialog";
@@ -38,9 +37,9 @@ export function TextInput({
   };
 
   return (
-    <Stack direction="column" sx={{ width: "100%", position: "relative" }}>
+    <div className="w-full">
       <RichTextarea
-        className="rich-textarea"
+        className="w-full resize-none overflow-hidden rounded-md border-1 border-neutral-600 p-2 focus:outline-1 focus:outline-neutral-400"
         ref={inputRef}
         value={toDisplayFormat(value)}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -48,9 +47,7 @@ export function TextInput({
         }
         rows={1}
         autoHeight
-        style={{
-          width: "100%",
-        }}
+        style={{ width: "100%" }}
       >
         {(v: string) => {
           if (v.length === 0) {
@@ -68,6 +65,6 @@ export function TextInput({
           inputRef={inputRef}
         />
       )}
-    </Stack>
+    </div>
   );
 }

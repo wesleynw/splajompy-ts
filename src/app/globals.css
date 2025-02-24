@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
+}
+
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -13,31 +28,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 a {
   color: inherit;
   text-decoration: none;
-}
-
-.rich-textarea {
-  border: 2px solid gray;
-  border-radius: 8px;
-  padding: 10px;
-  resize: none;
-  overflow: hidden;
-  font: inherit;
-  line-height: 1.5;
-  color: white;
-}
-
-.rich-textarea textarea {
-  color: "white";
-}
-
-.rich-textarea::selection {
-  background: #4a90e2;
-  color: white;
-}
-
-.rich-textarea:focus {
-  outline: none;
 }

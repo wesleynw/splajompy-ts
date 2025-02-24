@@ -1,6 +1,4 @@
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { IconButton, Stack } from "@mui/material";
+import { HeartStraight as HeartIcon } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
 
 type Props = {
@@ -15,22 +13,18 @@ export default function LikeButton({
   toggleLike,
 }: Readonly<Props>) {
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      <IconButton
-        disableRipple
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleLike();
-        }}
-        color="primary"
-      >
-        {liked ? (
-          <FavoriteIcon fontSize={isComment ? "small" : "medium"} />
-        ) : (
-          <FavoriteBorderIcon fontSize={isComment ? "small" : "medium"} />
-        )}
-      </IconButton>
-    </Stack>
+    <button
+      className="m-1.5"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleLike();
+      }}
+    >
+      <HeartIcon
+        className={isComment ? "size-5" : "size-6"}
+        weight={liked ? "fill" : "regular"}
+      />
+    </button>
   );
 }

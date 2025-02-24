@@ -1,46 +1,25 @@
 "use client";
 
 import { useUser } from "@/app/providers/UserProvider";
-import theme from "@/theme";
-import ExploreIcon from "@mui/icons-material/Explore";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import HomeIcon from "@mui/icons-material/Home";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import PersonIcon from "@mui/icons-material/Person";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  styled,
-  useTheme,
-} from "@mui/material";
+  Bell as BellIcon,
+  Globe as GlobeIcon,
+  House as HouseIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  UserCircle as UserCircleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter } from "next/navigation";
-import SearchIcon from "../icons/SearchIcon";
 import NotificationBadge from "../notifications/NotificationBadge";
-
-const StyledBottomNavigationAction = styled(BottomNavigationAction)({
-  color: theme.palette.secondary.dark,
-  paddingTop: "15px",
-  "&.Mui-selected": {
-    color: "white",
-    filter: "drop-shadow(0 0 5px rgba(255, 255, 255, 0.45))",
-  },
-});
 
 export default function MobileNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const user = useUser();
-  const theme = useTheme();
 
-  const is_standalone =
-    typeof window !== "undefined" &&
-    (window.matchMedia("(display-mode: standalone)").matches || false);
-
-  const handleNavigation = (event: React.MouseEvent, targetPath: string) => {
+  const handleNavigation = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    targetPath: string,
+  ) => {
     if (targetPath === pathname) {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,70 +28,69 @@ export default function MobileNavigation() {
     }
   };
 
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-      }}
-    >
-      <BottomNavigation
-        value={pathname}
-        sx={{
-          backgroundColor: theme.palette.secondary.main,
-          height: is_standalone ? "80px" : "56px",
-          alignItems: "flex-start",
-        }}
-      >
-        <StyledBottomNavigationAction
-          value="/"
-          icon={pathname === "/" ? <HomeIcon /> : <HomeOutlinedIcon />}
-          onClick={(event) => handleNavigation(event, "/")}
-          disableRipple
+  const navItems = [
+    {
+      href: "/",
+      icon: (
+        <HouseIcon
+          size={23}
+          weight={`${pathname === "/" ? "fill" : "regular"}`}
         />
+      ),
+    },
+    {
+      href: "/notifications",
+      icon: (
+        <NotificationBadge>
+          <BellIcon
+            size={23}
+            weight={`${pathname === "/notifications" ? "fill" : "regular"}`}
+          />
+        </NotificationBadge>
+      ),
+    },
+    {
+      href: "/all",
+      icon: (
+        <GlobeIcon
+          size={23}
+          weight={`${pathname === "/all" ? "fill" : "regular"}`}
+        />
+      ),
+    },
+    {
+      href: "/search",
+      icon: (
+        <MagnifyingGlassIcon
+          size={23}
+          weight={`${pathname === "/search" ? "fill" : "regular"}`}
+        />
+      ),
+    },
+    {
+      href: `/user/${user.username}`,
+      icon: (
+        <UserCircleIcon
+          size={23}
+          weight={pathname === `/user/${user.username}` ? "fill" : "regular"}
+        />
+      ),
+    },
+  ];
 
-        <StyledBottomNavigationAction
-          value="/notifications"
-          icon={
-            <NotificationBadge>
-              {pathname === "/notifications" ? (
-                <NotificationsIcon />
-              ) : (
-                <NotificationsNoneOutlinedIcon />
-              )}
-            </NotificationBadge>
-          }
-          onClick={(event) => handleNavigation(event, "/notifications")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value="/all"
-          icon={pathname === "/all" ? <ExploreIcon /> : <ExploreOutlinedIcon />}
-          onClick={(event) => handleNavigation(event, "/all")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value="/search"
-          icon={<SearchIcon />}
-          onClick={(event) => handleNavigation(event, "/search")}
-          disableRipple
-        />
-        <StyledBottomNavigationAction
-          value={`/user/${user.username}`}
-          icon={
-            pathname === `/user/${user.username}` ? (
-              <PersonIcon />
-            ) : (
-              <PersonOutlineOutlinedIcon />
-            )
-          }
-          onClick={(event) => handleNavigation(event, `/user/${user.username}`)}
-          disableRipple
-        />
-      </BottomNavigation>
-    </Box>
+  return (
+    <div className="fixed right-0 bottom-0 left-0 z-10 w-full">
+      <nav className="flex h-14 w-full flex-row items-start justify-between bg-neutral-900 [@media(display-mode:standalone)]:h-20">
+        {navItems.map((item) => (
+          <button
+            key={item.href}
+            onClick={(event) => handleNavigation(event, item.href)}
+            className={`flex flex-1 items-center justify-center pt-4 text-white`}
+          >
+            {item.icon}
+          </button>
+        ))}
+      </nav>
+    </div>
   );
 }

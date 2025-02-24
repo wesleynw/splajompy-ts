@@ -1,6 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { Box } from "@mui/material";
 
 interface ResponsiveImageProps {
   imagePath: string;
@@ -23,22 +21,16 @@ export default function ResponsiveImage({
   const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
 
   return (
-    <Box
+    <div
+      className="py-4"
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
         setOpen(true);
       }}
-      sx={{
-        display: "inline-flex",
-        overflow: "hidden",
-        padding: 0,
-        margin: 0,
-        maxWidth: "100%",
-      }}
     >
       <img
-        alt="Image"
+        alt="Post Image"
         src={src}
         style={{
           objectFit: isNonStandardSize ? "cover" : "contain",
@@ -50,6 +42,6 @@ export default function ResponsiveImage({
           cursor: "pointer",
         }}
       />
-    </Box>
+    </div>
   );
 }

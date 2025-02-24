@@ -1,5 +1,4 @@
 import { useUsers } from "@/app/data/users";
-import { Box, Divider, List, ListItemButton } from "@mui/material";
 import { RichTextareaHandle } from "rich-textarea";
 
 type Props = {
@@ -26,27 +25,19 @@ export default function MentionDialog({
   }
 
   return (
-    <Box sx={{ zIndex: "100" }}>
-      <List
-        dense={true}
-        sx={{
-          position: "absolute",
-          backgroundColor: "black",
-          borderRadius: "10px",
-          border: "1px solid white",
-          paddingY: "2px",
-        }}
-      >
+    <div className="z-50">
+      <ul className="absolute rounded-lg border border-white bg-black py-0.5">
         {users && users.length > 0 && !isPending ? (
           (() => {
             const filteredUsers = users.filter((user) =>
-              user.username.startsWith(mentionedUser)
+              user.username.startsWith(mentionedUser),
             );
+
             return filteredUsers.length > 0 ? (
               filteredUsers.slice(0, 5).map((user, index) => (
                 <div key={user.user_id}>
-                  <ListItemButton
-                    disableRipple
+                  <button
+                    className="w-full px-4 py-2 text-left hover:bg-gray-800 focus:outline-none"
                     onClick={() => {
                       mentionToSpecialFormat(user.user_id, user.username);
                       setMentionDialogOpen(false);
@@ -54,22 +45,22 @@ export default function MentionDialog({
                     }}
                   >
                     {user.username}
-                  </ListItemButton>
+                  </button>
                   {index < filteredUsers.length - 1 && (
-                    <Divider sx={{ color: "gray", border: "1px solid" }} />
+                    <div className="border-t border-gray-600" />
                   )}
                 </div>
               ))
             ) : (
-              <ListItemButton>
+              <li className="px-4 py-2">
                 <h3>No users found</h3>
-              </ListItemButton>
+              </li>
             );
           })()
         ) : (
-          <ListItemButton>...</ListItemButton>
+          <li className="px-4 py-2">...</li>
         )}
-      </List>
-    </Box>
+      </ul>
+    </div>
   );
 }

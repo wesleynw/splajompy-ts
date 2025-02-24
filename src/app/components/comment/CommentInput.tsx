@@ -1,5 +1,5 @@
-import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import Button from "../base/Button";
 import { TextInput } from "../post/new/TextInput";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 export default function CommentInput({ onAddComment }: Readonly<Props>) {
   const [comment, setComment] = useState("");
 
-  const handleAddComment = () => {
+  const handleComment = () => {
     if (comment.trim()) {
       onAddComment(comment);
       setComment("");
@@ -17,37 +17,25 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
   };
 
   return (
-    <Box sx={{ marginTop: 3 }}>
-      <Box sx={{ marginBottom: 2 }}>
+    <div className="mt-8 w-full">
+      <div className="mb-4 flex justify-center">
+        {/* <Input
+          placeholder="Add a comment..."
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+          className="border-1 border-neutral-500"
+        /> */}
         <TextInput
           placeholder="Add a comment..."
           value={comment}
           setTextValue={setComment}
         />
-      </Box>
-      <Button
-        variant="contained"
-        onClick={handleAddComment}
-        disabled={!comment.trim()}
-        sx={{
-          borderRadius: "24px",
-          padding: "8px 20px",
-          textTransform: "none",
-          backgroundColor: "#424242",
-          color: "white",
-          boxShadow: "none",
-          "&:hover": {
-            backgroundColor: "#ffffff",
-            color: "#424242",
-          },
-          "&:disabled": {
-            backgroundColor: "#555555",
-            color: "#888888",
-          },
-        }}
-      >
-        Comment
-      </Button>
-    </Box>
+      </div>
+      <div className="ml-2">
+        <Button disabled={!comment.trim()} onClick={handleComment}>
+          Comment
+        </Button>
+      </div>
+    </div>
   );
 }

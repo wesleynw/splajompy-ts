@@ -1,36 +1,15 @@
 "use client";
 
-import React, { useActionState } from "react";
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  styled,
-} from "@mui/material";
-import Link from "next/link";
-import { useFormStatus } from "react-dom";
 import { register } from "@/app/auth/register";
-import { StyledButton } from "../forms/button";
-import { StyledInput } from "../forms/input";
-import { StyledFormControl } from "../forms/formControl";
-
-const FormContainer = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  width: "100%",
-  maxWidth: "400px",
-  padding: "20px",
-  margin: "10px auto",
-  borderRadius: "8px",
-  background: "linear-gradient(135deg, #ffffff, #f0f0f0)",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-  ...theme.applyStyles("dark", {
-    background: "linear-gradient(135deg, #1b1b1b, #222222)",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
-  }),
-}));
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+import logo from "../../apple-icon.png";
+import Button2 from "../base/Button2";
+import Form from "../base/form/Form";
+import Input from "../base/form/Input";
+import CenteredLayout from "../layout/CenteredLayout";
 
 const initialState = {
   errors: {
@@ -42,120 +21,77 @@ const initialState = {
 };
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const { pending } = useFormStatus();
   const [state, dispatch] = useActionState(register, initialState);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-        overflow: "hidden",
-        position: "relative",
-        paddingBottom: "90px",
-        backgroundColor: "#121212",
-      }}
-    >
-      <form action={dispatch} style={{ width: "100%" }}>
-        <FormContainer>
-          <Typography variant="h5" fontWeight={800} marginBottom="30px">
-            Register
-          </Typography>
-          <StyledFormControl>
-            <StyledInput
-              type="text"
-              name="username"
-              placeholder="Username"
-              disableUnderline
-              required
-              defaultValue={state.payload?.get("username") || ""}
-            />
-          </StyledFormControl>
+    <div className="mt-16 flex w-screen flex-col justify-center">
+      <CenteredLayout>
+        <Form action={dispatch}>
+          <Image
+            width={100}
+            height={100}
+            src={logo}
+            alt="Logo"
+            className="mb-7 rounded-3xl shadow-[0_0_15px_5px_rgba(255,255,255,0.3)]"
+          />
+          <p className="mb-5 text-2xl font-black">Register</p>
+          <Input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+            defaultValue={(state.payload?.get("username") as string) || ""}
+          />
           {state.errors?.username && (
-            <Box
-              component="p"
-              sx={{
-                color: "#ff0000",
-                textAlign: "center",
-                marginTop: "8px",
-              }}
-            >
-              {state.errors.username}
-            </Box>
+            <p className="text-red-700">{state.errors.username}</p>
           )}
-          <StyledFormControl>
-            <StyledInput
-              type="email"
-              name="email"
-              placeholder="Email"
-              disableUnderline
-              required
-              defaultValue={state.payload?.get("email") || ""}
-            />
-          </StyledFormControl>
+          <Input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            defaultValue={(state.payload?.get("email") as string) || ""}
+          />
           {state.errors?.email && (
-            <Box
-              component="p"
-              sx={{
-                color: "#ff0000",
-                textAlign: "center",
-                marginTop: "8px",
-              }}
-            >
-              {state.errors.email}
-            </Box>
+            <p className="text-red-700">{state.errors.email}</p>
           )}
-          <StyledFormControl>
-            <StyledInput
-              type="password"
-              name="password"
-              placeholder="Password"
-              disableUnderline
-              required
-              defaultValue={state.payload?.get("password") || ""}
-            />
-          </StyledFormControl>
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            defaultValue={(state.payload?.get("password") as string) || ""}
+          />
           {state.errors?.password && (
-            <Box
-              component="p"
-              sx={{
-                color: "#ff0000",
-                textAlign: "center",
-                marginTop: "8px",
-              }}
-            >
-              {state.errors.password}
-            </Box>
+            <p className="text-red-700">{state.errors.password}</p>
           )}
-          <RegisterButton />
-          <Stack direction="row" spacing={1} sx={{ marginTop: "20px" }}>
-            <Typography>Already have an account?</Typography>
-            <Typography
-              sx={{
-                color: "primary.main",
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-              component={Link}
-              href="/login"
+          <Button2>
+            <div className="flex w-full flex-row justify-between">
+              <div></div>
+              <p>Register</p>
+              <div className="relative">
+                {pending && (
+                  <div className="absolute top-1 -left-4">
+                    <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Button2>
+          <div className="mt-2 flex flex-row space-x-2.5">
+            <p className="font-bold">Already have an account?</p>
+            <button
+              className="underline"
+              onClick={() => router.push("/login")}
+              type="button"
             >
-              Login
-            </Typography>
-          </Stack>
-        </FormContainer>
-      </form>
-    </Box>
-  );
-}
-
-function RegisterButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <StyledButton variant="contained" disabled={pending} type="submit">
-      {pending ? <CircularProgress size={24} /> : "Register"}
-    </StyledButton>
+              <p className="font-black">Login</p>
+            </button>
+          </div>
+        </Form>
+      </CenteredLayout>
+    </div>
   );
 }

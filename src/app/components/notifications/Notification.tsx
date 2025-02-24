@@ -1,16 +1,9 @@
 import { ExtendedNotificationData } from "@/app/lib/notifications";
 import { RenderMentions } from "@/app/utils/mentions";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/navigation";
+import Timestamp from "../post/Timestamp";
 import MiniComment from "./MiniComment";
 import MiniPost from "./MiniPost";
-
-dayjs.extend(relativeTime);
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 type Props = {
   notificationData: ExtendedNotificationData;
@@ -21,7 +14,6 @@ export default function Notification({
   notificationData,
   markRead,
 }: Readonly<Props>) {
-  const userTimezone = dayjs.tz.guess();
   const router = useRouter();
 
   const handleClick = () => {
@@ -32,9 +24,8 @@ export default function Notification({
 
   return (
     <div
-      className={`m-1.5 rounded-lg ${notificationData.viewed ? "bg-neutral-800" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
+      className={`border-x-1 border-t-1 border-neutral-700 ${notificationData.viewed ? "transparent" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
       onClick={handleClick}
-      role="button"
     >
       <p className="mb-1.5 font-medium">
         {<RenderMentions text={notificationData.message} />}
@@ -43,9 +34,7 @@ export default function Notification({
       {notificationData.comment && (
         <MiniComment comment={notificationData.comment} />
       )}
-      <p className="text-sm text-neutral-400">
-        {dayjs.utc(notificationData.created_at).tz(userTimezone).fromNow()}
-      </p>
+      <Timestamp date={notificationData.created_at} />
     </div>
   );
 }

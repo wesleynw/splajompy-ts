@@ -1,6 +1,5 @@
 import { RelevantLikesData } from "@/app/lib/likes";
 import { renderMentions } from "@/app/utils/mentions";
-import Box from "@mui/material/Box";
 
 type Props = {
   relevant_likes: RelevantLikesData;
@@ -12,18 +11,7 @@ export default function OtherLikes({ relevant_likes }: Readonly<Props>) {
   }
 
   return (
-    <Box
-      sx={{
-        fontWeight: "800",
-        fontSize: "14px",
-        "& a": {
-          color: "lightblue",
-          textDecoration: "underline",
-        },
-        "& a:hover": {
-          cursor: "pointer",
-        },
-      }}
+    <div
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -32,7 +20,7 @@ export default function OtherLikes({ relevant_likes }: Readonly<Props>) {
       Liked by{" "}
       {relevant_likes?.likes.reduce<React.ReactNode[]>((acc, like, index) => {
         const mention = renderMentions(
-          `{tag:${like.user_id ?? ""}:${like.username}}`
+          `{tag:${like.user_id ?? ""}:${like.username}}`,
         );
         if (index === 0) {
           return [mention];
@@ -52,8 +40,8 @@ export default function OtherLikes({ relevant_likes }: Readonly<Props>) {
         (relevant_likes.likes.length === 0
           ? " others"
           : relevant_likes.likes.length === 1
-          ? " and others"
-          : ", and others")}
-    </Box>
+            ? " and others"
+            : ", and others")}
+    </div>
   );
 }

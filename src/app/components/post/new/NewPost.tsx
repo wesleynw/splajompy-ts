@@ -3,11 +3,11 @@
 import { insertPost } from "@/app/lib/posts";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { User } from "@/db/schema";
-import { Box, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { RichTextareaHandle } from "rich-textarea";
 import { insertImage } from "../../../lib/actions";
+import CenteredLayout from "../../layout/CenteredLayout";
 import FileInput from "./FileInput";
 import ImagePreview from "./ImagePreview";
 import SubmitPostButton from "./SubmitPostButton";
@@ -24,7 +24,6 @@ export default function Page({
   onPost,
   inputRef,
 }: Readonly<NewPostProps>) {
-  const ref = useRef<HTMLFormElement>(null);
   const queryClient = useQueryClient();
 
   const [textValue, setTextValue] = useState<string>("");
@@ -65,7 +64,7 @@ export default function Page({
         const presignedUrlData = await getPresignedUrl(
           user.user_id,
           selectedFile.type,
-          selectedFile.name
+          selectedFile.name,
         );
         if (!presignedUrlData) {
           console.error("Failed to get presigned URL");
@@ -106,59 +105,23 @@ export default function Page({
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        padding: 1,
-      }}
-    >
-      <Stack
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        component="form"
-        ref={ref}
+    <CenteredLayout>
+      <form
+        className="mt-10 w-full rounded-lg bg-neutral-900 px-5 py-7"
         onSubmit={handleSubmit}
-        sx={{
-          borderRadius: "8px",
-          margin: "10px auto",
-          width: "100%",
-          maxWidth: "600px",
-          padding: 2,
-          paddingY: 4,
-          backgroundColor: "#1c1c1c",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-        }}
-        spacing={2}
       >
-        <Stack
-          direction="row"
-          alignItems="flex-start"
-          spacing={2}
-          sx={{ width: "100%" }}
-        >
-          <TextInput
-            placeholder="What's your favorite color?"
-            value={textValue}
-            setTextValue={setTextValue}
-            inputRef={inputRef}
-          />
-        </Stack>
+        <TextInput
+          placeholder="What's on your mind?"
+          value={textValue}
+          setTextValue={setTextValue}
+          inputRef={inputRef}
+        />
         <ImagePreview
           previewFile={previewFile}
           setPreviewFile={setPreviewFile}
           setFile={setSelectedFile}
         />
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            position: "relative",
-            paddingTop: "16px",
-          }}
-        >
+        <div className="align-center flex w-full justify-between pt-5">
           <FileInput
             file={selectedFile}
             setFile={setSelectedFile}
@@ -169,9 +132,9 @@ export default function Page({
             isLoading={isLoading}
             disabled={!!error || (!textValue.trim() && !selectedFile)}
           />
-        </Box>
-        {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-      </Stack>
-    </Box>
+        </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
+    </CenteredLayout>
   );
 }
