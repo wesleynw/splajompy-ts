@@ -1,4 +1,4 @@
-import { RenderMentions } from "@/app/utils/mentions";
+import { renderMentions } from "@/app/utils/mentions";
 import Linkify from "linkify-react";
 
 type Props = {
@@ -15,6 +15,7 @@ export default function PostTextContent({ text }: Readonly<Props>) {
   const handleLinkClick = (e: LinkClickEvent) => {
     if (e.target.tagName === "A") {
       e.stopPropagation();
+      e.preventDefault();
     }
   };
 
@@ -22,12 +23,12 @@ export default function PostTextContent({ text }: Readonly<Props>) {
     return;
   }
 
+  console.log("mentions: ", renderMentions(text));
+
   return (
-    <div className="mb-3 font-bold break-all">
+    <div className="break-word my-3 font-bold">
       <div onClick={handleLinkClick}>
-        <Linkify options={options}>
-          <RenderMentions text={text} />
-        </Linkify>
+        <Linkify options={options}>{renderMentions(text)}</Linkify>
       </div>
     </div>
   );
