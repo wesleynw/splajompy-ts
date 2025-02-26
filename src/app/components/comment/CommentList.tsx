@@ -42,7 +42,13 @@ export default function CommentList({
   };
 
   return (
-    <div className="w-full">
+    <div
+      className="w-full"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       <CommentInput onAddComment={addComment} />
       <div className="mt-5">{renderComments()}</div>
     </div>

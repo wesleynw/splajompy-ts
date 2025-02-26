@@ -23,8 +23,6 @@ export default function PostTextContent({ text }: Readonly<Props>) {
     return;
   }
 
-  console.log("mentions: ", renderMentions(text));
-
   return (
     <div className="break-word my-3 font-bold">
       <div onClick={handleLinkClick}>
