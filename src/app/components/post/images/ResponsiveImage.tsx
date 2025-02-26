@@ -22,7 +22,7 @@ export default function ResponsiveImage({
 
   return (
     <div
-      className="py-4"
+      className="inline-block py-4"
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -40,6 +40,11 @@ export default function ResponsiveImage({
           minHeight: "100px",
           borderRadius: "8px",
           cursor: "pointer",
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          setOpen(true);
         }}
       />
     </div>

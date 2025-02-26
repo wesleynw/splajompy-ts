@@ -14,7 +14,6 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
       onAddComment(comment);
       setComment("");
     }
-    ``;
   };
 
   return (
