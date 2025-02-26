@@ -13,9 +13,7 @@ export default function SearchPage() {
 
   return (
     <CenteredLayout>
-      {/* <div className="w-full"> */}
       <SearchBar query={query} setQuery={setQuery} />
-      {/* </div> */}
       <div className="my-3 h-0.5 w-full rounded-full bg-neutral-800"></div>
       {data?.map((user) => {
         return <SearchResult key={user.user_id} user={user} />;

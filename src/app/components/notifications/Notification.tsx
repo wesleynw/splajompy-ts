@@ -24,7 +24,7 @@ export default function Notification({
 
   return (
     <div
-      className={`border-x-1 border-t-1 border-neutral-700 ${notificationData.viewed ? "transparent" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
+      className={`border-t-1 border-neutral-700 sm:border-x-1 ${notificationData.viewed ? "transparent" : "bg-neutral-600"} transition-al flex w-full cursor-pointer flex-col justify-start p-4 text-left`}
       onClick={handleClick}
     >
       <p className="mb-1.5 font-medium">

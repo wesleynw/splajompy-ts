@@ -19,12 +19,6 @@ export default function CommentInput({ onAddComment }: Readonly<Props>) {
   return (
     <div className="mt-8 w-full">
       <div className="mb-4 flex justify-center">
-        {/* <Input
-          placeholder="Add a comment..."
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          className="border-1 border-neutral-500"
-        /> */}
         <TextInput
           placeholder="Add a comment..."
           value={comment}
