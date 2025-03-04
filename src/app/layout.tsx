@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import { PostHogProvider } from "./providers";
 import { ReactQueryProvider } from "./providers/ReacyQueryProvider";
 
 const roboto = Roboto({
@@ -31,7 +32,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={roboto.variable}>
         <ReactQueryProvider>
-          <div className="mb-16">{children}</div>
+          <PostHogProvider>
+            <div className="mb-16">{children}</div>
+          </PostHogProvider>
         </ReactQueryProvider>
       </body>
     </html>
