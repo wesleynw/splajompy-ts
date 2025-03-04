@@ -5,12 +5,13 @@ import {
   comments,
   follows,
   images,
+  ImageType,
   likes,
   notifications,
   posts,
   users,
 } from "@/db/schema";
-import { and, count, desc, eq, exists, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, exists, inArray, or, sql } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { internalTagRegex } from "../utils/mentions";
 import { getRelevantLikesForPosts, RelevantLikesData } from "./likes";
@@ -25,9 +26,7 @@ export type EnhancedPost = {
   comment_count: number;
   liked: boolean;
   relevant_likes: RelevantLikesData;
-  image_blob_url: string | null;
-  image_width: number | null;
-  image_height: number | null;
+  images: ImageType[];
 };
 
 const FETCH_LIMIT = 10;
@@ -63,7 +62,7 @@ export async function fetchPosts(
   offset: number = 0,
   target_following_only: boolean = false,
   target_post_id: number | null = null,
-  target_user_id: number | null = null
+  target_user_id: number | null = null,
 ): Promise<EnhancedPost[]> {
   const { user } = await getCurrentSession();
   if (user === null) {
@@ -77,9 +76,6 @@ export async function fetchPosts(
       date: posts.postdate,
       user_id: posts.user_id,
       author: users.username,
-      image_blob_url: images.imageBlobUrl,
-      image_width: images.width,
-      image_height: images.height,
       comment_count: sql<number>`COUNT(DISTINCT ${comments.comment_id})`,
       liked: sql<boolean>`
         EXISTS (
@@ -110,23 +106,16 @@ export async function fetchPosts(
             .where(
               and(
                 eq(follows.follower_id, user.user_id),
-                eq(follows.following_id, posts.user_id)
-              )
-            )
-        )
-      )
+                eq(follows.following_id, posts.user_id),
+              ),
+            ),
+        ),
+      ),
     );
   }
 
   const results = await baseQuery
-    .groupBy(
-      posts.post_id,
-      users.user_id,
-      users.username,
-      images.imageBlobUrl,
-      images.width,
-      images.height
-    )
+    .groupBy(posts.post_id, users.user_id, users.username)
     .orderBy(desc(posts.postdate))
     .limit(target_post_id ? 1 : FETCH_LIMIT)
     .offset(offset);
@@ -135,9 +124,24 @@ export async function fetchPosts(
 
   const relevantLikesMap = await getRelevantLikesForPosts(post_ids);
 
+  const imagesQuery = await db
+    .select({
+      post_id: images.post_id,
+      image_data: sql<ImageType[]>`json_agg(${images}.*)`,
+    })
+    .from(images)
+    .where(inArray(images.post_id, post_ids))
+    .groupBy(images.post_id);
+
+  // Create a map of post_id to images
+  const imagesMap = new Map(
+    imagesQuery.map((item) => [item.post_id, item.image_data]),
+  );
+
   return results.map((post) => ({
     ...post,
     author: post.author ?? "", // TODO: author is not nullable. why do i have to do this?
+    images: imagesMap.get(post.post_id) || [],
     relevant_likes: relevantLikesMap?.get(post.post_id) ?? {
       likes: [],
       hasOtherLikes: false,
@@ -182,7 +186,7 @@ export async function getPostById(post_id: number) {
       users.user_id,
       images.imageBlobUrl,
       images.width,
-      images.height
+      images.height,
     );
 
   return results[0];

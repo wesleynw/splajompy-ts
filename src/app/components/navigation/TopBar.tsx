@@ -23,7 +23,7 @@ export default function TopBar({ user }: Readonly<Props>) {
 
   return (
     <>
-      <div className="fixed top-0 z-10 w-full border-b-1 border-neutral-800 py-2.5 backdrop-blur-xl">
+      <div className="fixed top-0 z-10 w-full border-neutral-800 py-2.5 shadow-2xl shadow-neutral-950 backdrop-blur-xl">
         <div className="flex h-full flex-row items-center justify-center">
           <div className="fixed left-0 flex flex-row">
             <BackButton user={user} />

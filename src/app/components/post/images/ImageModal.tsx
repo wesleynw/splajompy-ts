@@ -6,24 +6,25 @@ import { animated, useSpring } from "@react-spring/web";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import Portal from "./Portal";
 
 const useGesture = createUseGesture([dragAction, pinchAction]);
 const AnimatedImage = animated(Image);
 
-interface ImageModalProps {
+type ImageModalProps = {
   imagePath: string;
   imageWidth: number;
   imageHeight: number;
   open: boolean;
   handleClose: () => void;
-}
+};
 
 function ImageModalContent({
   imagePath,
   imageWidth,
   imageHeight,
   handleClose,
-}: Readonly<Omit<ImageModalProps, "open">>) {
+}: Readonly<ImageModalProps>) {
   const [loaded, setLoaded] = useState(false);
   const [originalSize, setOriginalSize] = useState<{
     width: number;
@@ -190,10 +191,10 @@ function ImageModalContent({
   };
 
   return (
-    <div className="z-[10001]">
+    <div className="fixed inset-0 z-[9999] h-screen w-screen bg-black">
       <button
         onClick={handleDownload}
-        className="fixed top-4 right-14 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+        className="fixed top-4 right-14 z-[10000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
         <DownloadIcon size={23} />
       </button>
@@ -203,14 +204,14 @@ function ImageModalContent({
           e.preventDefault();
           handleClose();
         }}
-        className="fixed top-4 right-4 z-[4000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+        className="fixed top-4 right-4 z-[10000] rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
       >
         <XCircleIcon size={23} />
       </button>
 
       <div
         ref={containerRef}
-        className="fixed inset-0 z-[2000] flex touch-none items-center justify-center bg-black"
+        className="flex h-screen w-screen touch-none items-center justify-center"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -236,10 +237,10 @@ function ImageModalContent({
           }}
           style={{
             objectFit: "contain",
-            width: "96%",
-            height: "auto",
-            maxWidth: "100%",
-            maxHeight: "100%",
+            width: "100%",
+            height: "100%",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
             ...style,
             touchAction: "none",
             willChange: "transform",
@@ -254,5 +255,9 @@ function ImageModalContent({
 export default function ImageModal(props: Readonly<ImageModalProps>) {
   if (!props.open) return null;
 
-  return <ImageModalContent {...props} />;
+  return (
+    <Portal>
+      <ImageModalContent {...props} />
+    </Portal>
+  );
 }
