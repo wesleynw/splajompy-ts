@@ -19,11 +19,12 @@ export default function ImageCarousel({ images }: Readonly<Props>) {
         e.preventDefault();
         e.stopPropagation();
       }}
+      className="mt-4"
     >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {images.map((image) => (
-            <div className="w-full flex-none" key={image.image_id}>
+            <div className="w-full flex-none pl-2" key={image.image_id}>
               <div className="overflow-hidden rounded-xl">
                 <ResponsiveImageModal
                   path={image.imageBlobUrl}
