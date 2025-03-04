@@ -1,12 +1,10 @@
 import { EnhancedPost } from "@/app/lib/posts";
 import { PublicUser } from "@/db/schema";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 import CommentCount from "../comment/CommentCount";
 import CommentList from "../comment/CommentList";
 import FollowButton from "../follows/FollowButton";
-import ImageModal from "./images/ImageModal";
-import ResponsiveImage from "./images/ResponsiveImage";
+import ImageCarousel from "./images/ImageCarousel";
 import LikeButton from "./LikeButton";
 import OtherLikes from "./OtherLikes";
 import PostDropdown from "./PostDropdown";
@@ -27,9 +25,7 @@ export default function Post({
   author,
   date,
   text,
-  image_blob_url,
-  image_width,
-  image_height,
+  images,
   comment_count,
   relevant_likes,
   liked,
@@ -37,9 +33,6 @@ export default function Post({
   standaloneView = false,
 }: Readonly<Props>) {
   const router = useRouter();
-
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
 
   return (
     <div
@@ -74,23 +67,7 @@ export default function Post({
 
       <PostTextContent text={text} />
 
-      {image_blob_url && image_height && image_width && (
-        <div>
-          <ResponsiveImage
-            imagePath={image_blob_url}
-            width={image_width}
-            height={image_height}
-            setOpen={setOpen}
-          />
-          <ImageModal
-            imagePath={image_blob_url}
-            imageWidth={image_width}
-            imageHeight={image_height}
-            open={open}
-            handleClose={handleClose}
-          />
-        </div>
-      )}
+      <ImageCarousel images={images} />
 
       <div className="flex flex-row content-center justify-center">
         <Timestamp date={date} />

@@ -22,7 +22,7 @@ export default function ResponsiveImage({
 
   return (
     <div
-      className="inline-block py-4"
+      className="inline-block"
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();

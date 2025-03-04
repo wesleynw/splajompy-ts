@@ -90,7 +90,7 @@ export const images = pgTable("images", {
   imageBlobUrl: text().notNull(),
 });
 
-export type SelectImage = typeof images.$inferSelect;
+export type ImageType = typeof images.$inferSelect;
 
 export const follows = pgTable(
   "follows",
