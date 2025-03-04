@@ -44,9 +44,7 @@ export default function ImageCarousel({ images }: Readonly<Props>) {
               <DotButton
                 key={index + crypto.randomUUID()}
                 onClick={() => onDotButtonClick(index)}
-                className={"m-2 h-3 w-3 rounded-full border-3 border-neutral-600".concat(
-                  index === selectedIndex ? "border-neutral-200" : "",
-                )}
+                className={`m-2 h-3 w-3 rounded-full ${index === selectedIndex ? "bg-neutral-200" : "bg-neutral-600"}`}
               />
             ))}
           </div>

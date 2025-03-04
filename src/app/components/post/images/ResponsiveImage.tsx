@@ -34,7 +34,7 @@ export default function ResponsiveImage({
         src={src}
         style={{
           objectFit: isNonStandardSize ? "cover" : "contain",
-          maxHeight: isTall ? "200px" : "510px",
+          maxHeight: "510px",
           maxWidth: isTall ? "300px" : "100%",
           minWidth: "50%",
           minHeight: "100px",

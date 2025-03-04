@@ -28,18 +28,14 @@ export default function ImagePreview({
   }
 
   return (
-    <div className="relativemin-h-20 w-full">
+    <div className="w-full">
       <Image
         src={imageUrl}
         alt="Selected preview"
         width={0}
         height={0}
         sizes="100vw"
-        style={{
-          width: "100%",
-          height: "auto",
-          objectFit: "contain",
-        }}
+        className="max-h-80 w-full object-contain"
       />
       <button
         className="absolute top-6 right-6"
