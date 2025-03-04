@@ -16,6 +16,7 @@ export default function OtherLikes({ relevant_likes }: Readonly<Props>) {
         e.preventDefault();
         e.stopPropagation();
       }}
+      className="w-fit"
     >
       Liked by{" "}
       {relevant_likes?.likes.reduce<React.ReactNode[]>((acc, like, index) => {
