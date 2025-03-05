@@ -36,3 +36,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.linkify-link {
+  @apply text-blue-300;
+  @apply hover:underline;
+  @apply hover:cursor-pointer;
+}
