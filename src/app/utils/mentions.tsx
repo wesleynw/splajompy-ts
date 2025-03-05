@@ -9,8 +9,17 @@ export const toDisplayFormat = (text: string): string => {
   return text.replace(internalTagRegex, (_match, _p1, p2) => "@" + p2);
 };
 
-export const toPreviewFormat = (text: string): React.ReactNode => {
-  const mentionRegex = /(@\S+)/g;
+export const toPreviewFormat = (
+  text: string,
+  mentionedUsers: string[],
+): React.ReactNode => {
+  if (mentionedUsers.length === 0) {
+    return <span style={{ color: "white" }}>{text}</span>;
+  }
+
+  const formattedUsers = mentionedUsers.map((user) => `@${user}`);
+  const mentionRegex = new RegExp(`(${formattedUsers.join("|")})`, "g");
+
   return text.split(mentionRegex).map((part, index) =>
     mentionRegex.test(part) ? (
       <span
