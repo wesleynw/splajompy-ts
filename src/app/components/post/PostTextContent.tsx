@@ -5,10 +5,6 @@ type Props = {
   text: string | null;
 };
 
-interface LinkClickEvent extends React.MouseEvent<HTMLDivElement> {
-  target: HTMLAnchorElement;
-}
-
 export default function PostTextContent({ text }: Readonly<Props>) {
   const options = {
     defaultProtocol: "https",
@@ -16,11 +12,8 @@ export default function PostTextContent({ text }: Readonly<Props>) {
     className: "linkify-link",
   };
 
-  const handleLinkClick = (e: LinkClickEvent) => {
-    if (e.target.tagName === "A") {
-      e.stopPropagation();
-      e.preventDefault();
-    }
+  const handleLinkClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
   };
 
   if (!text) {
