@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useMemo } from "react";
 import { User } from "@/db/schema";
+import { usePostHog } from "posthog-js/react";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 
 type UserContextType = {
   user: User;
@@ -16,6 +17,12 @@ type Props = {
 
 export default function UserProvider({ user, children }: Readonly<Props>) {
   const value = useMemo(() => ({ user }), [user]);
+
+  const posthog = usePostHog();
+  posthog.identify(String(user.user_id), {
+    email: user.email,
+    username: user.username,
+  });
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
