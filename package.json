@@ -11,14 +11,14 @@
     "knip": "knip"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.750.0",
-    "@aws-sdk/s3-presigned-post": "^3.750.0",
+    "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/s3-presigned-post": "^3.758.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@phosphor-icons/react": "^2.1.7",
     "@react-spring/web": "^9.7.5",
     "@tailwindcss/postcss": "^4.0.9",
-    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query": "^5.67.1",
     "@use-gesture/react": "^10.3.1",
     "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.13",
@@ -47,7 +47,7 @@
     "@eslint/js": "^9.21.0",
     "@tanstack/eslint-plugin-query": "^5.66.1",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.9",
     "@types/pg": "^8.11.11",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
@@ -57,10 +57,10 @@
     "eslint-config-next": "15.2.1",
     "eslint-config-prettier": "^10.0.2",
     "knip": "^5.45.0",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b",
   "pnpm": {
