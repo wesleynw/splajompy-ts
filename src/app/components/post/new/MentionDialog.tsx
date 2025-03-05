@@ -1,8 +1,10 @@
 import { useUsers } from "@/app/data/users";
+import React from "react";
 import { RichTextareaHandle } from "rich-textarea";
 
 type Props = {
   mentionedUser: string;
+  setMentionedUser: React.Dispatch<React.SetStateAction<string[]>>;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
   setMentionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   inputRef?: React.RefObject<RichTextareaHandle | null>;
@@ -10,6 +12,7 @@ type Props = {
 
 export default function MentionDialog({
   mentionedUser,
+  setMentionedUser,
   setTextValue,
   setMentionDialogOpen,
   inputRef,
@@ -22,6 +25,8 @@ export default function MentionDialog({
       const regex = new RegExp(`@${mentionedUser}(.*?)(?=@|$)`, "g");
       return prev.replace(regex, tag);
     });
+
+    setMentionedUser((prev) => [...prev, username]);
   }
 
   return (

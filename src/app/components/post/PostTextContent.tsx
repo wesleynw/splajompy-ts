@@ -5,18 +5,15 @@ type Props = {
   text: string | null;
 };
 
-interface LinkClickEvent extends React.MouseEvent<HTMLDivElement> {
-  target: HTMLAnchorElement;
-}
-
 export default function PostTextContent({ text }: Readonly<Props>) {
-  const options = { defaultProtocol: "https", target: "_blank" };
+  const options = {
+    defaultProtocol: "https",
+    target: "_blank",
+    className: "linkify-link",
+  };
 
-  const handleLinkClick = (e: LinkClickEvent) => {
-    if (e.target.tagName === "A") {
-      e.stopPropagation();
-      e.preventDefault();
-    }
+  const handleLinkClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
   };
 
   if (!text) {
@@ -25,8 +22,13 @@ export default function PostTextContent({ text }: Readonly<Props>) {
 
   return (
     <div className="break-word my-3 font-bold">
-      <div onClick={handleLinkClick}>
-        <Linkify options={options}>{renderMentions(text)}</Linkify>
+      <div
+        onClick={handleLinkClick}
+        className="[&>p>a]:text-red-400 [&>p>a]:hover:text-red-600 [&>p>a]:hover:underline"
+      >
+        <Linkify as="p" options={options}>
+          {renderMentions(text)}
+        </Linkify>
       </div>
     </div>
   );

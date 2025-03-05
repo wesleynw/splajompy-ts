@@ -19,7 +19,8 @@ export function TextInput({
   inputRef,
 }: Readonly<TextInputProps>) {
   const [mentionDialogOpen, setMentionDialogOpen] = useState(false);
-  const [mentionedUser, setMentionedUser] = useState("");
+  const [mentionedUsers, setMentionedUsers] = useState<string[]>([]);
+  const [inputMention, setInputMention] = useState("");
 
   const handleChange = (newValue: string) => {
     setTextValue((prev) => {
@@ -33,7 +34,7 @@ export function TextInput({
     });
     const mentionMatch = /@(\w+)$/.exec(newValue);
     setMentionDialogOpen(!!mentionMatch);
-    if (mentionMatch) setMentionedUser(mentionMatch[1]);
+    if (mentionMatch) setInputMention(mentionMatch[1]);
   };
 
   return (
@@ -53,13 +54,14 @@ export function TextInput({
           if (v.length === 0) {
             return <span style={{ color: "#AAA" }}>{placeholder}</span>;
           }
-          return toPreviewFormat(v);
+          return toPreviewFormat(v, mentionedUsers);
         }}
       </RichTextarea>
 
       {mentionDialogOpen && (
         <MentionDialog
-          mentionedUser={mentionedUser}
+          mentionedUser={inputMention}
+          setMentionedUser={setMentionedUsers}
           setMentionDialogOpen={setMentionDialogOpen}
           setTextValue={setTextValue}
           inputRef={inputRef}
