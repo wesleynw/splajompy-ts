@@ -8,7 +8,7 @@ type Props = {
 export default function MiniComment({ comment }: Readonly<Props>) {
   return (
     <div className="my-2 rounded-md border-1 border-neutral-500 p-2 transition-all">
-      <div className="break-word font-bold">
+      <div className="font-bold break-words">
         <RenderMentions text={comment.text} />
       </div>
     </div>
