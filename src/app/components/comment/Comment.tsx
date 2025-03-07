@@ -24,7 +24,7 @@ export default function Comment({
         <div>
           <p className="font-extrabold">@{user.username}</p>
           <div className="mb-3">
-            <p className="break-word font-normal">
+            <p className="font-normal break-words">
               <Linkify options={options}>
                 <RenderMentions text={comment.text} />
               </Linkify>

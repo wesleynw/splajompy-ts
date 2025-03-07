@@ -21,12 +21,9 @@ export default function PostTextContent({ text }: Readonly<Props>) {
   }
 
   return (
-    <div className="break-word my-3 font-bold">
-      <div
-        onClick={handleLinkClick}
-        className="[&>p>a]:text-red-400 [&>p>a]:hover:text-red-600 [&>p>a]:hover:underline"
-      >
-        <Linkify as="p" options={options}>
+    <div className="my-3 font-bold">
+      <div onClick={handleLinkClick} className="[&>p>a]:hover:underline">
+        <Linkify as="p" options={options} className="break-words">
           {renderMentions(text)}
         </Linkify>
       </div>
