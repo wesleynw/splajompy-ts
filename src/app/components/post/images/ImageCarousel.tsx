@@ -42,7 +42,7 @@ export default function ImageCarousel({ images }: Readonly<Props>) {
           <div className="flex flex-row flex-wrap">
             {scrollSnaps.map((_, index) => (
               <DotButton
-                key={index + crypto.randomUUID()}
+                key={index}
                 onClick={() => onDotButtonClick(index)}
                 className={`m-2 h-3 w-3 rounded-full ${index === selectedIndex ? "bg-neutral-200" : "bg-neutral-600"}`}
               />

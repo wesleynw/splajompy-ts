@@ -22,7 +22,7 @@ export default function LikeButton({
       }}
     >
       <HeartIcon
-        className={isComment ? "size-5" : "size-6"}
+        className={isComment ? "size-5" : "size-7"}
         weight={liked ? "fill" : "regular"}
       />
     </button>

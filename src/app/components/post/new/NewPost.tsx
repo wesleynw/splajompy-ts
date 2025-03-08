@@ -136,7 +136,7 @@ export default function Page({
         onSubmit={handleSubmit}
       >
         <TextInput
-          placeholder="What's on your mind?"
+          placeholder="What change do you wish to see in the world?"
           value={textValue}
           setTextValue={setTextValue}
           inputRef={inputRef}
