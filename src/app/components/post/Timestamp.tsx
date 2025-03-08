@@ -17,7 +17,7 @@ export default function Timestamp({ date }: Readonly<Props>) {
   const userTimezone = dayjs.tz.guess();
 
   return (
-    <p className="text-sm font-bold">
+    <p className="flex flex-col justify-end text-sm font-bold">
       {dayjs.utc(date).tz(userTimezone).fromNow()}
     </p>
   );

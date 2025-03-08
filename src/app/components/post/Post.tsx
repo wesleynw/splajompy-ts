@@ -39,8 +39,8 @@ export default function Post({
       className="w-full border-t-1 border-neutral-800 p-6 transition-all last:border-b-1 hover:cursor-pointer sm:border-x-1"
       onClick={() => router.push(`/post/${post_id}`)}
     >
-      <div className="relative">
-        <div className="absolute right-0">
+      <div className="relative flex flex-row justify-end">
+        <div className="absolute top-0 right-0">
           {user.user_id === user_id ? (
             <PostDropdown post_id={post_id} />
           ) : (
@@ -58,7 +58,7 @@ export default function Post({
             router.push(`/user/${author}`);
           }}
         >
-          <p className="font-bold text-neutral-400 hover:underline">
+          <p className="font-bold text-neutral-300 hover:underline">
             @{author}
           </p>
         </button>

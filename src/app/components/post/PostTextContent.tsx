@@ -1,5 +1,6 @@
 import { renderMentions } from "@/app/utils/mentions";
 import Linkify from "linkify-react";
+import React from "react";
 
 type Props = {
   text: string | null;
@@ -10,10 +11,11 @@ export default function PostTextContent({ text }: Readonly<Props>) {
     defaultProtocol: "https",
     target: "_blank",
     className: "linkify-link",
-  };
-
-  const handleLinkClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+    attributes: {
+      onClick: (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+      },
+    },
   };
 
   if (!text) {
@@ -22,11 +24,9 @@ export default function PostTextContent({ text }: Readonly<Props>) {
 
   return (
     <div className="my-3 font-bold">
-      <div onClick={handleLinkClick} className="[&>p>a]:hover:underline">
-        <Linkify as="p" options={options} className="break-words">
-          {renderMentions(text)}
-        </Linkify>
-      </div>
+      <Linkify as="p" options={options} className="break-words">
+        {renderMentions(text)}
+      </Linkify>
     </div>
   );
 }

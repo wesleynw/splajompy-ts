@@ -1,5 +1,5 @@
 import { CommentWithLike } from "@/app/lib/comments";
-import { RenderMentions } from "@/app/utils/mentions";
+import { renderMentions } from "@/app/utils/mentions";
 import { SelectUser } from "@/db/schema";
 import Linkify from "linkify-react";
 import LikeButton from "../post/LikeButton";
@@ -16,19 +16,21 @@ export default function Comment({
   user,
   toggleLike,
 }: Readonly<Props>) {
-  const options = { defaultProtocol: "https", target: "_blank" };
+  const options = {
+    defaultProtocol: "https",
+    target: "_blank",
+    className: "linkify-link",
+  };
 
   return (
     <div className="my-3 border-t-1 border-neutral-800 py-3">
       <div className="flex w-full justify-between">
-        <div>
+        <div className="overflow-hidden break-words">
           <p className="font-extrabold">@{user.username}</p>
           <div className="mb-3">
-            <p className="font-normal break-words">
-              <Linkify options={options}>
-                <RenderMentions text={comment.text} />
-              </Linkify>
-            </p>
+            <Linkify as="p" options={options}>
+              {renderMentions(comment.text)}
+            </Linkify>
           </div>
           <Timestamp date={comment.comment_date} />
         </div>

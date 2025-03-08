@@ -55,7 +55,7 @@ export default function PostDropdown({ post_id }: Readonly<PostDropdownProps>) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-48 rounded-sm border-1 border-neutral-500 bg-neutral-800 shadow-lg">
+        <div className="absolute right-0 z-50 mt-2 w-48 rounded-sm border-1 border-neutral-500 bg-neutral-900 shadow-lg">
           <div role="menu" aria-orientation="vertical">
             <button
               onClick={handleDelete}
