@@ -30,7 +30,7 @@ export default function MentionDialog({
   }
 
   return (
-    <div className="z-50">
+    <div className="relative z-50">
       <ul className="absolute rounded-lg border border-white bg-black py-0.5">
         {users && users.length > 0 && !isPending ? (
           (() => {
