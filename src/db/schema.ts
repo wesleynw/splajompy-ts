@@ -12,9 +12,13 @@ import {
 
 export const users = pgTable("users", {
   user_id: serial().primaryKey().notNull().unique(),
+  name: text(),
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
   username: varchar({ length: 100 }).notNull(),
+  created: timestamp({ mode: "date" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type SelectUser = typeof users.$inferSelect;
@@ -22,6 +26,15 @@ export type InsertUser = typeof users.$inferInsert;
 
 export type User = typeof users.$inferSelect;
 export type PublicUser = Omit<User, "password">;
+
+export const bios = pgTable("bios", {
+  id: serial().primaryKey().notNull(),
+  user_id: integer()
+    .unique()
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  text: text().notNull(),
+});
 
 export const sessions = pgTable("sessions", {
   id: text().primaryKey(),

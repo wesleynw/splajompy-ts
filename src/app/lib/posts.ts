@@ -204,3 +204,20 @@ export async function deletePost(post_id: number) {
     .delete(posts)
     .where(and(eq(posts.user_id, user.user_id), eq(posts.post_id, post_id)));
 }
+
+export async function getPostCount(user_id: number): Promise<number | null> {
+  const { user: current_user } = await getCurrentSession();
+  if (current_user === null) {
+    return null;
+  }
+
+  const post_count = await db
+    .select({
+      count: sql<number>`cast(count(${posts.user_id}) as int)`,
+    })
+    .from(posts)
+    .where(eq(posts.user_id, user_id))
+    .groupBy(posts.user_id);
+
+  return post_count[0].count;
+}

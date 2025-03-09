@@ -1,7 +1,7 @@
 "use client";
 
 import { usePosts } from "@/app/data/posts";
-import { User } from "@/db/schema";
+import { PublicUser } from "@/db/schema";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 import Post from "../post/Post";
@@ -10,7 +10,7 @@ import FeedBottom from "./FeedBottom";
 import ScrollObserver from "./ScrollObserver";
 
 type Props = {
-  user: User;
+  user: PublicUser;
   target_following_only?: boolean;
   target_user_id?: number | null;
   target_post_id?: number;

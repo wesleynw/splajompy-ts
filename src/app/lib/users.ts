@@ -1,9 +1,41 @@
 "use server";
 
 import { db } from "@/db";
-import { PublicUser, User, users } from "@/db/schema";
+import { bios, PublicUser, User, users } from "@/db/schema";
 import { desc, eq, ilike, or } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
+import { isFollowingUser } from "./follows";
+import { getPostCount } from "./posts";
+
+export type EnhancedUser = PublicUser & {
+  name: string | null;
+  bio?: string;
+  isFollower: boolean;
+  post_count: number;
+};
+
+async function addEnhancedUserData(
+  user: PublicUser,
+): Promise<EnhancedUser | null> {
+  const { user: current_user } = await getCurrentSession();
+  if (current_user === null) {
+    return null;
+  }
+
+  const result = await db
+    .select({ text: bios.text })
+    .from(bios)
+    .where(eq(bios.user_id, user.user_id))
+    .limit(1);
+
+  const bio = result.length > 0 ? result[0].text : "";
+
+  const isFollower = (await isFollowingUser(user.user_id)) ?? false;
+
+  const post_count = (await getPostCount(user.user_id)) ?? 0;
+
+  return { ...user, bio, isFollower, post_count };
+}
 
 export async function getAllUsers() {
   const { user } = await getCurrentSession();
@@ -18,14 +50,21 @@ export async function getAllUsers() {
   return results;
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserByUsername(
+  username: string,
+): Promise<EnhancedUser | null> {
   const results = await db
     .select()
     .from(users)
     .where(eq(users.username, username))
     .limit(1);
 
-  return results[0];
+  if (results.length === 0) {
+    return null;
+  }
+  const user = addEnhancedUserData(results[0]);
+
+  return user;
 }
 
 export async function getUserByEmail(email: string) {
@@ -88,4 +127,28 @@ export async function getUserByUsernameSearch(
     .limit(10);
 
   return results;
+}
+
+export type UserUpdates = {
+  name: string;
+  bio: string;
+};
+
+export async function updateCurrentUser(data: UserUpdates): Promise<boolean> {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return false;
+  }
+
+  await db
+    .update(users)
+    .set({ name: data.name })
+    .where(eq(users.user_id, user.user_id));
+
+  await db
+    .insert(bios)
+    .values({ user_id: user.user_id, text: data.bio })
+    .onConflictDoUpdate({ target: bios.user_id, set: { text: data.bio } });
+
+  return true;
 }
