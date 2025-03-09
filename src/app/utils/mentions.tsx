@@ -54,7 +54,13 @@ export const renderMentions = (text: string): React.ReactNode => {
       parts.push(text.slice(lastIndex, offset));
     }
     parts.push(
-      <Link key={offset} href={`/user/${username}`}>
+      <Link
+        key={offset}
+        href={`/user/${username}`}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <span className="font-bold text-blue-300 hover:cursor-pointer hover:underline">
           {"@" + username}
         </span>
