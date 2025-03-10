@@ -23,6 +23,7 @@ export default function Post({
   user,
   user_id,
   author,
+  displayName,
   date,
   text,
   images,
@@ -57,10 +58,22 @@ export default function Post({
             e.stopPropagation();
             router.push(`/user/${author}`);
           }}
+          className="text-left"
         >
-          <p className="font-bold text-neutral-300 hover:underline">
-            @{author}
-          </p>
+          {displayName ? (
+            <>
+              <p className="text-xl font-black break-words hover:underline">
+                {displayName}
+              </p>
+              <p className="text-base font-bold text-neutral-400 hover:underline">
+                @{author}
+              </p>
+            </>
+          ) : (
+            <p className="text-lg font-black text-neutral-300 hover:underline">
+              @{author}
+            </p>
+          )}
         </button>
         <div className="grow"></div>
       </div>

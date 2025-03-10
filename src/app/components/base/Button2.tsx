@@ -2,14 +2,23 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 
 export default function Button2({
   children,
+  variant = "normal",
   ...props
 }: Readonly<
-  { children: ReactNode } & ButtonHTMLAttributes<HTMLButtonElement>
+  {
+    children: ReactNode;
+    variant?: "normal" | "outlined";
+  } & ButtonHTMLAttributes<HTMLButtonElement>
 >) {
+  const normalClasses =
+    "m-3 w-full rounded-sm bg-blue-400 px-2.5 py-2 font-bold overflow-auto disabled:bg-transparent disabled:border-1 disabled:border-neutral-800";
+  const outlineClasses =
+    "m-3 w-full rounded-sm  px-2.5 py-2 font-bold border-1 border-neutral-800 overflow-auto";
+
   return (
     <button
       {...props}
-      className="m-3 w-full rounded-sm bg-blue-400 px-2.5 py-2 font-bold"
+      className={variant == "normal" ? normalClasses : outlineClasses}
     >
       {children}
     </button>
