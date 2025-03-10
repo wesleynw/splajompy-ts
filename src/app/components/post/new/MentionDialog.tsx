@@ -23,7 +23,7 @@ export default function MentionDialog({
     const tag = `{tag:${id}:${username}}`;
     setTextValue((prev: string) => {
       const regex = new RegExp(`@${mentionedUser}(.*?)(?=@|$)`, "g");
-      return prev.replace(regex, tag);
+      return prev.replace(regex, tag) + " ";
     });
 
     setMentionedUser((prev) => [...prev, username]);
