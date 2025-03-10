@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { bios, PublicUser, User, users } from "@/db/schema";
 import { desc, eq, ilike, or } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
-import { isFollowingUser } from "./follows";
+import { isFollowing } from "./follows";
 import { getPostCount } from "./posts";
 
 export type EnhancedUser = PublicUser & {
@@ -30,7 +30,11 @@ export async function addEnhancedUserData(
 
   const bio = result.length > 0 ? result[0].text : "";
 
-  const isFollower = (await isFollowingUser(user.user_id)) ?? false;
+  const isFollower = await isFollowing(user.user_id, current_user.user_id);
+
+  console.warn(
+    `checking if ${current_user.username} is following ${user.username}`,
+  );
 
   const post_count = (await getPostCount(user.user_id)) ?? 0;
 
@@ -53,6 +57,11 @@ export async function getAllUsers() {
 export async function getUserByUsername(
   username: string,
 ): Promise<EnhancedUser | null> {
+  const { user: current_user } = await getCurrentSession();
+  if (current_user === null) {
+    return null;
+  }
+
   const results = await db
     .select()
     .from(users)
@@ -62,6 +71,7 @@ export async function getUserByUsername(
   if (results.length === 0) {
     return null;
   }
+
   const user = addEnhancedUserData(results[0]);
 
   return user;

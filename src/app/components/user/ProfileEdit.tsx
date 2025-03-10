@@ -20,18 +20,28 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
   const [showAlert, setShowAlert] = useState(false);
   const posthog = usePostHog();
   const router = useRouter();
-
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
   });
 
+  const [nameCharCount, setNameCharCount] = useState(0);
+  const [bioCharCount, setBioCharCount] = useState(0);
+  const NAME_CHAR_LIMIT = 25;
+  const BIO_CHAR_LIMIT = 400;
+
   useEffect(() => {
     if (user) {
+      const initialName = user.name || "";
+      const initialBio = user.bio || "";
+
       setFormData({
-        name: user.name || "",
-        bio: user.bio || "",
+        name: initialName,
+        bio: initialBio,
       });
+
+      setNameCharCount(initialName.length);
+      setBioCharCount(initialBio.length);
     }
   }, [user]);
 
@@ -39,26 +49,27 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    if (name === "name" && value.length <= NAME_CHAR_LIMIT) {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setNameCharCount(value.length);
+    } else if (name === "bio" && value.length <= BIO_CHAR_LIMIT) {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setBioCharCount(value.length);
+    } else if (name !== "name" && name !== "bio") {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     mutate({ name: formData.name, bio: formData.bio });
-
     posthog.capture("profile_update");
-
     setShowAlert(true);
-
     setTimeout(() => {
       setShowAlert(false);
     }, 3000);
-
     setIsSubmitting(false);
   };
 
@@ -82,25 +93,46 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
           onSubmit={handleSubmit}
           className="flex w-full flex-col justify-start"
         >
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder={"Display name"}
-            autoComplete="off"
-          />
-          <Textarea
-            id="bio"
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder={"Bio"}
-            className="w-full rounded-lg border border-neutral-700 bg-black/20 p-2 text-white focus:border-white focus:outline-none"
-            autoComplete="off"
-          />
-          <Button2 type="submit" disabled={isSubmitting}>
+          <div className="relative w-full">
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder={"Display name"}
+              autoComplete="off"
+              maxLength={NAME_CHAR_LIMIT}
+            />
+            <div className="absolute right-2 bottom-2 text-xs text-neutral-400">
+              {nameCharCount}/{NAME_CHAR_LIMIT}
+            </div>
+          </div>
+
+          <div className="relative w-full">
+            <Textarea
+              id="bio"
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              placeholder={"Bio"}
+              className="w-full rounded-lg border border-neutral-700 bg-black/20 p-2 text-white focus:border-white focus:outline-none"
+              autoComplete="off"
+              maxLength={BIO_CHAR_LIMIT}
+            />
+            <div className="absolute right-2 bottom-2 text-xs text-neutral-400">
+              {bioCharCount}/{BIO_CHAR_LIMIT}
+            </div>
+          </div>
+
+          <Button2
+            type="submit"
+            disabled={
+              isSubmitting ||
+              nameCharCount > NAME_CHAR_LIMIT ||
+              bioCharCount > BIO_CHAR_LIMIT
+            }
+          >
             <div className="flex w-full flex-row justify-between">
               <div></div>
               <p>Save</p>
@@ -118,7 +150,6 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
           </Button2>
         </Form>
       </div>
-
       <div
         className={`fixed bottom-14 left-1/2 z-50 -translate-x-1/2 transform rounded-lg bg-neutral-600 px-4 py-2 text-white transition-all duration-300 ease-in-out ${
           showAlert

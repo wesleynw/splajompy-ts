@@ -1,6 +1,10 @@
 "use client";
 
-import { followUser, isFollowingUser, unfollowUser } from "@/app/lib/follows";
+import {
+  followUser,
+  isCurrentUserFollowing,
+  unfollowUser,
+} from "@/app/lib/follows";
 import { useEffect, useState } from "react";
 import Button from "../base/Button";
 
@@ -20,7 +24,7 @@ export default function FollowButton({
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
-      const result = await isFollowingUser(user_id);
+      const result = await isCurrentUserFollowing(user_id);
       setIsFollowing(result);
       setIsLoaded(true);
     };

@@ -49,13 +49,12 @@ export default function UserProfile({
         <p className="text-xl font-black">{user.name}</p>
         <div className="flex w-full flex-row justify-between">
           {user.name === null ? (
-            <p className="ml-1 text-lg font-black">@{user.username}</p>
+            <p className="text-lg font-black">@{user.username}</p>
           ) : (
             <p className="text-md font-black text-neutral-400">
               @{user.username}
             </p>
           )}
-          <p>{user.isFollower && "Follows You"}</p>
           {isOwnProfile && (
             <button
               className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
@@ -66,6 +65,10 @@ export default function UserProfile({
           )}
           <FollowButton user_id={user.user_id} show_unfollow={true} />
         </div>
+        {user.isFollower && (
+          <p className="font-bold text-neutral-700">Follows You</p>
+        )}
+
         {user.bio && (
           <p className="preserve-b my-2.5 break-words whitespace-pre-line">
             {user.bio}
