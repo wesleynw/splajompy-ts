@@ -48,7 +48,7 @@ export default function UserProfile({
       <div className="ml-2">
         <p className="text-xl font-black">{user.name}</p>
         <div className="flex w-full flex-row justify-between">
-          {user.name === null ? (
+          {!user.name ? (
             <p className="text-lg font-black">@{user.username}</p>
           ) : (
             <p className="text-md font-black text-neutral-400">
