@@ -23,6 +23,7 @@ export type EnhancedPost = {
   date: string;
   user_id: number;
   author: string;
+  displayName: string;
   comment_count: number;
   liked: boolean;
   relevant_likes: RelevantLikesData;
@@ -76,6 +77,7 @@ export async function fetchPosts(
       date: posts.postdate,
       user_id: posts.user_id,
       author: users.username,
+      displayName: users.name,
       comment_count: sql<number>`COUNT(DISTINCT ${comments.comment_id})`,
       liked: sql<boolean>`
         EXISTS (
@@ -141,6 +143,7 @@ export async function fetchPosts(
   return results.map((post) => ({
     ...post,
     author: post.author ?? "", // TODO: author is not nullable. why do i have to do this?
+    displayName: post.displayName ?? "",
     images: imagesMap.get(post.post_id) || [],
     relevant_likes: relevantLikesMap?.get(post.post_id) ?? {
       likes: [],
@@ -219,5 +222,5 @@ export async function getPostCount(user_id: number): Promise<number | null> {
     .where(eq(posts.user_id, user_id))
     .groupBy(posts.user_id);
 
-  return post_count[0].count;
+  return post_count.length > 0 ? post_count[0].count : 0;
 }

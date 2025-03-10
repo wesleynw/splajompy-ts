@@ -1,7 +1,8 @@
 import { deleteSessionTokenCookie } from "@/app/auth/cookies";
 import { getCurrentSession, invalidateSession } from "@/app/auth/session";
 import { useUser } from "@/app/data/user";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import Button2 from "../base/Button2";
 import FollowButton from "../follows/FollowButton";
 import CenteredLayout from "../layout/CenteredLayout";
 
@@ -14,16 +15,11 @@ export default function UserProfile({
   username,
   isOwnProfile,
 }: Readonly<Props>) {
+  const router = useRouter();
   const { isPending, isError, user } = useUser(username);
 
   if (isPending) {
-    return (
-      <div className="flex w-full animate-pulse flex-row justify-between border-t-1 border-neutral-800 p-4 sm:border-x-1">
-        <div role="status" className="animate-pulse">
-          <div className="mb-4 h-6 w-40 rounded-sm bg-neutral-700"></div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   if (!user) {
@@ -48,18 +44,44 @@ export default function UserProfile({
   };
 
   return (
-    <div className="flex w-full flex-row justify-between border-t-1 border-neutral-800 p-4 sm:border-x-1">
-      <p className="ml-1 text-lg font-black">@{user.username}</p>
-      <p>{user.isFollower && "Follows You"}</p>
+    <div className="w-full border-y-1 border-neutral-800 p-4 sm:border-x-1">
+      <div className="ml-2">
+        <p className="text-xl font-black">{user.name}</p>
+        <div className="flex w-full flex-row justify-between">
+          {user.name === null ? (
+            <p className="ml-1 text-lg font-black">@{user.username}</p>
+          ) : (
+            <p className="text-md font-black text-neutral-400">
+              @{user.username}
+            </p>
+          )}
+          <p>{user.isFollower && "Follows You"}</p>
+          {isOwnProfile && (
+            <button
+              className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
+          )}
+          <FollowButton user_id={user.user_id} show_unfollow={true} />
+        </div>
+        {user.bio && (
+          <p className="preserve-b my-2.5 break-words whitespace-pre-line">
+            {user.bio}
+          </p>
+        )}
+      </div>
       {isOwnProfile && (
-        <button
-          className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button>
+        <div className="flex">
+          <Button2
+            variant="outlined"
+            onClick={() => router.push("/edit-profile")}
+          >
+            Edit Profile
+          </Button2>
+        </div>
       )}
-      <FollowButton user_id={user.user_id} show_unfollow={true} />
     </div>
   );
 }

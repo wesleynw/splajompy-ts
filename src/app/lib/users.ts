@@ -14,7 +14,7 @@ export type EnhancedUser = PublicUser & {
   post_count: number;
 };
 
-async function addEnhancedUserData(
+export async function addEnhancedUserData(
   user: PublicUser,
 ): Promise<EnhancedUser | null> {
   const { user: current_user } = await getCurrentSession();

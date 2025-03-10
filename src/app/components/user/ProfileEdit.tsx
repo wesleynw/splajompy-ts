@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@/app/data/user";
+import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 import Button2 from "../base/Button2";
@@ -18,6 +19,7 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const posthog = usePostHog();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -87,6 +89,7 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
             value={formData.name}
             onChange={handleChange}
             placeholder={"Display name"}
+            autoComplete="off"
           />
           <Textarea
             id="bio"
@@ -95,6 +98,7 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
             onChange={handleChange}
             placeholder={"Bio"}
             className="w-full rounded-lg border border-neutral-700 bg-black/20 p-2 text-white focus:border-white focus:outline-none"
+            autoComplete="off"
           />
           <Button2 type="submit" disabled={isSubmitting}>
             <div className="flex w-full flex-row justify-between">
@@ -108,6 +112,9 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
                 )}
               </div>
             </div>
+          </Button2>
+          <Button2 variant="outlined" onClick={() => router.back()}>
+            Cancel
           </Button2>
         </Form>
       </div>
