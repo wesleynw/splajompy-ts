@@ -29,6 +29,13 @@
       "when": 1740177809051,
       "tag": "0003_eager_otto_octavius",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1741567354705,
+      "tag": "0004_icy_star_brand",
+      "breakpoints": true
     }
   ]
 }
