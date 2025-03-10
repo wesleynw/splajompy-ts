@@ -1,5 +1,6 @@
 import { getCurrentSession } from "@/app/auth/session";
 import UserView from "@/app/components/user/UserView";
+import { getUserByUsername } from "@/app/lib/users";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata(props: {
@@ -19,9 +20,9 @@ export default async function Page({
   const slug = (await params).slug;
   const username = String(slug);
 
-  const { user } = await getCurrentSession();
+  const { user: current_user } = await getCurrentSession();
 
-  if (user === null) {
+  if (current_user === null) {
     redirect("/login");
   }
 
@@ -29,11 +30,17 @@ export default async function Page({
     redirect("/");
   }
 
+  const target_user = await getUserByUsername(username);
+
+  if (target_user === null) {
+    redirect("/");
+  }
+
   return (
     <UserView
-      user={user}
+      user={target_user}
       username={username}
-      isOwnProfile={username === user.username}
+      isOwnProfile={username === current_user.username}
     />
   );
 }
