@@ -87,42 +87,35 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
 
   return (
     <CenteredLayout>
-      <div className="flex w-full flex-col rounded-lg border-y-1 border-neutral-800 bg-black/10 p-4 sm:border-x-1">
+      <div className="flex w-full flex-col border-y-1 border-neutral-800 p-4 sm:border-x-1">
         <p className="ml-1 text-lg font-black">@{user.username}</p>
-        <Form
-          onSubmit={handleSubmit}
-          className="flex w-full flex-col justify-start"
-        >
-          <div className="relative w-full">
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder={"Display name"}
-              autoComplete="off"
-              maxLength={NAME_CHAR_LIMIT}
-            />
-            <div className="absolute right-2 bottom-2 text-xs text-neutral-400">
-              {nameCharCount}/{NAME_CHAR_LIMIT}
-            </div>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder={"Display name"}
+            autoComplete="off"
+            maxLength={NAME_CHAR_LIMIT}
+          />
+          <div className="w-full text-right text-xs text-neutral-400">
+            {nameCharCount}/{NAME_CHAR_LIMIT}
           </div>
 
-          <div className="relative w-full">
-            <Textarea
-              id="bio"
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              placeholder={"Bio"}
-              className="w-full rounded-lg border border-neutral-700 bg-black/20 p-2 text-white focus:border-white focus:outline-none"
-              autoComplete="off"
-              maxLength={BIO_CHAR_LIMIT}
-            />
-            <div className="absolute right-2 bottom-2 text-xs text-neutral-400">
-              {bioCharCount}/{BIO_CHAR_LIMIT}
-            </div>
+          <Textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            placeholder={"Bio"}
+            className="w-full rounded-lg border border-neutral-700 bg-black/20 p-2 text-white focus:border-white focus:outline-none"
+            autoComplete="off"
+            maxLength={BIO_CHAR_LIMIT}
+          />
+          <div className="w-full text-right text-xs text-neutral-400">
+            {bioCharCount}/{BIO_CHAR_LIMIT}
           </div>
 
           <Button2
