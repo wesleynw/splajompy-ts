@@ -101,6 +101,7 @@ export const images = pgTable("images", {
   height: integer().notNull(),
   width: integer().notNull(),
   imageBlobUrl: text().notNull(),
+  displayOrder: integer().default(0).notNull(),
 });
 
 export type ImageType = typeof images.$inferSelect;

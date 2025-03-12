@@ -36,6 +36,13 @@
       "when": 1741567354705,
       "tag": "0004_icy_star_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1741810808017,
+      "tag": "0005_yellow_paladin",
+      "breakpoints": true
     }
   ]
 }

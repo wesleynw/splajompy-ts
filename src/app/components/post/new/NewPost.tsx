@@ -58,7 +58,7 @@ export default function Page({
 
       if (images.length > 0) {
         await Promise.all(
-          images.map(async (file) => {
+          images.map(async (file, index) => {
             try {
               const img = new Image();
               const loadPromise = new Promise<void>((resolve) => {
@@ -108,6 +108,7 @@ export default function Page({
                 uniqueFilename,
                 img.width,
                 img.height,
+                index,
               );
             } catch (err) {
               console.error("Error processing file upload", err);
