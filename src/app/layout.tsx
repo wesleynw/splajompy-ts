@@ -33,7 +33,7 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <ReactQueryProvider>
           <PostHogProvider>
-            <div className="mb-16">{children}</div>
+            <div className="mb-90">{children}</div>
           </PostHogProvider>
         </ReactQueryProvider>
       </body>
