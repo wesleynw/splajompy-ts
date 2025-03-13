@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 export async function getPresignedUrl(
   user_id: number,
   contentType: string,
-  fileName: string
+  fileName: string,
 ) {
   try {
     const client = new S3Client({
@@ -42,13 +42,12 @@ export async function getPresignedUrl(
   }
 }
 
-export async function deleteObject(post_id: number) {
+export async function deleteObjects(post_id: number) {
   try {
     const result = await db
       .select({ imageBlobUrl: images.imageBlobUrl })
       .from(images)
-      .where(eq(images.post_id, post_id))
-      .limit(1);
+      .where(eq(images.post_id, post_id));
 
     if (!result?.[0]) {
       return;
@@ -66,7 +65,7 @@ export async function deleteObject(post_id: number) {
     });
 
     await client.send(
-      new DeleteObjectCommand({ Bucket: process.env.SPACE_NAME!, Key: key })
+      new DeleteObjectCommand({ Bucket: process.env.SPACE_NAME!, Key: key }),
     );
   } catch (error) {
     console.error(error);
