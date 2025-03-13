@@ -15,7 +15,7 @@ import { and, count, desc, eq, exists, inArray, or, sql } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { internalTagRegex } from "../utils/mentions";
 import { getRelevantLikesForPosts, RelevantLikesData } from "./likes";
-import { deleteObject } from "./s3";
+import { deleteObjects } from "./s3";
 
 export type EnhancedPost = {
   post_id: number;
@@ -203,7 +203,7 @@ export async function deletePost(post_id: number) {
     return;
   }
 
-  await deleteObject(post_id);
+  await deleteObjects(post_id);
 
   await db
     .delete(posts)
