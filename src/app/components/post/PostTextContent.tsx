@@ -24,7 +24,11 @@ export default function PostTextContent({ text }: Readonly<Props>) {
 
   return (
     <div className="my-3 font-bold">
-      <Linkify as="p" options={options} className="break-words">
+      <Linkify
+        as="p"
+        options={options}
+        className="preserve-b break-words whitespace-pre-line"
+      >
         {renderMentions(text)}
       </Linkify>
     </div>

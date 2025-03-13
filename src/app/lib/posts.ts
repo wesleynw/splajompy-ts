@@ -129,7 +129,9 @@ export async function fetchPosts(
   const imagesQuery = await db
     .select({
       post_id: images.post_id,
-      image_data: sql<ImageType[]>`json_agg(${images}.*)`,
+      image_data: sql<
+        ImageType[]
+      >`json_agg(${images}.* ORDER BY ${images.displayOrder}) ASC`,
     })
     .from(images)
     .where(inArray(images.post_id, post_ids))

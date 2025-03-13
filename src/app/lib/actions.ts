@@ -8,13 +8,15 @@ export async function insertImage(
   post_id: number,
   imageBlobUrl: string,
   width: number,
-  height: number
+  height: number,
+  displayOrder: number = 0,
 ) {
   await db.insert(images).values({
     post_id: post_id,
     height: height,
     width: width,
     imageBlobUrl: imageBlobUrl,
+    displayOrder: displayOrder,
   });
 }
 
