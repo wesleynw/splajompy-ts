@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "cva";
 import React, { ReactNode } from "react";
 
 const button = cva(
-  "m-3 py-1 px-2.5 font-bold transition-all select-none text-neutral-100",
+  "m-3 py-1 px-2.5 font-bold transition-all select-none text-neutral-100 flex flex-row justify-between",
   {
     variants: {
       color: {
@@ -52,7 +52,9 @@ const button = cva(
   },
 );
 
-export type Props = { children: ReactNode } & VariantProps<typeof button> &
+export type Props = { children: ReactNode; isLoading: boolean } & VariantProps<
+  typeof button
+> &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled">;
 
 export default function Button({
@@ -60,11 +62,20 @@ export default function Button({
   color = "default",
   fullWidth = false,
   disabled = false,
+  isLoading = true,
   ...props
 }: Props) {
   return (
     <button {...props} className={button({ color, fullWidth, disabled })}>
+      <div></div>
       {children}
+      <div className="relative">
+        {isLoading && fullWidth && (
+          <div className="absolute top-1 -left-4">
+            <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
+          </div>
+        )}
+      </div>
     </button>
   );
 }

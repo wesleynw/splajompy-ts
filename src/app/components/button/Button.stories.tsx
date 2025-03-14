@@ -26,6 +26,11 @@ const meta = {
         type: "boolean",
       },
     },
+    isLoading: {
+      controls: {
+        type: "boolean",
+      },
+    },
   },
 } satisfies Meta<typeof Button>;
 
@@ -39,5 +44,6 @@ export const Default: Story = {
     fullWidth: false,
     color: "default",
     disabled: false,
+    isLoading: false,
   },
 };
