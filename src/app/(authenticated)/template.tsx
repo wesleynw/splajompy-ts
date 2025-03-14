@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentSession } from "../auth/session";
 import Navigation from "../components/navigation/Navigation";
 import TopBar from "../components/navigation/TopBar";
+import Prefetcher from "../components/Prefetcher";
 import UserProvider from "../providers/UserProvider";
 
 export default async function AuthenticatedLayout({
@@ -18,6 +19,7 @@ export default async function AuthenticatedLayout({
   return (
     <div className="pt-13">
       <UserProvider user={user}>
+        <Prefetcher username={user.username} />
         <TopBar user={user} />
         <div className="mb-60">{children}</div>
         <Navigation />
