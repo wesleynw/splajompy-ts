@@ -20,6 +20,11 @@ export default function Comment({
     defaultProtocol: "https",
     target: "_blank",
     className: "linkify-link",
+    attributes: {
+      onClick: (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+      },
+    },
   };
 
   return (
