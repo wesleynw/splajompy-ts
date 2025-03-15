@@ -56,12 +56,6 @@ export default function UserProfile({
             </p>
           )}
           {isOwnProfile && (
-            // <button
-            //   className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
-            //   onClick={handleSignOut}
-            // >
-            //   Sign Out
-            // </button>
             <div className="relative">
               <Button onClick={handleSignOut}>Sign Out</Button>
             </div>

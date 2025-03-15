@@ -43,7 +43,7 @@ export const Default: Story = {
     children: "Click me",
     fullWidth: true,
     color: "default",
-    disabled: true,
+    disabled: false,
     isLoading: false,
   },
 };

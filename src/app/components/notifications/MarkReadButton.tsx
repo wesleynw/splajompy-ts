@@ -1,3 +1,5 @@
+import Button from "../button/Button";
+
 type Props = {
   markRead: () => void;
 };
@@ -7,10 +9,7 @@ export default function MarkReadButton({ markRead }: Readonly<Props>) {
     markRead();
   };
   return (
-    <button
-      className="m-1.5 flex flex-row rounded-lg bg-blue-400 px-2 py-2 font-bold text-neutral-100 hover:cursor-pointer"
-      onClick={handleClick}
-    >
+    <Button onClick={handleClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -40,6 +39,6 @@ export default function MarkReadButton({ markRead }: Readonly<Props>) {
         />
       </svg>
       Mark all as read
-    </button>
+    </Button>
   );
 }
