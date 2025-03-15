@@ -3,6 +3,7 @@ import { insertPost } from "@/app/lib/posts";
 import { getPresignedUrl } from "@/app/lib/s3";
 import { User } from "@/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
+import imageCompression from "browser-image-compression";
 import { useState } from "react";
 import { RichTextareaHandle } from "rich-textarea";
 import { insertImage } from "../../../lib/actions";
@@ -87,20 +88,35 @@ export default function Page({
 
               const { url, fields, uniqueFilename } = presignedUrlData;
 
-              const formData = new FormData();
-              Object.entries(fields).forEach(([key, value]) => {
-                formData.append(key, value);
-              });
-              formData.append("file", file);
+              const imageCompressionOptions = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920,
+                useWebWorker: true,
+              };
 
-              const uploadResponse = await fetch(url, {
-                method: "POST",
-                body: formData,
-              });
+              try {
+                const compressedImage = await imageCompression(
+                  file,
+                  imageCompressionOptions,
+                );
 
-              if (!uploadResponse.ok) {
-                console.error("Failed to upload image");
-                return;
+                const formData = new FormData();
+                Object.entries(fields).forEach(([key, value]) => {
+                  formData.append(key, value);
+                });
+                formData.append("file", compressedImage);
+
+                const uploadResponse = await fetch(url, {
+                  method: "POST",
+                  body: formData,
+                });
+
+                if (!uploadResponse.ok) {
+                  console.error("Failed to upload image");
+                  return;
+                }
+              } catch (error) {
+                console.error("Error compressing and uploading image: ", error);
               }
 
               await insertImage(
