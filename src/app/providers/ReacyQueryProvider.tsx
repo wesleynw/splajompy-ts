@@ -6,20 +6,7 @@ import { useState } from "react";
 export function ReactQueryProvider({
   children,
 }: Readonly<React.PropsWithChildren>) {
-  const [client] = useState(
-    new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: Infinity,
-          refetchOnMount: false,
-          refetchOnWindowFocus: false,
-          refetchOnReconnect: false,
-          refetchInterval: false,
-          gcTime: Infinity,
-        },
-      },
-    }),
-  );
+  const [client] = useState(new QueryClient());
 
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
