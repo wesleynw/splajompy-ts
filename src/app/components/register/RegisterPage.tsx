@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import React, { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import logo from "../../apple-icon.png";
-import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
+import Button from "../button/Button";
 import CenteredLayout from "../layout/CenteredLayout";
 
 const initialState = {
@@ -67,19 +67,9 @@ export default function RegisterPage() {
           {state.errors?.password && (
             <p className="text-red-700">{state.errors.password}</p>
           )}
-          <Button2>
-            <div className="flex w-full flex-row justify-between">
-              <div></div>
-              <p>Register</p>
-              <div className="relative">
-                {pending && (
-                  <div className="absolute top-1 -left-4">
-                    <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </Button2>
+          <Button type="submit" isLoading={pending} fullWidth>
+            Register
+          </Button>
           <div className="mt-2 flex flex-row space-x-2.5">
             <p className="font-bold">Already have an account?</p>
             <button

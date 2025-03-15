@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../base/Button";
+import Button from "../button/Button";
 import { TextInput } from "../post/new/TextInput";
 
 interface Props {

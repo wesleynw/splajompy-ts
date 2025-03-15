@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useState } from "react";
 import logo from "../../apple-icon.png";
-import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
+import Button from "../button/Button";
 import CenteredLayout from "../layout/CenteredLayout";
 
 const initialState = {
@@ -71,19 +71,9 @@ export default function LoginPage() {
                 {isUsingPassword ? "username or email" : "password"}
               </button>
             </div>
-            <Button2 type="submit" disabled={isPending}>
-              <div className="flex w-full flex-row justify-between">
-                <div></div>
-                <p>Continue</p>
-                <div className="relative">
-                  {isPending && (
-                    <div className="absolute top-1 -left-4">
-                      <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Button2>
+            <Button fullWidth isLoading={isPending} type="submit">
+              Continue
+            </Button>
             <div className="mt-2 flex flex-row space-x-2.5">
               <p className="font-bold">New here?</p>
               <button
@@ -125,19 +115,9 @@ export default function LoginPage() {
             {otpState?.errors?.code && (
               <p style={{ color: "red" }}>{otpState.errors.code}</p>
             )}
-            <Button2 type="submit">
-              <div className="flex w-full flex-row justify-between">
-                <div></div>
-                <p>Continue</p>
-                <div className="relative">
-                  {isOtpPending && (
-                    <div className="absolute top-1 -left-4">
-                      <div className="text-surfaceinline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Button2>
+            <Button fullWidth isLoading={isOtpPending} type="submit">
+              Continue
+            </Button>
           </Form>
         )}
       </CenteredLayout>

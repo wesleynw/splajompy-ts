@@ -1,5 +1,5 @@
 import { PlusCircle as PlusCircleIcon } from "@phosphor-icons/react/dist/ssr";
-import Button from "../../base/Button";
+import Button from "../../button/Button";
 
 type Props = {
   isOpen: boolean;

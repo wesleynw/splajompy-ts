@@ -2,7 +2,7 @@ import { deleteSessionTokenCookie } from "@/app/auth/cookies";
 import { getCurrentSession, invalidateSession } from "@/app/auth/session";
 import { useUser } from "@/app/data/user";
 import { redirect, useRouter } from "next/navigation";
-import Button2 from "../base/Button2";
+import Button from "../button/Button";
 import FollowButton from "../follows/FollowButton";
 import CenteredLayout from "../layout/CenteredLayout";
 
@@ -56,12 +56,15 @@ export default function UserProfile({
             </p>
           )}
           {isOwnProfile && (
-            <button
-              className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
+            // <button
+            //   className="rounded-full bg-blue-400 px-2.5 py-1 font-bold"
+            //   onClick={handleSignOut}
+            // >
+            //   Sign Out
+            // </button>
+            <div className="relative">
+              <Button onClick={handleSignOut}>Sign Out</Button>
+            </div>
           )}
           <FollowButton user_id={user.user_id} show_unfollow={true} />
         </div>
@@ -76,13 +79,14 @@ export default function UserProfile({
         )}
       </div>
       {isOwnProfile && (
-        <div className="flex">
-          <Button2
-            variant="outlined"
+        <div className="flex pt-5">
+          <Button
             onClick={() => router.push("/edit-profile")}
+            color="outline"
+            fullWidth
           >
             Edit Profile
-          </Button2>
+          </Button>
         </div>
       )}
     </div>

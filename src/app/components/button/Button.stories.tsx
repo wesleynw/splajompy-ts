@@ -41,9 +41,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: "Click me",
-    fullWidth: false,
+    fullWidth: true,
     color: "default",
-    disabled: false,
+    disabled: true,
     isLoading: false,
   },
 };
