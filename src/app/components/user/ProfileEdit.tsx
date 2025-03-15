@@ -3,10 +3,10 @@ import { useUser } from "@/app/data/user";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
-import Button2 from "../base/Button2";
 import Form from "../base/form/Form";
 import Input from "../base/form/Input";
 import Textarea from "../base/form/Textarea";
+import Button from "../button/Button";
 import CenteredLayout from "../layout/CenteredLayout";
 import Spinner from "../loading/Spinner";
 
@@ -117,30 +117,19 @@ export default function ProfileEdit({ username }: Readonly<Props>) {
           <div className="w-full text-right text-xs text-neutral-400">
             {bioCharCount}/{BIO_CHAR_LIMIT}
           </div>
-
-          <Button2
+          <Button
+            fullWidth
             type="submit"
+            isLoading={isSubmitting}
             disabled={
-              isSubmitting ||
-              nameCharCount > NAME_CHAR_LIMIT ||
-              bioCharCount > BIO_CHAR_LIMIT
+              nameCharCount > NAME_CHAR_LIMIT || bioCharCount > BIO_CHAR_LIMIT
             }
           >
-            <div className="flex w-full flex-row justify-between">
-              <div></div>
-              <p>Save</p>
-              <div className="relative">
-                {isSubmitting && (
-                  <div className="absolute top-1 -left-4">
-                    <div className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"></div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </Button2>
-          <Button2 variant="outlined" onClick={() => router.back()}>
+            Save
+          </Button>
+          <Button fullWidth color="outline" onClick={() => router.back()}>
             Cancel
-          </Button2>
+          </Button>
         </Form>
       </div>
       <div

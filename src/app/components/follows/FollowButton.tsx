@@ -6,7 +6,7 @@ import {
   unfollowUser,
 } from "@/app/lib/follows";
 import { useEffect, useState } from "react";
-import Button from "../base/Button";
+import Button from "../button/Button";
 
 type Props = {
   user_id: number;
@@ -19,7 +19,6 @@ export default function FollowButton({
 }: Readonly<Props>) {
   const [hasFollowed, setHasFollowed] = useState(false);
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -42,7 +41,6 @@ export default function FollowButton({
     e.preventDefault();
     e.stopPropagation();
 
-    setLoading(true);
     try {
       if (isFollowing) {
         await unfollowUser(user_id);
@@ -54,8 +52,6 @@ export default function FollowButton({
       }
     } catch (error) {
       console.error("Failed to update follow status:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -64,7 +60,7 @@ export default function FollowButton({
   }
 
   return (
-    <Button onClick={handleFollow} disabled={loading}>
+    <Button onClick={handleFollow}>
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>
   );

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import Button from "../base/Button";
+import Button from "../button/Button";
 import CenteredLayout from "../layout/CenteredLayout";
 
 export default function EmptyFeed() {
