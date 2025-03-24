@@ -24,7 +24,7 @@ export async function getCommentsByPost(
     .from(comments)
     .innerJoin(users, eq(comments.user_id, users.user_id))
     .where(eq(comments.post_id, post_id))
-    .orderBy(desc(comments.comment_date));
+    .orderBy(desc(comments.created_at));
 
   const commentsWithUsers = await Promise.all(
     results.map(async (result) => {

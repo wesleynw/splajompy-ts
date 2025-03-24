@@ -16,7 +16,7 @@ export const users = pgTable("users", {
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
   username: varchar({ length: 100 }).notNull(),
-  created: timestamp({ mode: "date" })
+  created_at: timestamp({ mode: "date" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
@@ -41,7 +41,7 @@ export const sessions = pgTable("sessions", {
   user_id: integer()
     .notNull()
     .references(() => users.user_id),
-  expiresAt: timestamp({ withTimezone: true, mode: "date" }).notNull(),
+  expires_at: timestamp({ withTimezone: true, mode: "date" }).notNull(),
 });
 
 export type Session = typeof sessions.$inferSelect;
@@ -53,7 +53,7 @@ export const verificationCodes = pgTable("verificationCodes", {
     .unique()
     .notNull()
     .references(() => users.user_id, { onDelete: "cascade" }),
-  expiresAt: timestamp({ mode: "date" }).notNull(),
+  expires_at: timestamp({ mode: "date" }).notNull(),
 });
 
 export const posts = pgTable("posts", {
@@ -64,7 +64,7 @@ export const posts = pgTable("posts", {
       onDelete: "cascade",
     }),
   text: text(),
-  postdate: timestamp({ mode: "string" })
+  created_at: timestamp({ mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
@@ -85,7 +85,7 @@ export const comments = pgTable("comments", {
       onDelete: "cascade",
     }),
   text: text().notNull(),
-  comment_date: timestamp({ mode: "string" })
+  created_at: timestamp({ mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
@@ -100,8 +100,8 @@ export const images = pgTable("images", {
     .references(() => posts.post_id, { onDelete: "cascade" }),
   height: integer().notNull(),
   width: integer().notNull(),
-  imageBlobUrl: text().notNull(),
-  displayOrder: integer().default(0).notNull(),
+  image_blob_url: text().notNull(),
+  display_order: integer().default(0).notNull(),
 });
 
 export type ImageType = typeof images.$inferSelect;
