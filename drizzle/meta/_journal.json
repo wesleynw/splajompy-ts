@@ -43,6 +43,13 @@
       "when": 1741810808017,
       "tag": "0005_yellow_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1742860047472,
+      "tag": "0006_parallel_forge",
+      "breakpoints": true
     }
   ]
 }

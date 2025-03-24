@@ -15,8 +15,8 @@ export async function insertImage(
     post_id: post_id,
     height: height,
     width: width,
-    imageBlobUrl: imageBlobUrl,
-    displayOrder: displayOrder,
+    image_blob_url: imageBlobUrl,
+    display_order: displayOrder,
   });
 }
 

@@ -1,14 +1,14 @@
 "use server";
 
-import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
-import { registerSchema } from "../lib/zod";
-import { formatErrors } from "../lib/utils";
 import { getUserByEmail, getUserByUsername } from "../lib/users";
+import { formatErrors } from "../lib/utils";
+import { registerSchema } from "../lib/zod";
 import { setSessionTokenCookie } from "./cookies";
-import { generateSessionToken, createSession } from "./session";
+import { createSession, generateSessionToken } from "./session";
 
 export type RegisterResult = {
   errors?: Record<string, string>;
@@ -17,7 +17,7 @@ export type RegisterResult = {
 
 export async function register(
   _currentState: unknown,
-  formData: FormData
+  formData: FormData,
 ): Promise<RegisterResult> {
   const result = await registerSchema.safeParseAsync({
     username: formData.get("username"),
@@ -64,7 +64,7 @@ export async function register(
 
   const token = await generateSessionToken();
   const session = await createSession(token, newUser[0].user_id);
-  await setSessionTokenCookie(token, session.expiresAt);
+  await setSessionTokenCookie(token, session.expires_at);
 
   redirect("/");
 }

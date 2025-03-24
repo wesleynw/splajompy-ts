@@ -74,7 +74,7 @@ export async function fetchPosts(
     .select({
       post_id: posts.post_id,
       text: posts.text,
-      date: posts.postdate,
+      date: posts.created_at,
       user_id: posts.user_id,
       author: users.username,
       displayName: users.name,
@@ -118,7 +118,7 @@ export async function fetchPosts(
 
   const results = await baseQuery
     .groupBy(posts.post_id, users.user_id, users.username)
-    .orderBy(desc(posts.postdate))
+    .orderBy(desc(posts.created_at))
     .limit(target_post_id ? 1 : FETCH_LIMIT)
     .offset(offset);
 
@@ -131,7 +131,7 @@ export async function fetchPosts(
       post_id: images.post_id,
       image_data: sql<
         ImageType[]
-      >`json_agg(${images}.* ORDER BY ${images.displayOrder}) ASC`,
+      >`json_agg(${images}.* ORDER BY ${images.display_order}) ASC`,
     })
     .from(images)
     .where(inArray(images.post_id, post_ids))
@@ -164,11 +164,11 @@ export async function getPostById(post_id: number) {
     .select({
       post_id: posts.post_id,
       text: posts.text,
-      postdate: posts.postdate,
+      postdate: posts.created_at,
       user_id: users.user_id,
       poster: users.username,
       comment_count: count(comments.comment_id),
-      imageBlobUrl: images.imageBlobUrl,
+      imageBlobUrl: images.image_blob_url,
       imageWidth: images.width,
       imageHeight: images.height,
       liked: sql<boolean>`
@@ -189,7 +189,7 @@ export async function getPostById(post_id: number) {
     .groupBy(
       posts.post_id,
       users.user_id,
-      images.imageBlobUrl,
+      images.image_blob_url,
       images.width,
       images.height,
     );

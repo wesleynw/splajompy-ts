@@ -28,7 +28,7 @@ export async function createSession(
   const session: Session = {
     id: session_id,
     user_id: user_id,
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
 
   await db.insert(sessions).values(session);
@@ -51,16 +51,16 @@ async function validateSessionToken(
     return { session: null, user: null };
   }
   const { user, session } = result[0];
-  if (Date.now() >= session.expiresAt.getTime()) {
+  if (Date.now() >= session.expires_at.getTime()) {
     await db.delete(sessions).where(eq(sessions.id, token));
     return { session: null, user: null };
   }
-  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+  if (Date.now() >= session.expires_at.getTime() - 1000 * 60 * 60 * 24 * 15) {
+    session.expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
     await db
       .update(sessions)
       .set({
-        expiresAt: session.expiresAt,
+        expires_at: session.expires_at,
       })
       .where(eq(sessions.id, session.id));
   }

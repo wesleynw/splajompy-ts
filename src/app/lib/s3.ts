@@ -45,7 +45,7 @@ export async function getPresignedUrl(
 export async function deleteObjects(post_id: number) {
   try {
     const result = await db
-      .select({ imageBlobUrl: images.imageBlobUrl })
+      .select({ imageBlobUrl: images.image_blob_url })
       .from(images)
       .where(eq(images.post_id, post_id));
 

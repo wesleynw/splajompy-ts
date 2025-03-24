@@ -37,7 +37,7 @@ export default function Comment({
               {renderMentions(comment.text)}
             </Linkify>
           </div>
-          <Timestamp date={comment.comment_date} />
+          <Timestamp date={comment.created_at} />
         </div>
         <LikeButton
           liked={comment.isLiked}

@@ -1,16 +1,16 @@
 "use server";
 
-import { identifierSchema, otpSchema, signInSchema } from "../lib/zod";
-import bcrypt from "bcryptjs";
-import { getUserByIdentifier } from "../lib/users";
-import { createSession, generateSessionToken } from "./session";
-import { setSessionTokenCookie } from "./cookies";
-import { formatErrors } from "../lib/utils";
-import { redirect } from "next/navigation";
-import { sendSignInCodeEmail } from "../lib/emails";
 import { db } from "@/db";
 import { verificationCodes } from "@/db/schema";
+import bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import { sendSignInCodeEmail } from "../lib/emails";
+import { getUserByIdentifier } from "../lib/users";
+import { formatErrors } from "../lib/utils";
+import { identifierSchema, otpSchema, signInSchema } from "../lib/zod";
+import { setSessionTokenCookie } from "./cookies";
+import { createSession, generateSessionToken } from "./session";
 
 export type AuthResult = {
   errors?: Record<string, string>;
@@ -20,7 +20,7 @@ export type AuthResult = {
 
 export async function authorize(
   _currentState: unknown,
-  formData: FormData
+  formData: FormData,
 ): Promise<AuthResult> {
   if (formData.get("password") == null) {
     return setupPasswordlessSignIn(formData);
@@ -62,7 +62,7 @@ export async function authorize(
 
   const token = await generateSessionToken();
   const session = await createSession(token, user.user_id);
-  await setSessionTokenCookie(token, session.expiresAt);
+  await setSessionTokenCookie(token, session.expires_at);
   redirect("/");
 }
 
@@ -99,11 +99,11 @@ async function setupPasswordlessSignIn(formData: FormData) {
     .values({
       code: code,
       user_id: user.user_id,
-      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+      expires_at: new Date(Date.now() + 5 * 60 * 1000),
     })
     .onConflictDoUpdate({
       target: verificationCodes.user_id,
-      set: { code: code, expiresAt: new Date(Date.now() + 5 * 60 * 1000) },
+      set: { code: code, expires_at: new Date(Date.now() + 5 * 60 * 1000) },
     });
 
   await sendSignInCodeEmail(user.email, code);
@@ -113,7 +113,7 @@ async function setupPasswordlessSignIn(formData: FormData) {
 
 export async function verifyPasswordlessCode(
   _currentState: unknown,
-  formData: FormData
+  formData: FormData,
 ) {
   const result = await otpSchema.safeParseAsync({
     identifier: formData.get("identifier"),
@@ -143,8 +143,8 @@ export async function verifyPasswordlessCode(
     .where(
       and(
         eq(verificationCodes.user_id, user?.user_id),
-        eq(verificationCodes.code, code)
-      )
+        eq(verificationCodes.code, code),
+      ),
     );
 
   if (dbResult.length < 1) {
@@ -154,7 +154,7 @@ export async function verifyPasswordlessCode(
     };
   }
 
-  if (dbResult[0].expiresAt < new Date()) {
+  if (dbResult[0].expires_at < new Date()) {
     return {
       errors: { code: "This code is expired." },
       payload: formData,
@@ -167,6 +167,6 @@ export async function verifyPasswordlessCode(
 
   const token = await generateSessionToken();
   const session = await createSession(token, user.user_id);
-  await setSessionTokenCookie(token, session.expiresAt);
+  await setSessionTokenCookie(token, session.expires_at);
   redirect("/");
 }

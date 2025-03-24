@@ -27,7 +27,7 @@ export default function ImageCarousel({ images }: Readonly<Props>) {
             <div className="w-full flex-none pl-2" key={image.image_id}>
               <div className="overflow-hidden rounded-xl">
                 <ResponsiveImageModal
-                  path={image.imageBlobUrl}
+                  path={image.image_blob_url}
                   height={image.height}
                   width={image.width}
                 />
