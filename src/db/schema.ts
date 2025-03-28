@@ -134,9 +134,12 @@ export const likes = pgTable(
     user_id: integer("user_id")
       .notNull()
       .references(() => users.user_id, { onDelete: "cascade" }),
+    is_post: boolean().notNull().default(true),
     created_at: timestamp({ mode: "string" }).default(sql`CURRENT_TIMESTAMP`),
   },
-  (table) => [unique().on(table.user_id, table.post_id, table.comment_id)],
+  (table) => [
+    unique().on(table.user_id, table.post_id, table.comment_id, table.is_post),
+  ],
 );
 
 export type Like = typeof likes.$inferSelect;
