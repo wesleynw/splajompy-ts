@@ -1,0 +1,2 @@
+ALTER TABLE "likes" DROP CONSTRAINT "likes_user_id_post_id_comment_id_unique";--> statement-breakpoint
+ALTER TABLE "likes" ADD CONSTRAINT "likes_user_id_post_id_comment_id_is_post_unique" UNIQUE("user_id","post_id","comment_id","is_post");

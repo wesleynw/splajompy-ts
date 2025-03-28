@@ -37,6 +37,7 @@ export async function addLike(
     post_id: post_id,
     comment_id: comment_id,
     user_id: user.user_id,
+    is_post: comment_id != null,
   });
 
   let recipient_id = post.user_id;

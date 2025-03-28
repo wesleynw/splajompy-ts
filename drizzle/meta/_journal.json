@@ -50,6 +50,20 @@
       "when": 1742860047472,
       "tag": "0006_parallel_forge",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1743198835760,
+      "tag": "0007_equal_exodus",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1743199005665,
+      "tag": "0008_lying_bulldozer",
+      "breakpoints": true
     }
   ]
 }

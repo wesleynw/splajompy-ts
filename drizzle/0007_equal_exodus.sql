@@ -1,0 +1,1 @@
+ALTER TABLE "likes" ADD COLUMN "is_post" boolean DEFAULT true NOT NULL;
