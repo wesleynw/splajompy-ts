@@ -35,7 +35,7 @@ export async function register(
   const email = result.data.email;
   const password = result.data.password;
 
-  const existingUsername = await getUserByUsername(username);
+  const existingUsername = await getUserByUsername(username, false);
   if (existingUsername != null) {
     return {
       errors: { username: "This username is taken." },
