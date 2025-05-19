@@ -56,12 +56,8 @@ export async function getAllUsers() {
 
 export async function getUserByUsername(
   username: string,
+  includeDetails = true,
 ): Promise<EnhancedUser | null> {
-  const { user: current_user } = await getCurrentSession();
-  if (current_user === null) {
-    return null;
-  }
-
   const results = await db
     .select()
     .from(users)
@@ -72,7 +68,18 @@ export async function getUserByUsername(
     return null;
   }
 
-  const user = addEnhancedUserData(results[0]);
+  let user: EnhancedUser | null = null;
+
+  if (includeDetails) {
+    user = await addEnhancedUserData(results[0]);
+  } else {
+    // hack
+    user = {
+      ...results[0],
+      isFollower: false,
+      post_count: 0,
+    };
+  }
 
   return user;
 }
