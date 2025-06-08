@@ -9,8 +9,11 @@ export default function Privacy() {
       <p className="mb-4">
         Splajompy respects your privacy. We do not share or sell any personal
         information. Your use of this site is secure, and stored login data is
-        private and encrypted. Minimal usage data is collected to monitor and
-        improve the performance of the site.
+        private and encrypted.
+      </p>
+      <p className="mb-4">
+        Usage data (time of login, if the app has crashed, e.g.) is collected to
+        monitor and improve the performance of the site.
       </p>
       <p>
         If you have any questions about our privacy policy, please email{" "}
