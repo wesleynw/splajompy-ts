@@ -15,9 +15,9 @@ export default function TermsOfService() {
         <h2 className="mb-3 text-xl font-semibold">1. Acceptance of Terms</h2>
         <p className="mb-4">
           By accessing or using our platform, you agree to be bound by these
-          Terms of Service and our Privacy Policy. If you don't agree, please
-          don't use our service. These terms constitute a legally binding
-          agreement between you and our company.
+          Terms of Service and our Privacy Policy. If you don&apos;t agree,
+          please don&apos;t use our service. These terms constitute a legally
+          binding agreement between you and our company.
         </p>
       </section>
 
@@ -38,10 +38,10 @@ export default function TermsOfService() {
         <h2 className="mb-3 text-xl font-semibold">3. User Accounts</h2>
         <ul className="mb-4 list-disc pl-6">
           <li>
-            You're responsible for maintaining account security and keeping
+            You&apos;re responsible for maintaining account security and keeping
             credentials confidential
           </li>
-          <li>You're liable for all activities under your account</li>
+          <li>You&apos;re liable for all activities under your account</li>
           <li>We may suspend or terminate accounts that violate these terms</li>
           <li>
             One person, one account - multiple accounts may be merged or
@@ -55,7 +55,7 @@ export default function TermsOfService() {
         <h2 className="mb-3 text-xl font-semibold">4. Content Guidelines</h2>
         <p className="mb-2 font-medium">You may not post content that:</p>
         <ul className="mb-4 list-disc pl-6">
-          <li>Is illegal, harmful, or violates others' rights</li>
+          <li>Is illegal, harmful, or violates others&apos; rights</li>
           <li>Contains hate speech, harassment, bullying, or threats</li>
           <li>
             Includes spam, scams, misleading information, or phishing attempts
@@ -80,9 +80,12 @@ export default function TermsOfService() {
             May be removed if it violates our guidelines, with or without notice
           </li>
           <li>
-            Should respect others' privacy, consent, and community standards
+            Should respect others&apos; privacy, consent, and community
+            standards
           </li>
-          <li>Must be original or properly attributed if using others' work</li>
+          <li>
+            Must be original or properly attributed if using others&apos; work
+          </li>
         </ul>
       </section>
 
@@ -91,23 +94,26 @@ export default function TermsOfService() {
         <ul className="mb-4 list-disc pl-6">
           <li>Be respectful to other users and maintain civil discourse</li>
           <li>
-            Don't impersonate others, create fake accounts, or misrepresent your
-            identity
+            Don&apos;t impersonate others, create fake accounts, or misrepresent
+            your identity
           </li>
           <li>
-            Don't attempt to hack, disrupt, reverse engineer, or abuse our
+            Don&apos;t attempt to hack, disrupt, reverse engineer, or abuse our
             systems
           </li>
           <li>
-            Don't use our platform for commercial purposes without written
+            Don&apos;t use our platform for commercial purposes without written
             permission (this includes advertising, selling products, or
             promoting businesses)
           </li>
           <li>
-            Don't scrape, crawl, or automatically collect data from our platform
+            Don&apos;t scrape, crawl, or automatically collect data from our
+            platform
           </li>
           <li>Report violations to our moderation team promptly</li>
-          <li>Don't circumvent any security measures or access restrictions</li>
+          <li>
+            Don&apos;t circumvent any security measures or access restrictions
+          </li>
         </ul>
       </section>
 
@@ -116,9 +122,9 @@ export default function TermsOfService() {
         <ul className="mb-4 list-disc pl-6">
           <li>We collect and use data as described in our Privacy Policy</li>
           <li>You control your privacy settings and can modify them anytime</li>
-          <li>We don't sell personal information to third parties</li>
+          <li>We don&apos;t sell personal information to third parties</li>
           <li>
-            You can request data deletion by contacting us - we'll respond
+            You can request data deletion by contacting us - we&apos;ll respond
             within 30 days
           </li>
           <li>
@@ -143,7 +149,7 @@ export default function TermsOfService() {
             We respect copyright and respond to valid DMCA takedown notices
           </li>
           <li>
-            Don't use our trademarks, logos, or branding without written
+            Don&apos;t use our trademarks, logos, or branding without written
             permission
           </li>
           <li>We may use user feedback and suggestions without compensation</li>
@@ -157,13 +163,17 @@ export default function TermsOfService() {
       <section className="mb-6">
         <h2 className="mb-3 text-xl font-semibold">8. Service Availability</h2>
         <ul className="mb-4 list-disc pl-6">
-          <li>We provide the service "as is" without warranties of any kind</li>
+          <li>
+            We provide the service &quot;as is&quot; without warranties of any
+            kind
+          </li>
           <li>
             Service may be interrupted for maintenance, updates, or technical
             issues
           </li>
           <li>
-            We're not liable for service disruptions, data loss, or downtime
+            We&apos;re not liable for service disruptions, data loss, or
+            downtime
           </li>
         </ul>
       </section>
@@ -183,7 +193,7 @@ export default function TermsOfService() {
             provisions
           </li>
           <li>
-            You're responsible for backing up your content before account
+            You&apos;re responsible for backing up your content before account
             deletion
           </li>
         </ul>
@@ -198,7 +208,9 @@ export default function TermsOfService() {
           </li>
           <li>Continued use after changes means acceptance of new terms</li>
           <li>Major changes will be announced prominently on our platform</li>
-          <li>If you don't agree to changes, you may terminate your account</li>
+          <li>
+            If you don&apos;t agree to changes, you may terminate your account
+          </li>
           <li>
             Previous versions of terms will be archived and available upon
             request
@@ -214,7 +226,7 @@ export default function TermsOfService() {
             remain in effect
           </li>
           <li>
-            Our failure to enforce any provision doesn't waive our right to
+            Our failure to enforce any provision doesn&apos;t waive our right to
             enforce it later
           </li>
           <li>These terms constitute the entire agreement between us</li>
