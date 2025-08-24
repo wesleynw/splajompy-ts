@@ -16,6 +16,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/.well-known/:path*",
+        destination: "/api/.well-known/:path*",
+      },
+      {
         source: "/ingest/static/:path*",
         destination: "https://us-assets.i.posthog.com/static/:path*",
       },
