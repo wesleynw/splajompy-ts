@@ -38,7 +38,8 @@ export default async function Page({
 
   return (
     <UserView
-      user={target_user}
+      current_user={current_user}
+      target_user={target_user}
       username={username}
       isOwnProfile={username === current_user.username}
     />

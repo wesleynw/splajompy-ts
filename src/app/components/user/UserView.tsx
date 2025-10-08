@@ -7,13 +7,15 @@ import CenteredLayout from "../layout/CenteredLayout";
 import UserProfile from "./UserProfile";
 
 interface Props {
-  user: PublicUser;
+  current_user: PublicUser;
+  target_user: PublicUser;
   username: string;
   isOwnProfile: boolean;
 }
 
 export default function UserView({
-  user,
+  current_user,
+  target_user,
   username,
   isOwnProfile,
 }: Readonly<Props>) {
@@ -22,7 +24,7 @@ export default function UserView({
       <CenteredLayout>
         <UserProfile username={username} isOwnProfile={isOwnProfile} />
       </CenteredLayout>
-      <Feed user={user} target_user_id={user.user_id} />
+      <Feed user={current_user} target_user_id={target_user.user_id} />
     </>
   );
 }
