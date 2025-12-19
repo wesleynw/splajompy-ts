@@ -71,7 +71,7 @@
     "knip": "^5.70.1",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "storybook": "^8.6.14",
+    "storybook": "^8.6.15",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
