@@ -13,8 +13,8 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.937.0",
-    "@aws-sdk/s3-presigned-post": "^3.937.0",
+    "@aws-sdk/client-s3": "^3.981.0",
+    "@aws-sdk/s3-presigned-post": "^3.981.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -26,7 +26,7 @@
     "browser-image-compression": "^2.0.2",
     "cva": "npm:class-variance-authority@^0.7.1",
     "dayjs": "^1.11.19",
-    "drizzle-orm": "^0.41.0",
+    "drizzle-orm": "^0.45.1",
     "embla-carousel": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "image-size": "^2.0.2",
@@ -36,7 +36,7 @@
     "next": "^15.5.9",
     "pg": "^8.16.3",
     "postcss": "^8.5.6",
-    "posthog-js": "^1.297.2",
+    "posthog-js": "^1.336.4",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "resend": "^4.8.0",
@@ -63,7 +63,7 @@
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
     "dotenv": "^16.6.1",
-    "drizzle-kit": "^0.30.6",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.1",
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.8",
@@ -83,6 +83,7 @@
       "core-js",
       "core-js-pure",
       "esbuild",
+      "protobufjs",
       "sharp",
       "unrs-resolver"
     ]
