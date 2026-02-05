@@ -10,12 +10,14 @@ import {
   notifications,
   posts,
   users,
+  VISIBILITY_PUBLIC,
 } from "@/db/schema";
 import { and, count, desc, eq, exists, inArray, or, sql } from "drizzle-orm";
 import { getCurrentSession } from "../auth/session";
 import { internalTagRegex } from "../utils/mentions";
 import { getRelevantLikesForPosts, RelevantLikesData } from "./likes";
 import { deleteObjects } from "./s3";
+import { userRelationship } from "../../../drizzle/schema";
 
 export type EnhancedPost = {
   post_id: number;
@@ -93,27 +95,48 @@ export async function fetchPosts(
     .leftJoin(comments, eq(comments.post_id, posts.post_id))
     .leftJoin(images, eq(images.post_id, posts.post_id));
 
+  const visibilityFilter = or(
+    eq(posts.visibilitytype, VISIBILITY_PUBLIC),
+    eq(posts.user_id, user.user_id),
+    exists(
+      db
+        .select()
+        .from(userRelationship)
+        .where(
+          and(
+            eq(userRelationship.userId, posts.user_id),
+            eq(userRelationship.targetUserId, user.user_id),
+          ),
+        ),
+    ),
+  );
+
   if (target_post_id !== null) {
-    baseQuery.where(eq(posts.post_id, target_post_id));
+    baseQuery.where(and(eq(posts.post_id, target_post_id), visibilityFilter));
   } else if (target_user_id) {
-    baseQuery.where(eq(posts.user_id, target_user_id));
+    baseQuery.where(and(eq(posts.user_id, target_user_id), visibilityFilter));
   } else if (target_following_only) {
     baseQuery.where(
-      or(
-        eq(posts.user_id, user.user_id),
-        exists(
-          db
-            .select()
-            .from(follows)
-            .where(
-              and(
-                eq(follows.follower_id, user.user_id),
-                eq(follows.following_id, posts.user_id),
+      and(
+        or(
+          eq(posts.user_id, user.user_id),
+          exists(
+            db
+              .select()
+              .from(follows)
+              .where(
+                and(
+                  eq(follows.follower_id, user.user_id),
+                  eq(follows.following_id, posts.user_id),
+                ),
               ),
-            ),
+          ),
         ),
+        visibilityFilter,
       ),
     );
+  } else {
+    baseQuery.where(visibilityFilter);
   }
 
   const results = await baseQuery
