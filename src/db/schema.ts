@@ -56,6 +56,9 @@ export const verificationCodes = pgTable("verificationCodes", {
   expires_at: timestamp({ mode: "date" }).notNull(),
 });
 
+export const VISIBILITY_PUBLIC = 0;
+export const VISIBILITY_FRIENDS_ONLY = 1;
+
 export const posts = pgTable("posts", {
   post_id: serial().primaryKey().notNull(),
   user_id: integer("user_id")
@@ -67,6 +70,7 @@ export const posts = pgTable("posts", {
   created_at: timestamp({ mode: "string" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  visibilitytype: integer().default(0).notNull(),
 });
 
 export type SelectPost = typeof posts.$inferSelect;
