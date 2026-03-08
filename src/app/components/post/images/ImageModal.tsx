@@ -13,6 +13,7 @@ const AnimatedImage = animated(Image);
 
 type ImageModalProps = {
   imagePath: string;
+  src: string | null;
   imageWidth: number;
   imageHeight: number;
   open: boolean;
@@ -21,6 +22,7 @@ type ImageModalProps = {
 
 function ImageModalContent({
   imagePath,
+  src,
   imageWidth,
   imageHeight,
   handleClose,
@@ -30,8 +32,6 @@ function ImageModalContent({
     width: number;
     height: number;
   } | null>(null);
-
-  const src = `https://splajompy-bucket.nyc3.cdn.digitaloceanspaces.com/${imagePath}`;
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<number>(0);
@@ -182,6 +182,7 @@ function ImageModalContent({
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    if (!src) return;
     const link = document.createElement("a");
     link.href = src;
     link.download = imagePath.split("/").pop() ?? "image";
@@ -217,10 +218,10 @@ function ImageModalContent({
           e.stopPropagation();
         }}
       >
-        {!loaded && (
+        {(!loaded || !src) && (
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
         )}
-        <AnimatedImage
+        {src && <AnimatedImage
           ref={imageRef}
           src={src}
           alt="Modal Image"
@@ -246,7 +247,7 @@ function ImageModalContent({
             willChange: "transform",
             pointerEvents: "none",
           }}
-        />
+        />}
       </div>
     </div>
   );

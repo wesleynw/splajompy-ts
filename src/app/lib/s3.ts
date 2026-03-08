@@ -2,7 +2,12 @@
 
 import { db } from "@/db";
 import { images } from "@/db/schema";
-import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
@@ -70,4 +75,22 @@ export async function deleteObjects(post_id: number) {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function getObjectPresignedUrl(filePath: string) {
+  const client = new S3Client({
+    region: process.env.SPACE_REGION!,
+    endpoint: `https://${process.env.SPACE_REGION}.digitaloceanspaces.com`,
+    credentials: {
+      accessKeyId: process.env.SPACES_ACCESS_KEY!,
+      secretAccessKey: process.env.SPACES_SECRET_KEY!,
+    },
+  });
+
+  const command = new GetObjectCommand({
+    Bucket: process.env.SPACE_NAME!,
+    Key: filePath,
+  });
+
+  return getSignedUrl(client, command, { expiresIn: 3600 });
 }
