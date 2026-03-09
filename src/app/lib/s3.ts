@@ -36,7 +36,7 @@ export async function getPresignedUrl(
       Bucket: process.env.SPACE_NAME!,
       Key: `${uniqueFilename}`,
       Fields: {
-        acl: "public-read",
+        acl: "private",
         ContentType: contentType,
       },
     });
