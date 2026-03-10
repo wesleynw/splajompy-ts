@@ -13,8 +13,9 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.981.0",
-    "@aws-sdk/s3-presigned-post": "^3.981.0",
+    "@aws-sdk/client-s3": "^3.1004.0",
+    "@aws-sdk/s3-presigned-post": "^3.1004.0",
+    "@aws-sdk/s3-request-presigner": "^3.1004.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -75,7 +76,7 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
+  "packageManager": "pnpm@10.31.0+sha512.e3927388bfaa8078ceb79b748ffc1e8274e84d75163e67bc22e06c0d3aed43dd153151cbf11d7f8301ff4acb98c68bdc5cadf6989532801ffafe3b3e4a63c268",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
